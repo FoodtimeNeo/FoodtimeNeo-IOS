@@ -5,6 +5,7 @@ struct ProfileView: View {
     let user: User
     @ObservedObject var session: AppSession
     @State private var confirmLogout = false
+    @State private var showChangePassword = false
 
     var body: some View {
         NavigationStack {
@@ -20,6 +21,8 @@ struct ProfileView: View {
                         profileCard
                         capabilityCard
                         roadmapCard
+                        Button("修改密码") { showChangePassword = true }
+                            .buttonStyle(InkButtonStyle())
                         Button("退出登录") { confirmLogout = true }
                             .buttonStyle(InkButtonStyle())
                     }
@@ -28,6 +31,9 @@ struct ProfileView: View {
             }
             .navigationTitle("我的")
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .sheet(isPresented: $showChangePassword) {
+            ChangePasswordView(session: session)
         }
         .alert("退出登录？", isPresented: $confirmLogout) {
             Button("取消", role: .cancel) {}
@@ -101,7 +107,7 @@ struct ProfileView: View {
                 Text("开发状态")
                     .font(.system(size: 18, weight: .bold, design: .serif))
                     .foregroundStyle(Zine.ink)
-                Text("当前已接入登录、注册、会话恢复、能力读取和食堂三级只读浏览。找回密码、点评、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
+                Text("当前已接入登录、注册、找回/修改密码、会话恢复、能力读取和食堂三级只读浏览。点评、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
                     .font(.subheadline)
                     .foregroundStyle(Zine.muted)
             }

@@ -77,6 +77,80 @@ final class RemoteAuthServiceTests: XCTestCase {
         XCTAssertEqual(json["password"] as? String, "Foodtime2026!")
     }
 
+    func testPasswordResetVerifyDecodesGrant() async throws {
+        let transport = StubHTTPTransport()
+        let token = String(repeating: "a", count: 43)
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-4"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"resetToken":"\(token)","expiresAt":"2099-11-20T04:05:00Z"}
+            """))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let grant = try await service.verifyPasswordResetCode(
+            email: "USER@example.com",
+            verificationCode: "012345"
+        )
+
+        XCTAssertEqual(grant.resetToken, token)
+        XCTAssertFalse(grant.isExpired)
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["email"] as? String, "user@example.com")
+        XCTAssertEqual(json["verificationCode"] as? String, "012345")
+    }
+
+    func testChangePasswordUsesPUTAndCSRF() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-5"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("null"))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        try await service.changePassword(oldPassword: "Old12345!", newPassword: "New12345!")
+
+        let request = transport.requests[1]
+        XCTAssertEqual(request.httpMethod, "PUT")
+        XCTAssertEqual(request.url?.path, "/api/v1/users/me/password")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "X-CSRF-TOKEN"), "token-5")
+        let body = try XCTUnwrap(request.httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["oldPassword"] as? String, "Old12345!")
+        XCTAssertEqual(json["newPassword"] as? String, "New12345!")
+    }
+
+    func testResetPasswordSendsTokenAndNewPassword() async throws {
+        let transport = StubHTTPTransport()
+        let token = String(repeating: "b", count: 43)
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-6"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("null"))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        try await service.resetPassword(resetToken: token, newPassword: "New12345!")
+
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/auth/password-reset")
+        XCTAssertEqual(json["resetToken"] as? String, token)
+        XCTAssertEqual(json["newPassword"] as? String, "New12345!")
+    }
+
     func testEmailCodeInvalidSurfacesBusinessCode() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

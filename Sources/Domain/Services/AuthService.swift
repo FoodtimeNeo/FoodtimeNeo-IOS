@@ -11,6 +11,10 @@ protocol AuthService: AnyObject {
         verificationCode: String,
         invitationCode: String?
     ) async throws -> User
+    func sendPasswordResetCode(email: String) async throws -> EmailCodeReceipt
+    func verifyPasswordResetCode(email: String, verificationCode: String) async throws -> PasswordResetGrant
+    func resetPassword(resetToken: String, newPassword: String) async throws
+    func changePassword(oldPassword: String, newPassword: String) async throws
     func currentSession() async throws -> SessionSnapshot
     func capabilities() async throws -> CapabilitySnapshot
     func logout() async throws

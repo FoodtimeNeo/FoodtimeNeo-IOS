@@ -77,6 +77,22 @@ final class AppSessionTests: XCTestCase {
         XCTAssertFalse(jar.sessionCookiePresent)
     }
 
+    func testChangePasswordClearsLocalSession() async throws {
+        let jar = MemoryCookieJar()
+        jar.sessionCookiePresent = true
+        let auth = FakeAuthService()
+        auth.sessionResult = .success(SessionSnapshot(user: TestFixtures.user, mode: .normal))
+        let session = makeSession(auth: auth, jar: jar)
+        await session.start()
+        XCTAssertTrue(session.isSignedIn)
+
+        try await session.changePassword(oldPassword: "Old12345!", newPassword: "New12345!")
+
+        XCTAssertEqual(session.state, .signedOut)
+        XCTAssertFalse(jar.sessionCookiePresent)
+        XCTAssertEqual(auth.changePasswordCalls, 1)
+    }
+
     func testUnauthorizedClearsSessionAndCapabilities() async {
         let jar = MemoryCookieJar()
         jar.sessionCookiePresent = true

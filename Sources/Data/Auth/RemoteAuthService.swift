@@ -103,6 +103,67 @@ final class RemoteAuthService: AuthService {
         return try await api.send(request, as: User.self)
     }
 
+    func sendPasswordResetCode(email: String) async throws -> EmailCodeReceipt {
+        let body = PasswordResetCodeBody(email: RegistrationValidation.normalizedEmail(email))
+        let request = try APIRequest.json(
+            .post,
+            "auth/password-reset/email-code",
+            body: body,
+            requiresAuth: false,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: EmailCodeReceipt.self)
+    }
+
+    func verifyPasswordResetCode(
+        email: String,
+        verificationCode: String
+    ) async throws -> PasswordResetGrant {
+        let body = PasswordResetVerifyBody(
+            email: RegistrationValidation.normalizedEmail(email),
+            verificationCode: verificationCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        let request = try APIRequest.json(
+            .post,
+            "auth/password-reset/verify",
+            body: body,
+            requiresAuth: false,
+            requiresCSRF: true
+        )
+        let response: PasswordResetGrantResponse = try await api.send(
+            request,
+            as: PasswordResetGrantResponse.self
+        )
+        return PasswordResetGrant(resetToken: response.resetToken, expiresAt: response.expiresAt)
+    }
+
+    func resetPassword(resetToken: String, newPassword: String) async throws {
+        let body = PasswordResetBody(
+            resetToken: resetToken.trimmingCharacters(in: .whitespacesAndNewlines),
+            newPassword: newPassword
+        )
+        let request = try APIRequest.json(
+            .post,
+            "auth/password-reset",
+            body: body,
+            requiresAuth: false,
+            requiresCSRF: true
+        )
+        try await api.sendVoid(request)
+    }
+
+    func changePassword(oldPassword: String, newPassword: String) async throws {
+        let body = ChangePasswordBody(oldPassword: oldPassword, newPassword: newPassword)
+        let request = try APIRequest.json(
+            .put,
+            "users/me/password",
+            body: body,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        try await api.sendVoid(request)
+    }
+
     func currentSession() async throws -> SessionSnapshot {
         let response: SessionMeResponse = try await api.send(
             .get("auth/me"),
@@ -142,6 +203,30 @@ final class RemoteAuthService: AuthService {
 
 private struct RegistrationCodeBody: Encodable {
     let email: String
+}
+
+private struct PasswordResetCodeBody: Encodable {
+    let email: String
+}
+
+private struct PasswordResetVerifyBody: Encodable {
+    let email: String
+    let verificationCode: String
+}
+
+private struct PasswordResetBody: Encodable {
+    let resetToken: String
+    let newPassword: String
+}
+
+private struct ChangePasswordBody: Encodable {
+    let oldPassword: String
+    let newPassword: String
+}
+
+private struct PasswordResetGrantResponse: Decodable {
+    let resetToken: String
+    let expiresAt: Date?
 }
 
 private struct RegistrationBody: Encodable {

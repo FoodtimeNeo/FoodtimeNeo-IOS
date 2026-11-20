@@ -96,12 +96,26 @@ final class FakeAuthService: AuthService {
         EmailCodeReceipt(expiresAt: nil, resendAfterSeconds: 60)
     )
     var registerResult: Result<User, Error> = .success(TestFixtures.user)
+    var passwordResetCodeResult: Result<EmailCodeReceipt, Error> = .success(
+        EmailCodeReceipt(expiresAt: nil, resendAfterSeconds: 60)
+    )
+    var passwordResetVerifyResult: Result<PasswordResetGrant, Error> = .success(
+        PasswordResetGrant(
+            resetToken: String(repeating: "a", count: 43),
+            expiresAt: Date().addingTimeInterval(300)
+        )
+    )
+    var resetPasswordError: Error?
+    var changePasswordError: Error?
     var sessionResult: Result<SessionSnapshot, Error> = .failure(AppError.unauthenticated)
     var capabilitiesResult: Result<CapabilitySnapshot, Error> = .success(.empty)
     var logoutError: Error?
     private(set) var loginCalls = 0
     private(set) var registrationCodeEmails: [String] = []
     private(set) var registerCalls = 0
+    private(set) var passwordResetCodeEmails: [String] = []
+    private(set) var resetPasswordCalls = 0
+    private(set) var changePasswordCalls = 0
 
     func registrationPolicy() async throws -> RegistrationPolicy {
         policy
@@ -133,6 +147,28 @@ final class FakeAuthService: AuthService {
     ) async throws -> User {
         registerCalls += 1
         return try registerResult.get()
+    }
+
+    func sendPasswordResetCode(email: String) async throws -> EmailCodeReceipt {
+        passwordResetCodeEmails.append(email)
+        return try passwordResetCodeResult.get()
+    }
+
+    func verifyPasswordResetCode(
+        email: String,
+        verificationCode: String
+    ) async throws -> PasswordResetGrant {
+        try passwordResetVerifyResult.get()
+    }
+
+    func resetPassword(resetToken: String, newPassword: String) async throws {
+        resetPasswordCalls += 1
+        if let resetPasswordError { throw resetPasswordError }
+    }
+
+    func changePassword(oldPassword: String, newPassword: String) async throws {
+        changePasswordCalls += 1
+        if let changePasswordError { throw changePasswordError }
     }
 
     func currentSession() async throws -> SessionSnapshot {

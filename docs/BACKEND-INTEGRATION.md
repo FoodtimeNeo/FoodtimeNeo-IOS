@@ -56,6 +56,8 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 注册策略 | `GET /auth/registration-policy` |
 | 注册邮箱验证码 | `POST /auth/register/email-code`（202，返回 `expiresAt/resendAfterSeconds`） |
 | 注册 | `POST /auth/register`（201，返回用户，不自动登录） |
+| 找回密码 | `POST /auth/password-reset/email-code`、`/verify`、`/password-reset` |
+| 修改密码 | `PUT /users/me/password`（成功后当前会话失效） |
 | 能力 | `GET /users/me/capabilities` |
 | 食堂/档口/菜品 | `GET /dining-halls`、`GET /dining-halls/{id}/stalls`、`GET /stalls/{id}/dishes` |
 

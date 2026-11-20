@@ -147,6 +147,28 @@ final class AppSession: ObservableObject {
         )
     }
 
+    func sendPasswordResetCode(email: String) async throws -> EmailCodeReceipt {
+        try await auth.sendPasswordResetCode(email: email)
+    }
+
+    func verifyPasswordResetCode(
+        email: String,
+        verificationCode: String
+    ) async throws -> PasswordResetGrant {
+        try await auth.verifyPasswordResetCode(email: email, verificationCode: verificationCode)
+    }
+
+    func resetPassword(resetToken: String, newPassword: String) async throws {
+        try await auth.resetPassword(resetToken: resetToken, newPassword: newPassword)
+    }
+
+    func changePassword(oldPassword: String, newPassword: String) async throws {
+        try await auth.changePassword(oldPassword: oldPassword, newPassword: newPassword)
+        await clearLocalSession()
+        capabilities = .empty
+        state = .signedOut
+    }
+
     func logout() async {
         do {
             try await auth.logout()

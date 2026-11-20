@@ -6,7 +6,7 @@ struct LoginView: View {
     @ObservedObject var session: AppSession
     @StateObject private var model: LoginViewModel
     @State private var showRegistration = false
-    @State private var showPasswordRoadmap = false
+    @State private var showPasswordRecovery = false
 
     init(session: AppSession) {
         self.session = session
@@ -117,11 +117,11 @@ struct LoginView: View {
                     HStack {
                         Button("注册账号") { showRegistration = true }
                         Spacer()
-                        Button("忘记密码？") { showPasswordRoadmap = true }
+                        Button("忘记密码？") { showPasswordRecovery = true }
                     }
                     .buttonStyle(LinkButtonStyle())
 
-                    Text("当前已接入登录、注册与食堂只读浏览。找回密码、社区与管理功能按审计报告的波次继续接入，不把占位入口当作已完成。")
+                    Text("当前已接入登录、注册、找回密码与食堂只读浏览。社区与管理功能按审计报告的波次继续接入，不把占位入口当作已完成。")
                         .font(.footnote)
                         .foregroundStyle(Zine.muted)
                         .padding(.bottom, 24)
@@ -135,10 +135,10 @@ struct LoginView: View {
                 model.email = email
             }
         }
-        .alert("功能接入中", isPresented: $showPasswordRoadmap) {
-            Button("知道了", role: .cancel) {}
-        } message: {
-            Text("找回密码将在下一阶段接入；当前请使用已有账号登录。")
+        .sheet(isPresented: $showPasswordRecovery) {
+            PasswordRecoveryView(session: session) { email in
+                model.email = email
+            }
         }
     }
 }
