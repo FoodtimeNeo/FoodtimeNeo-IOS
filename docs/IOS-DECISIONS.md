@@ -5,7 +5,7 @@
 | 事项 | 当前状态 | 处理 |
 |---|---|---|
 | UI/工程技术路线 | **已确认原生 SwiftUI** | 不使用 Capacitor 容器或 Flutter；完整复刻 Android，不以网页套壳交付 |
-| 最低 iOS/iPadOS | **已确认 iOS 17** | 不使用 iOS 18 独占 API；iPad/横屏布局仍按 W7 专项验收 |
+| 最低 iOS/iPadOS | **已确认 iOS 17** | 不使用 iOS 18 独占 API；W7 已做主要页面限宽、社区列数自适应，导航结构/分屏仍待拍板与实机验收 |
 | 目标设备 | 暂按 iPhone + iPad 通用 | 方向为竖屏 + 左右横屏；如需收窄，发布前调整 |
 | Bundle ID | 暂用 `cn.edu.bjtu.foodtime` | 与 Android 包名一致；App Store 注册冲突时再改，改后需重新签名 |
 | 开发团队/签名 | 未确认 | 工程不填他人 Team ID；不提交证书/描述文件；模拟器 CI 不签名 |
