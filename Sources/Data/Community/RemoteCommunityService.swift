@@ -250,6 +250,28 @@ final class RemoteCommunityService: CommunityService {
         )
     }
 
+    func author(id: String) async throws -> CommunityAuthor {
+        try await api.send(
+            .get("community/authors/\(encoded(id))"),
+            as: CommunityAuthor.self
+        )
+    }
+
+    func authorPosts(
+        authorID: String,
+        size: Int,
+        cursor: String?
+    ) async throws -> CommunityFeedPage {
+        var query = [URLQueryItem(name: "size", value: String(min(100, max(1, size))))]
+        if let cursor, !cursor.isEmpty {
+            query.append(URLQueryItem(name: "cursor", value: cursor))
+        }
+        return try await api.send(
+            .get("community/authors/\(encoded(authorID))/posts", query: query),
+            as: CommunityFeedPage.self
+        )
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

@@ -159,9 +159,15 @@ struct CommunityDetailView: View {
         PaperCard {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(post.userDisplayName)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Zine.ink)
+                    NavigationLink {
+                        AuthorPostsView(authorID: post.userId, service: session.community)
+                    } label: {
+                        Text(post.userDisplayName)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Zine.ink)
+                            .underline()
+                    }
+                    .buttonStyle(.plain)
                     if post.userId != session.user?.id {
                         Button(startingChatID == post.userId ? "…" : "私信") {
                             startChat(with: post.userId)
