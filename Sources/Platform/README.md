@@ -1,5 +1,5 @@
 # Platform
 
-放相册、文件、分享、凭据、通知等系统适配；实现依赖已确认的平台方案。
+Keychain、相册/文件、系统分享、剪贴板、通知及生命周期适配；不决定审核、处罚、账号资格等业务结论。
 
-当前目录只定义职责，尚无Swift模块或功能实现；工程结构在选型后确认。
+当前：`KeychainStore`（`AfterFirstUnlockThisDeviceOnly`）、`KeychainCookieArchive`（按 origin 归档）、`InstallationMarker`（首启清 Keychain，避免卸载重装恢复旧会话）。相册/通知/BGTask 待接入。
