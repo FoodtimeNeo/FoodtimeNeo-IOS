@@ -77,7 +77,7 @@ final class FileCommunityDraftStore: CommunityDraftStore {
     }
 
     func imageData(named: String, accountID: String) -> Data? {
-        try? Data(contentsOf: imagesDirectory(for: accountID).appendingPathComponent(name))
+        try? Data(contentsOf: imagesDirectory(for: accountID).appendingPathComponent(named))
     }
 
     func clear(accountID: String) {
