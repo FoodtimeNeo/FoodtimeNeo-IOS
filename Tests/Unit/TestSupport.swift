@@ -627,6 +627,9 @@ final class FakeCommunityService: CommunityService {
     )
     var viewCount = 1
     var createPostResult = CommunityPostReceipt(id: "post-2")
+    var myPostsResult = Result<Page<CommunityPost>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
     var editPostResult = CommunityEditReceipt(id: "post-1", revision: 2, changed: true)
     var pinsResult = CommunityPinSnapshot(revision: 1, items: [], canManage: false)
     private(set) var commentCalls = 0
@@ -697,6 +700,10 @@ final class FakeCommunityService: CommunityService {
     ) async throws -> CommunityPostReceipt {
         createPostCalls += 1
         return createPostResult
+    }
+
+    func myPosts(page: Int, size: Int) async throws -> Page<CommunityPost> {
+        try myPostsResult.get()
     }
 
     func editPost(

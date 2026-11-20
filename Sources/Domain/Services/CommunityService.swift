@@ -33,6 +33,7 @@ protocol CommunityService: AnyObject {
         imageURLs: [String],
         requestID: String
     ) async throws -> CommunityPostReceipt
+    func myPosts(page: Int, size: Int) async throws -> Page<CommunityPost>
     func editPost(
         id: String,
         expectedRevision: Int,
