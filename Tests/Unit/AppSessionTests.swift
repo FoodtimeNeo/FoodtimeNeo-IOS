@@ -196,6 +196,7 @@ final class AppSessionTests: XCTestCase {
             auth: auth,
             catalog: FakeCatalogService(),
             social: FakeSocialService(),
+            feedback: FakeFeedbackService(),
             api: api,
             cookieJar: jar,
             archive: MemoryCookieArchive(),

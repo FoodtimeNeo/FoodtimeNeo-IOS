@@ -7,6 +7,7 @@ struct AppEnvironment {
     let auth: AuthService
     let catalog: CatalogService
     let social: SocialService
+    let feedback: FeedbackService
     let cookieJar: SystemCookieJar
     let archive: KeychainCookieArchive
 
@@ -43,6 +44,7 @@ struct AppEnvironment {
             auth: RemoteAuthService(api: api),
             catalog: RemoteCatalogService(api: api),
             social: RemoteSocialService(api: api),
+            feedback: RemoteFeedbackService(api: api),
             cookieJar: jar,
             archive: archive
         )

@@ -300,6 +300,37 @@ final class FakeSocialService: SocialService {
     }
 }
 
+final class FakeFeedbackService: FeedbackService {
+    var createResult: Result<Feedback, Error> = .success(TestFixtures.feedback)
+    var listResult: Result<Page<Feedback>, Error> = .success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var detailResult: Result<Feedback, Error> = .success(TestFixtures.feedback)
+    var repliesResult: Result<Page<FeedbackReply>, Error> = .success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    private(set) var createCalls = 0
+    private(set) var lastRequestID: String?
+
+    func create(type: FeedbackType, content: String, requestID: String) async throws -> Feedback {
+        createCalls += 1
+        lastRequestID = requestID
+        return try createResult.get()
+    }
+
+    func list(archived: Bool, page: Int, size: Int) async throws -> Page<Feedback> {
+        try listResult.get()
+    }
+
+    func detail(id: String) async throws -> Feedback {
+        try detailResult.get()
+    }
+
+    func replies(id: String, page: Int, size: Int) async throws -> Page<FeedbackReply> {
+        try repliesResult.get()
+    }
+}
+
 final class FakeCatalogService: CatalogService {
     var halls: [DiningHall] = []
     var stallsByHall: [String: [Stall]] = [:]
@@ -361,6 +392,17 @@ enum TestFixtures {
     static let deletionResult = AccountDeletionResult(
         deleted: true,
         emailsReusableAt: Date().addingTimeInterval(3600)
+    )
+
+    static let feedback = Feedback(
+        id: "fb-1",
+        type: "suggestion",
+        content: "希望增加收藏分组排序",
+        status: "pending",
+        createdAt: Date(),
+        updatedAt: Date(),
+        userDisplayName: user.displayName,
+        latestReply: nil
     )
 
     static func envelope(_ data: String, code: String = "OK", message: String = "success") -> String {

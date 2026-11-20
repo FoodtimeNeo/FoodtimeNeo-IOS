@@ -63,6 +63,7 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 学校邮箱 | `POST /auth/bind-email/email-code`、`POST /users/me/bind-email` |
 | 社交 | `GET /users/search`、`/users/{id}/following|followers`、`PUT/DELETE /users/{id}/follow` |
 | 黑名单 | `GET /users/me/blocks`、`PUT/DELETE /users/{id}/block` |
+| 反馈 | `POST/GET /users/me/feedback`、详情、回复历史 |
 | 能力 | `GET /users/me/capabilities` |
 | 食堂/档口/菜品 | `GET /dining-halls`、`GET /dining-halls/{id}/stalls`、`GET /stalls/{id}/dishes` |
 
