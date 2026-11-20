@@ -63,7 +63,12 @@ struct CommunityDetailView: View {
         }
         .navigationTitle("食记")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await model.load() }
+        .task {
+            await model.load()
+            if let post = model.post, post.status == "approved" {
+                await session.recordHistory(kind: .post, targetID: post.id)
+            }
+        }
         .fullScreenCover(isPresented: $showGallery) {
             DishGalleryView(
                 urls: galleryURLs,

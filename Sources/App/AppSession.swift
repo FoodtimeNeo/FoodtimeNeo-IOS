@@ -25,6 +25,7 @@ final class AppSession: ObservableObject {
     let community: CommunityService
     let drafts: CommunityDraftStore
     let favorites: FavoriteService
+    let history: HistoryService
     let inbox: InboxService
     let messages: MessageService
     let notifications: NotificationService
@@ -47,6 +48,7 @@ final class AppSession: ObservableObject {
         community: CommunityService,
         drafts: CommunityDraftStore,
         favorites: FavoriteService,
+        history: HistoryService,
         inbox: InboxService,
         messages: MessageService,
         notifications: NotificationService,
@@ -65,6 +67,7 @@ final class AppSession: ObservableObject {
         self.community = community
         self.drafts = drafts
         self.favorites = favorites
+        self.history = history
         self.inbox = inbox
         self.messages = messages
         self.notifications = notifications
@@ -87,6 +90,7 @@ final class AppSession: ObservableObject {
             community: environment.community,
             drafts: environment.drafts,
             favorites: environment.favorites,
+            history: environment.history,
             inbox: environment.inbox,
             messages: environment.messages,
             notifications: environment.notifications,
@@ -212,6 +216,23 @@ final class AppSession: ObservableObject {
         await clearLocalSession()
         capabilities = .empty
         state = .signedOut
+    }
+
+    /// Best-effort after a successful detail load. Epoch-stale events are never
+    /// retried with a new epoch; the next real detail visit creates a new event.
+    func recordHistory(kind: HistoryKind, targetID: String) async {
+        do {
+            let settings = try await history.settings()
+            guard settings.enabled else { return }
+            try await history.record(
+                kind: kind,
+                targetID: targetID,
+                epoch: settings.epoch(for: kind),
+                visitEventID: UUID().uuidString
+            )
+        } catch {
+            // History failure must not block or fail detail browsing.
+        }
     }
 
     func currentProfile() async throws -> UserProfile {

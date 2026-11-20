@@ -167,6 +167,26 @@ final class AppSessionTests: XCTestCase {
         XCTAssertEqual(session.state, .signedIn(visitor.asUser))
     }
 
+    func testRecordHistoryUsesSettingsEpoch() async {
+        let jar = MemoryCookieJar()
+        jar.sessionCookiePresent = true
+        let auth = FakeAuthService()
+        auth.sessionResult = .success(SessionSnapshot(user: TestFixtures.user, mode: .normal))
+        let history = FakeHistoryService()
+        history.settingsResult = .success(
+            BrowsingHistorySettings(enabled: true, revision: 1, dishEpoch: 7, postEpoch: 8)
+        )
+        let session = makeSession(auth: auth, jar: jar, history: history)
+        await session.start()
+
+        await session.recordHistory(kind: .dish, targetID: "d-1")
+
+        XCTAssertEqual(history.recordCalls.count, 1)
+        XCTAssertEqual(history.recordCalls.first?.0, .dish)
+        XCTAssertEqual(history.recordCalls.first?.1, "d-1")
+        XCTAssertEqual(history.recordCalls.first?.2, 7)
+    }
+
     func testUnauthorizedClearsSessionAndCapabilities() async {
         let jar = MemoryCookieJar()
         jar.sessionCookiePresent = true
@@ -186,7 +206,11 @@ final class AppSessionTests: XCTestCase {
         XCTAssertFalse(jar.sessionCookiePresent)
     }
 
-    private func makeSession(auth: FakeAuthService, jar: MemoryCookieJar) -> AppSession {
+    private func makeSession(
+        auth: FakeAuthService,
+        jar: MemoryCookieJar,
+        history: FakeHistoryService = FakeHistoryService()
+    ) -> AppSession {
         let api = APIClient(
             baseURL: TestFixtures.baseURL,
             transport: StubHTTPTransport(),
@@ -203,6 +227,7 @@ final class AppSessionTests: XCTestCase {
             community: FakeCommunityService(),
             drafts: MemoryDraftStore(),
             favorites: FakeFavoriteService(),
+            history: history,
             inbox: FakeInboxService(),
             messages: FakeMessageService(),
             notifications: FakeNotificationService(),

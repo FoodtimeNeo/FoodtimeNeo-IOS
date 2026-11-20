@@ -385,6 +385,52 @@ final class FakeReviewService: ReviewService {
     }
 }
 
+final class FakeHistoryService: HistoryService {
+    var settingsResult = Result<BrowsingHistorySettings, Error>.success(
+        BrowsingHistorySettings(enabled: true, revision: 1, dishEpoch: 0, postEpoch: 0)
+    )
+    var updateResult = Result<BrowsingHistorySettings, Error>.success(
+        BrowsingHistorySettings(enabled: false, revision: 2, dishEpoch: 1, postEpoch: 1)
+    )
+    var listResult = Result<Page<BrowsingHistoryItem>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 50)
+    )
+    var deleteError: Error?
+    var clearError: Error?
+    var recordError: Error?
+    private(set) var recordCalls: [(HistoryKind, String, Int)] = []
+
+    func settings() async throws -> BrowsingHistorySettings {
+        try settingsResult.get()
+    }
+
+    func updateSettings(enabled: Bool, expectedRevision: Int) async throws -> BrowsingHistorySettings {
+        try updateResult.get()
+    }
+
+    func list(kind: HistoryKind, page: Int, size: Int) async throws -> Page<BrowsingHistoryItem> {
+        try listResult.get()
+    }
+
+    func record(
+        kind: HistoryKind,
+        targetID: String,
+        epoch: Int,
+        visitEventID: String
+    ) async throws {
+        recordCalls.append((kind, targetID, epoch))
+        if let recordError { throw recordError }
+    }
+
+    func deleteOne(kind: HistoryKind, targetID: String) async throws {
+        if let deleteError { throw deleteError }
+    }
+
+    func clear(kind: HistoryKind) async throws {
+        if let clearError { throw clearError }
+    }
+}
+
 final class FakeFavoriteService: FavoriteService {
     var groupsResult: Result<[FavoriteGroup], Error> = .success([])
     var createResult = Result<FavoriteGroup, Error>.success(

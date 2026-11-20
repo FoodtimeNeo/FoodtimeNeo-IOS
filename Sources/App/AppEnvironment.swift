@@ -14,6 +14,7 @@ struct AppEnvironment {
     let community: CommunityService
     let drafts: CommunityDraftStore
     let favorites: FavoriteService
+    let history: HistoryService
     let inbox: InboxService
     let messages: MessageService
     let notifications: NotificationService
@@ -60,6 +61,7 @@ struct AppEnvironment {
             community: RemoteCommunityService(api: api),
             drafts: FileCommunityDraftStore(),
             favorites: RemoteFavoriteService(api: api),
+            history: RemoteHistoryService(api: api),
             inbox: RemoteInboxService(api: api),
             messages: RemoteMessageService(api: api),
             notifications: RemoteNotificationService(api: api),

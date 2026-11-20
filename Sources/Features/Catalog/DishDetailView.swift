@@ -33,6 +33,9 @@ struct DishDetailView: View {
         .task {
             await model.load()
             isFavorited = (try? await session.favorites.dishFavoriteState(dishID: dishID)) ?? false
+            if model.detail != nil {
+                await session.recordHistory(kind: .dish, targetID: dishID)
+            }
         }
         .fullScreenCover(isPresented: $showGallery) {
             DishGalleryView(urls: model.imageURLs, startIndex: galleryStart)

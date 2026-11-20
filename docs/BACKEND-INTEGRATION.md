@@ -78,6 +78,7 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 目录投稿 | `POST /stalls/{id}/submissions`、`POST /dining-halls/{id}/submissions`、`GET /users/me/dish-submissions`、`/stall-submissions` |
 | 社区 | `GET /community/feed/cursor`、`/community/posts/{id}`、评论 cursor、评论提交、点赞/收藏/浏览量、`POST /community/posts` |
 | 收藏分组 | `/users/me/favorite-groups`、memberships、dish/community favorites |
+| 浏览历史 | `/users/me/browsing-history`、`/settings`、记录/删除/清空 |
 
 ## 7. 验证要求
 
