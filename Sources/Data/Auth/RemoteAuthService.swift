@@ -68,6 +68,41 @@ final class RemoteAuthService: AuthService {
         return LoginOutcome(user: response.user, mode: mode, expiresAt: response.expiresAt)
     }
 
+    func sendRegistrationCode(email: String) async throws -> EmailCodeReceipt {
+        let body = RegistrationCodeBody(email: RegistrationValidation.normalizedEmail(email))
+        let request = try APIRequest.json(
+            .post,
+            "auth/register/email-code",
+            body: body,
+            requiresAuth: false,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: EmailCodeReceipt.self)
+    }
+
+    func register(
+        email: String,
+        password: String,
+        verificationCode: String,
+        invitationCode: String?
+    ) async throws -> User {
+        let normalizedInvitation = invitationCode.map(RegistrationValidation.normalizedInvitationCode)
+        let body = RegistrationBody(
+            email: RegistrationValidation.normalizedEmail(email),
+            password: password,
+            verificationCode: verificationCode.trimmingCharacters(in: .whitespacesAndNewlines),
+            invitationCode: normalizedInvitation?.isEmpty == true ? nil : normalizedInvitation
+        )
+        let request = try APIRequest.json(
+            .post,
+            "auth/register",
+            body: body,
+            requiresAuth: false,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: User.self)
+    }
+
     func currentSession() async throws -> SessionSnapshot {
         let response: SessionMeResponse = try await api.send(
             .get("auth/me"),
@@ -103,6 +138,17 @@ final class RemoteAuthService: AuthService {
         try await api.sendVoid(.post("auth/logout", requiresCSRF: true))
         await api.invalidateSession()
     }
+}
+
+private struct RegistrationCodeBody: Encodable {
+    let email: String
+}
+
+private struct RegistrationBody: Encodable {
+    let email: String
+    let password: String
+    let verificationCode: String
+    let invitationCode: String?
 }
 
 private struct LoginBody: Encodable {

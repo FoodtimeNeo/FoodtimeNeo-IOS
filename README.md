@@ -10,8 +10,9 @@
 - 已接入网络层：`/api/v1`、统一响应包络、错误映射、`X-Request-Id`、`X-Foodtime-Client: ios`、Cookie 会话、CSRF、204/205 空 body、超时与禁止重定向。
 - 已接入会话：Keychain Cookie 归档、首启清理、登录/验证码、冷启动恢复、`appeal_only` 受限会话、能力快照与 401 清理。
 - 已实现食堂 → 档口 → 菜品三级只读浏览，以及个人页的账号信息、能力展示和退出登录。
+- W1 注册：注册策略、邀请码、邮箱验证码、密码校验、注册成功返回登录；详见 [注册流程](docs/AUTH-REGISTRATION.md)。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：注册/找回密码/改密、资料/头像/学校邮箱/注销、点评与回复、投稿、社区、收藏分组、历史、私信/通知、反馈、举报申诉、管理端、价格历史、地图、相册/HEIC/裁剪/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
+- **尚未实现**：找回密码/改密、资料/头像/学校邮箱/注销、点评与回复、投稿、社区、收藏分组、历史、私信/通知、反馈、举报申诉、管理端、价格历史、地图、相册/HEIC/裁剪/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
 - Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 

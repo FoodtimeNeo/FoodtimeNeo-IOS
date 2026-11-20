@@ -18,6 +18,7 @@
 - 登录会替换整个会话，旧 CSRF 失效；CSRF 只存内存，不落盘。`403 CSRF_INVALID` 会清缓存，但不自动重放写请求。
 - 401 清会话与内存私有数据并回登录；403 区分 `CSRF_INVALID`/`ACCESS_DENIED`/`RESTRICTED_SESSION`；429 读取 `Retry-After`；503 显示服务端消息。
 - 停用账号正确密码登录返回 `sessionMode=appeal_only`，45 分钟绝对到期，只允许本人决定/申诉、证据上传/读取、CSRF、登录、退出；iOS 用独立会话状态处理。
+- 注册：先 `GET /auth/registration-policy`，按 `mode` 决定是否显示邀请码；`POST /auth/register/email-code` 与 `POST /auth/register` 都带 Cookie/CSRF。注册成功不自动登录；客户端不硬编码邮箱域名白名单，账号是否存在只由服务端裁决。
 
 ## 3. 客户端标识（待后端确认）
 
@@ -52,7 +53,9 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 |---|---|
 | CSRF / 登录 / 当前用户 / 退出 | `GET /auth/csrf`、`POST /auth/login`、`GET /auth/me`、`POST /auth/logout` |
 | 验证码 | `GET /auth/captcha` |
-| 注册策略 | `GET /auth/registration-policy`（已实现客户端方法，页面待 W1） |
+| 注册策略 | `GET /auth/registration-policy` |
+| 注册邮箱验证码 | `POST /auth/register/email-code`（202，返回 `expiresAt/resendAfterSeconds`） |
+| 注册 | `POST /auth/register`（201，返回用户，不自动登录） |
 | 能力 | `GET /users/me/capabilities` |
 | 食堂/档口/菜品 | `GET /dining-halls`、`GET /dining-halls/{id}/stalls`、`GET /stalls/{id}/dishes` |
 

@@ -10,7 +10,7 @@ struct User: Codable, Identifiable, Equatable, Sendable {
     var isSuperadmin: Bool { role == "superadmin" }
 }
 
-enum SessionMode: String, Codable, Sendable {
+enum SessionMode: String, Codable, Equatable, Sendable {
     case normal
     case appealOnly = "appeal_only"
 }
@@ -43,7 +43,7 @@ struct CaptchaAnswer: Equatable, Sendable {
 }
 
 struct RegistrationPolicy: Equatable, Sendable {
-    enum Mode: String, Sendable {
+    enum Mode: String, Equatable, Sendable {
         case open
         case invitation
         case closed

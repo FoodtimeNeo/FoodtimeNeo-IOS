@@ -125,6 +125,28 @@ final class AppSession: ObservableObject {
         try await auth.captcha()
     }
 
+    func registrationPolicy() async throws -> RegistrationPolicy {
+        try await auth.registrationPolicy()
+    }
+
+    func sendRegistrationCode(email: String) async throws -> EmailCodeReceipt {
+        try await auth.sendRegistrationCode(email: email)
+    }
+
+    func register(
+        email: String,
+        password: String,
+        verificationCode: String,
+        invitationCode: String?
+    ) async throws -> User {
+        try await auth.register(
+            email: email,
+            password: password,
+            verificationCode: verificationCode,
+            invitationCode: invitationCode
+        )
+    }
+
     func logout() async {
         do {
             try await auth.logout()

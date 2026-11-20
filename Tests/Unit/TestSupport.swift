@@ -92,10 +92,16 @@ final class FakeAuthService: AuthService {
     )
     var challenge = CaptchaChallenge(challengeId: "challenge-1", imageBase64: "", expiresAt: nil)
     var loginResult: Result<LoginOutcome, Error> = .failure(AppError.unauthenticated)
+    var registrationCodeResult: Result<EmailCodeReceipt, Error> = .success(
+        EmailCodeReceipt(expiresAt: nil, resendAfterSeconds: 60)
+    )
+    var registerResult: Result<User, Error> = .success(TestFixtures.user)
     var sessionResult: Result<SessionSnapshot, Error> = .failure(AppError.unauthenticated)
     var capabilitiesResult: Result<CapabilitySnapshot, Error> = .success(.empty)
     var logoutError: Error?
     private(set) var loginCalls = 0
+    private(set) var registrationCodeEmails: [String] = []
+    private(set) var registerCalls = 0
 
     func registrationPolicy() async throws -> RegistrationPolicy {
         policy
@@ -112,6 +118,21 @@ final class FakeAuthService: AuthService {
     ) async throws -> LoginOutcome {
         loginCalls += 1
         return try loginResult.get()
+    }
+
+    func sendRegistrationCode(email: String) async throws -> EmailCodeReceipt {
+        registrationCodeEmails.append(email)
+        return try registrationCodeResult.get()
+    }
+
+    func register(
+        email: String,
+        password: String,
+        verificationCode: String,
+        invitationCode: String?
+    ) async throws -> User {
+        registerCalls += 1
+        return try registerResult.get()
     }
 
     func currentSession() async throws -> SessionSnapshot {
