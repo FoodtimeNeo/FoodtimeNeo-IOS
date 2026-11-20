@@ -1,5 +1,5 @@
 # Domain
 
-放纯业务模型、用例及接口；不依赖具体UI或存储实现。
+模型、错误、格式化、权限投影与业务接口；不依赖 SwiftUI/UIKit、HTTP DTO 或存储 SDK。
 
-当前目录只定义职责，尚无Swift模块或功能实现；工程结构在选型后确认。
+当前：`User`/`SessionMode`/`RegistrationPolicy`/`CapabilitySnapshot`、目录模型、`AppError`、分页、`DisplayFormat`、`AuthService`/`CatalogService` 端口。HTTP 实现只在 `Data`。
