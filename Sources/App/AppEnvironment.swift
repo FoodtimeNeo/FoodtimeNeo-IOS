@@ -13,6 +13,9 @@ struct AppEnvironment {
     let submissions: SubmissionService
     let community: CommunityService
     let drafts: CommunityDraftStore
+    let inbox: InboxService
+    let messages: MessageService
+    let notifications: NotificationService
     let cookieJar: SystemCookieJar
     let archive: KeychainCookieArchive
 
@@ -55,6 +58,9 @@ struct AppEnvironment {
             submissions: RemoteSubmissionService(api: api),
             community: RemoteCommunityService(api: api),
             drafts: FileCommunityDraftStore(),
+            inbox: RemoteInboxService(api: api),
+            messages: RemoteMessageService(api: api),
+            notifications: RemoteNotificationService(api: api),
             cookieJar: jar,
             archive: archive
         )

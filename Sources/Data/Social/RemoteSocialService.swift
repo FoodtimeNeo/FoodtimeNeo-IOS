@@ -51,6 +51,10 @@ final class RemoteSocialService: SocialService {
         )
     }
 
+    func blockState(userID: String) async throws -> BlockState {
+        try await api.send(.get("users/\(encoded(userID))/block"), as: BlockState.self)
+    }
+
     func block(userID: String) async throws -> BlockState {
         try await api.send(.put("users/\(encoded(userID))/block"), as: BlockState.self)
     }

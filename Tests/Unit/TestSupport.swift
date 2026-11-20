@@ -249,10 +249,12 @@ final class FakeSocialService: SocialService {
     var unfollowResult = FollowState(followed: false, followerCount: 0)
     var blockResult = BlockState(blocked: true)
     var unblockResult = BlockState(blocked: false)
+    var blockStateResult = BlockState(blocked: false)
     private(set) var followCalls: [String] = []
     private(set) var unfollowCalls: [String] = []
     private(set) var blockCalls: [String] = []
     private(set) var unblockCalls: [String] = []
+    private(set) var blockStateCalls: [String] = []
 
     func searchUsers(query: String, page: Int, size: Int) async throws -> Page<SocialUser> {
         makePage(searchUsersResult, number: page, size: size)
@@ -283,6 +285,11 @@ final class FakeSocialService: SocialService {
             page: page,
             size: size
         )
+    }
+
+    func blockState(userID: String) async throws -> BlockState {
+        blockStateCalls.append(userID)
+        return blockStateResult
     }
 
     func block(userID: String) async throws -> BlockState {
@@ -750,6 +757,166 @@ final class FakeCatalogService: CatalogService {
     }
 }
 
+final class FakeInboxService: InboxService {
+    var noticesResult = Result<Page<Notice>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var messagesResult = Result<Page<InboxMessage>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var noticeUnread = 0
+    var messageUnread = 0
+    private(set) var readNoticeIDs: [String] = []
+    private(set) var readMessageIDs: [String] = []
+    private(set) var markAllCalls = 0
+
+    func notices(page: Int, size: Int) async throws -> Page<Notice> {
+        try noticesResult.get()
+    }
+
+    func markNoticeRead(id: String) async throws {
+        readNoticeIDs.append(id)
+    }
+
+    func unreadNoticeCount() async throws -> Int {
+        noticeUnread
+    }
+
+    func messages(page: Int, size: Int) async throws -> Page<InboxMessage> {
+        try messagesResult.get()
+    }
+
+    func markMessageRead(id: String) async throws {
+        readMessageIDs.append(id)
+    }
+
+    func markAllMessagesRead() async throws {
+        markAllCalls += 1
+    }
+
+    func unreadMessageCount() async throws -> Int {
+        messageUnread
+    }
+}
+
+final class FakeMessageService: MessageService {
+    var conversationsResult = Result<Page<Conversation>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var unread = 0
+    var conversationResult = Result<Conversation, Error>.success(TestFixtures.conversation)
+    var messagePageResult = Result<DirectMessagePage, Error>.success(
+        DirectMessagePage(items: [], hasMore: false, nextCursor: nil)
+    )
+    var startResult = Result<Conversation, Error>.success(TestFixtures.conversation)
+    var sendHandler: (String, String, String) throws -> DirectMessage = { _, content, requestID in
+        DirectMessage(
+            id: "dm-\(requestID)",
+            conversationId: TestFixtures.conversation.id,
+            senderId: TestFixtures.user.id,
+            content: content,
+            createdAt: Date()
+        )
+    }
+    private(set) var sent: [(conversationID: String, content: String, requestID: String)] = []
+    private(set) var readConversationIDs: [String] = []
+    private(set) var hiddenConversationIDs: [String] = []
+    private(set) var startCalls: [String] = []
+
+    func conversations(page: Int, size: Int) async throws -> Page<Conversation> {
+        try conversationsResult.get()
+    }
+
+    func unreadCount() async throws -> Int {
+        unread
+    }
+
+    func conversation(id: String) async throws -> Conversation {
+        try conversationResult.get()
+    }
+
+    func startConversation(userID: String) async throws -> Conversation {
+        startCalls.append(userID)
+        return try startResult.get()
+    }
+
+    func messages(
+        conversationID: String,
+        size: Int,
+        cursor: String?
+    ) async throws -> DirectMessagePage {
+        try messagePageResult.get()
+    }
+
+    func send(conversationID: String, content: String, requestID: String) async throws -> DirectMessage {
+        sent.append((conversationID, content, requestID))
+        return try sendHandler(conversationID, content, requestID)
+    }
+
+    func markRead(conversationID: String) async throws {
+        readConversationIDs.append(conversationID)
+    }
+
+    func hide(conversationID: String) async throws {
+        hiddenConversationIDs.append(conversationID)
+    }
+}
+
+final class FakeNotificationService: NotificationService {
+    var preferencesResult = Result<NotificationPreferences, Error>.success(
+        NotificationPreferences(items: [])
+    )
+    var updateResult: Result<NotificationPreference, Error>?
+    var updateHandler: (String, Bool, Int) throws -> NotificationPreference = { category, enabled, revision in
+        NotificationPreference(category: category, enabled: enabled, revision: revision + 1)
+    }
+    private(set) var updates: [(category: String, enabled: Bool, revision: Int)] = []
+    private(set) var preferenceCalls = 0
+
+    func preferences() async throws -> NotificationPreferences {
+        preferenceCalls += 1
+        return try preferencesResult.get()
+    }
+
+    func update(
+        category: String,
+        enabled: Bool,
+        expectedRevision: Int
+    ) async throws -> NotificationPreference {
+        updates.append((category, enabled, expectedRevision))
+        if let updateResult {
+            return try updateResult.get()
+        }
+        return try updateHandler(category, enabled, expectedRevision)
+    }
+}
+
+@MainActor
+final class FakeNotificationAuthorizer: NotificationAuthorizing {
+    var currentStatus: NotificationPermissionStatus = .authorized
+    var requestResult = Result<Bool, Error>.success(true)
+    var statusAfterRequest: NotificationPermissionStatus?
+    private(set) var requestCalls = 0
+    private(set) var settingsOpened = 0
+
+    func status() async -> NotificationPermissionStatus {
+        currentStatus
+    }
+
+    func requestAuthorization() async throws -> Bool {
+        requestCalls += 1
+        let granted = try requestResult.get()
+        if granted, let statusAfterRequest {
+            currentStatus = statusAfterRequest
+        }
+        return granted
+    }
+
+    func openSystemSettings() {
+        settingsOpened += 1
+    }
+}
+
 enum TestFixtures {
     static let baseURL = URL(string: "https://example.test/api/v1/")!
     static let user = User(
@@ -902,6 +1069,51 @@ enum TestFixtures {
         updatedAt: Date(),
         userDisplayName: user.displayName,
         latestReply: nil
+    )
+
+    static let conversation = Conversation(
+        id: "conv-1",
+        other: ChatParticipant(id: "u-2", displayName: "饭搭子", avatarUrl: nil),
+        lastMessage: "中午吃什么",
+        lastSenderId: "u-2",
+        lastMessageAt: Date(),
+        unreadCount: 1,
+        updatedAt: Date()
+    )
+
+    static let directMessage = DirectMessage(
+        id: "dm-1",
+        conversationId: "conv-1",
+        senderId: "u-2",
+        content: "中午吃什么",
+        createdAt: Date()
+    )
+
+    static let notice = Notice(
+        id: "notice-1",
+        content: "# 假期安排\n\n食堂正常营业。",
+        publishedAt: Date(),
+        isUpdate: true
+    )
+
+    static let inboxMessage = InboxMessage(
+        id: "msg-1",
+        title: "有人赞了你的食记",
+        body: "去看看吧",
+        category: "LIKE_POST",
+        refType: "community-post",
+        refId: "post-1",
+        refCommentId: nil,
+        refRootCommentId: nil,
+        actorCount: 1,
+        isRead: false,
+        createdAt: Date()
+    )
+
+    static let notificationPreference = NotificationPreference(
+        category: "message",
+        enabled: true,
+        revision: 1
     )
 
     static func envelope(_ data: String, code: String = "OK", message: String = "success") -> String {

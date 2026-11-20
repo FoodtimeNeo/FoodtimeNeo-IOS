@@ -11,14 +11,25 @@ struct ProfileView: View {
         case myReviews
         case myReplies
         case mySubmissions
+        case inbox
+        case notificationSettings
 
         var id: String { rawValue }
     }
 
     let user: User
     @ObservedObject var session: AppSession
+    @StateObject private var badge: InboxBadgeViewModel
     @State private var confirmLogout = false
     @State private var activeSheet: ProfileSheet?
+
+    init(user: User, session: AppSession) {
+        self.user = user
+        self.session = session
+        _badge = StateObject(
+            wrappedValue: InboxBadgeViewModel(inbox: session.inbox, messages: session.messages)
+        )
+    }
 
     var body: some View {
         NavigationStack {
@@ -38,6 +49,20 @@ struct ProfileView: View {
                             .buttonStyle(InkButtonStyle())
                         Button("关注与黑名单") { activeSheet = .social }
                             .buttonStyle(InkButtonStyle())
+                        Button { activeSheet = .inbox } label: {
+                            HStack(spacing: 8) {
+                                Text("消息信箱")
+                                if badge.total > 0 {
+                                    Text(badge.total > 99 ? "99+" : String(badge.total))
+                                        .font(.caption2.weight(.bold))
+                                        .foregroundStyle(Zine.onRed)
+                                        .padding(.horizontal, 7)
+                                        .padding(.vertical, 3)
+                                        .background(Capsule().fill(Zine.red))
+                                }
+                            }
+                        }
+                        .buttonStyle(InkButtonStyle())
                         Button("我的点评") { activeSheet = .myReviews }
                             .buttonStyle(InkButtonStyle())
                         Button("我的回复") { activeSheet = .myReplies }
@@ -47,6 +72,8 @@ struct ProfileView: View {
                         Button("建议与反馈") { activeSheet = .feedback }
                             .buttonStyle(InkButtonStyle())
                         Button("修改密码") { activeSheet = .changePassword }
+                            .buttonStyle(InkButtonStyle())
+                        Button("提醒设置") { activeSheet = .notificationSettings }
                             .buttonStyle(InkButtonStyle())
                         if !user.isAdmin {
                             Button("账号安全与注销") { activeSheet = .accountSecurity }
@@ -60,6 +87,12 @@ struct ProfileView: View {
             }
             .navigationTitle("我的")
             .navigationBarTitleDisplayMode(.inline)
+            .task { await badge.load() }
+            .onChange(of: activeSheet) { _, value in
+                if value == nil {
+                    Task { await badge.load() }
+                }
+            }
         }
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
@@ -79,6 +112,10 @@ struct ProfileView: View {
                 MyRepliesView(session: session)
             case .mySubmissions:
                 MySubmissionsView(session: session)
+            case .inbox:
+                InboxView(inbox: session.inbox, messages: session.messages)
+            case .notificationSettings:
+                NotificationSettingsView(service: session.notifications)
             }
         }
         .alert("退出登录？", isPresented: $confirmLogout) {

@@ -5,11 +5,20 @@ struct SocialView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var model: SocialViewModel
     @State private var blockTarget: SocialUser?
+    @State private var startingChatID: String?
+    @State private var chatTargetID: String?
+    @State private var chatError: String?
+    private let messages: MessageService
+    private let social: SocialService
+    private let currentUserID: String
 
     init(session: AppSession, currentUserID: String) {
         _model = StateObject(
             wrappedValue: SocialViewModel(session: session, currentUserID: currentUserID)
         )
+        messages = session.messages
+        social = session.social
+        self.currentUserID = currentUserID
     }
 
     var body: some View {
@@ -63,6 +72,12 @@ struct SocialView: View {
                             .foregroundStyle(Zine.red)
                             .padding(.horizontal, Zine.pagePadding)
                     }
+                    if let chatError, !chatError.isEmpty {
+                        Text(chatError)
+                            .font(.subheadline)
+                            .foregroundStyle(Zine.red)
+                            .padding(.horizontal, Zine.pagePadding)
+                    }
                 }
             }
             .navigationTitle("关注与黑名单")
@@ -88,6 +103,14 @@ struct SocialView: View {
                 }
             } message: {
                 Text("拉黑主要影响私信；不会删除对方已有的公开内容。可随时在黑名单中解除。")
+            }
+            .navigationDestination(item: $chatTargetID) { conversationID in
+                ChatView(
+                    conversationID: conversationID,
+                    messages: messages,
+                    social: social,
+                    currentUserID: currentUserID
+                )
             }
         }
     }
@@ -143,6 +166,12 @@ struct SocialView: View {
                 .disabled(model.blockedIDs.contains(user.id))
 
                 if !model.blockedIDs.contains(user.id) {
+                    Button(startingChatID == user.id ? "…" : "私信") {
+                        startChat(user)
+                    }
+                    .buttonStyle(LinkButtonStyle())
+                    .disabled(startingChatID != nil)
+
                     Button("拉黑") { blockTarget = user }
                         .buttonStyle(LinkButtonStyle())
                 }
@@ -170,6 +199,25 @@ struct SocialView: View {
                 }
                 .buttonStyle(InkButtonStyle())
                 .frame(width: 102)
+            }
+        }
+    }
+
+    private func startChat(_ user: SocialUser) {
+        guard startingChatID == nil else { return }
+        startingChatID = user.id
+        chatError = nil
+        Task {
+            do {
+                let conversation = try await messages.startConversation(userID: user.id)
+                startingChatID = nil
+                chatTargetID = conversation.id
+            } catch let error as AppError {
+                startingChatID = nil
+                chatError = error.localizedDescription
+            } catch {
+                startingChatID = nil
+                chatError = error.localizedDescription
             }
         }
     }

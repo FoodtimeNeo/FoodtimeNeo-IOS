@@ -24,6 +24,9 @@ final class AppSession: ObservableObject {
     let submissions: SubmissionService
     let community: CommunityService
     let drafts: CommunityDraftStore
+    let inbox: InboxService
+    let messages: MessageService
+    let notifications: NotificationService
 
     private let api: APIClient
     private let cookieJar: CookieJar
@@ -42,6 +45,9 @@ final class AppSession: ObservableObject {
         submissions: SubmissionService,
         community: CommunityService,
         drafts: CommunityDraftStore,
+        inbox: InboxService,
+        messages: MessageService,
+        notifications: NotificationService,
         api: APIClient,
         cookieJar: CookieJar,
         archive: CookieArchiving,
@@ -56,6 +62,9 @@ final class AppSession: ObservableObject {
         self.submissions = submissions
         self.community = community
         self.drafts = drafts
+        self.inbox = inbox
+        self.messages = messages
+        self.notifications = notifications
         self.api = api
         self.cookieJar = cookieJar
         self.archive = archive
@@ -74,6 +83,9 @@ final class AppSession: ObservableObject {
             submissions: environment.submissions,
             community: environment.community,
             drafts: environment.drafts,
+            inbox: environment.inbox,
+            messages: environment.messages,
+            notifications: environment.notifications,
             api: environment.api,
             cookieJar: environment.cookieJar,
             archive: environment.archive,

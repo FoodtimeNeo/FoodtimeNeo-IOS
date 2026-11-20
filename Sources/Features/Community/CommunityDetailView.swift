@@ -19,6 +19,9 @@ struct CommunityDetailView: View {
     @State private var showGallery = false
     @State private var galleryStart = 0
     @State private var activeSheet: DetailSheet?
+    @State private var startingChatID: String?
+    @State private var chatTargetID: String?
+    @State private var chatError: String?
 
     init(postID: String, service: CommunityService) {
         _model = StateObject(
@@ -40,6 +43,12 @@ struct CommunityDetailView: View {
                     }
                     if let error = model.errorMessage, !error.isEmpty {
                         Text(error)
+                            .font(.subheadline)
+                            .foregroundStyle(Zine.red)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    if let chatError, !chatError.isEmpty {
+                        Text(chatError)
                             .font(.subheadline)
                             .foregroundStyle(Zine.red)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -82,12 +91,39 @@ struct CommunityDetailView: View {
                 }
             }
         }
+        .navigationDestination(item: $chatTargetID) { conversationID in
+            ChatView(
+                conversationID: conversationID,
+                messages: session.messages,
+                social: session.social,
+                currentUserID: session.user?.id ?? ""
+            )
+        }
     }
 
     private var galleryURLs: [URL] {
         guard let post = model.post else { return [] }
         return post.images.compactMap {
             MediaURL.resolve($0.url, baseURL: session.catalog.mediaBaseURL)
+        }
+    }
+
+    private func startChat(with userID: String) {
+        guard startingChatID == nil else { return }
+        startingChatID = userID
+        chatError = nil
+        Task {
+            do {
+                let conversation = try await session.messages.startConversation(userID: userID)
+                startingChatID = nil
+                chatTargetID = conversation.id
+            } catch let error as AppError {
+                startingChatID = nil
+                chatError = error.localizedDescription
+            } catch {
+                startingChatID = nil
+                chatError = error.localizedDescription
+            }
         }
     }
 
@@ -112,6 +148,13 @@ struct CommunityDetailView: View {
                     Text(post.userDisplayName)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Zine.ink)
+                    if post.userId != session.user?.id {
+                        Button(startingChatID == post.userId ? "…" : "私信") {
+                            startChat(with: post.userId)
+                        }
+                        .buttonStyle(LinkButtonStyle())
+                        .disabled(startingChatID != nil)
+                    }
                     Spacer()
                     Text(DisplayFormat.dateTime(post.createdAt))
                         .font(.caption)
