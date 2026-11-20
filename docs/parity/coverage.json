@@ -43,10 +43,13 @@
         "symbol": "AccountLifecycleScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Account/AccountSecurityView.swift",
+        "Sources/Features/Profile/ProfileEditView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -505,10 +508,13 @@
         "symbol": "SchoolEmailScreen.binder"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Account/AccountSecurityView.swift",
+        "Sources/Features/Profile/ProfileEditView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -526,10 +532,13 @@
         "symbol": "BlockedUsersScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Social/SocialView.swift",
+        "Sources/Features/Profile/ProfileView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -547,10 +556,12 @@
         "symbol": "CampusMapScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Map/CampusMapView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -568,10 +579,13 @@
         "symbol": "CommunityScreen.feed"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityFeedView.swift",
+        "Sources/Features/Community/CommunityDetailView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -610,10 +624,13 @@
         "symbol": "CommunityScreen.create"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityComposeView.swift",
+        "Sources/Platform/FileCommunityDraftStore.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -631,10 +648,13 @@
         "symbol": "CommunityScreen.detail"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityFeedView.swift",
+        "Sources/Features/Community/CommunityDetailView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -652,10 +672,13 @@
         "symbol": "PostEditScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityEditView.swift",
+        "Sources/Features/Community/CommunityPinsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -694,10 +717,13 @@
         "symbol": "CommunityScreen.feed"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityFeedView.swift",
+        "Sources/Features/Community/CommunityDetailView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -736,10 +762,13 @@
         "symbol": "CommunityPinScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityEditView.swift",
+        "Sources/Features/Community/CommunityPinsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -757,10 +786,13 @@
         "symbol": "CommunityDiscoveryScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityFeedView.swift",
+        "Sources/Features/Community/CommunityDetailView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -799,10 +831,12 @@
         "symbol": "DishScreen.detail"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DishDetailView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -820,10 +854,14 @@
         "symbol": "DiningScreen.halls"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DiningHallsView.swift",
+        "Sources/Features/Catalog/StallsView.swift",
+        "Sources/Features/Catalog/StallDishesView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -862,10 +900,12 @@
         "symbol": "DishSearchScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DishSearchView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -883,10 +923,14 @@
         "symbol": "DishScreen.dishes"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DiningHallsView.swift",
+        "Sources/Features/Catalog/StallsView.swift",
+        "Sources/Features/Catalog/StallDishesView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -925,10 +969,12 @@
         "symbol": "FeedbackScreen.list"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Feedback/FeedbackView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -946,10 +992,12 @@
         "symbol": "FeedbackScreen.detail"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Feedback/FeedbackView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -967,10 +1015,13 @@
         "symbol": "FollowListScreen.followers"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Social/SocialView.swift",
+        "Sources/Features/Profile/ProfileView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -988,10 +1039,13 @@
         "symbol": "FollowListScreen.following"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Social/SocialView.swift",
+        "Sources/Features/Profile/ProfileView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1009,10 +1063,12 @@
         "symbol": "DishScreen.gallery"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DishDetailView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1072,10 +1128,14 @@
         "symbol": "ReviewReplyScreen.mine"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1093,10 +1153,14 @@
         "symbol": "ProfileScreen.reviews"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1114,10 +1178,15 @@
         "symbol": "SubmissionScreen.mine"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Submissions/ImageSubmissionView.swift",
+        "Sources/Features/Submissions/DishSubmissionView.swift",
+        "Sources/Features/Submissions/StallSubmissionView.swift",
+        "Sources/Features/Submissions/MySubmissionsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1177,10 +1246,14 @@
         "symbol": "PasswordScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Auth/LoginView.swift",
+        "Sources/Features/Auth/RegistrationView.swift",
+        "Sources/Features/Auth/PasswordRecoveryView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1198,10 +1271,12 @@
         "symbol": "PriceHistoryScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/PriceHistoryView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1219,10 +1294,13 @@
         "symbol": "ProfileScreen.profile"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Social/SocialView.swift",
+        "Sources/Features/Profile/ProfileView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1240,10 +1318,13 @@
         "symbol": "ProfileScreen.edit"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Social/SocialView.swift",
+        "Sources/Features/Profile/ProfileView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1261,10 +1342,12 @@
         "symbol": "ReviewScreen.quick"
       },
       "availability": "integration-only",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/QuickReviewView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "dev"
       ]
@@ -1281,10 +1364,14 @@
         "symbol": "ReviewReplyScreen.create"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1344,10 +1431,14 @@
         "symbol": "ReviewScreen.create"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1365,10 +1456,14 @@
         "symbol": "ReviewReplyScreen.thread"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1386,10 +1481,14 @@
         "symbol": "DiningScreen.stalls"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DiningHallsView.swift",
+        "Sources/Features/Catalog/StallsView.swift",
+        "Sources/Features/Catalog/StallDishesView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1407,10 +1506,15 @@
         "symbol": "UploadScreen.dish"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Submissions/ImageSubmissionView.swift",
+        "Sources/Features/Submissions/DishSubmissionView.swift",
+        "Sources/Features/Submissions/StallSubmissionView.swift",
+        "Sources/Features/Submissions/MySubmissionsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1428,10 +1532,15 @@
         "symbol": "UploadScreen.stall"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Submissions/ImageSubmissionView.swift",
+        "Sources/Features/Submissions/DishSubmissionView.swift",
+        "Sources/Features/Submissions/StallSubmissionView.swift",
+        "Sources/Features/Submissions/MySubmissionsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1449,10 +1558,15 @@
         "symbol": "UploadScreen.photo"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Submissions/ImageSubmissionView.swift",
+        "Sources/Features/Submissions/DishSubmissionView.swift",
+        "Sources/Features/Submissions/StallSubmissionView.swift",
+        "Sources/Features/Submissions/MySubmissionsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1470,10 +1584,13 @@
         "symbol": "UserSearchScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Social/SocialView.swift",
+        "Sources/Features/Profile/ProfileView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1512,10 +1629,14 @@
         "symbol": "VenueScreen.reviews"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1533,10 +1654,14 @@
         "symbol": "VenueScreen.write"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。",
       "androidBranches": [
         "main",
         "dev"
@@ -1564,10 +1689,14 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Auth/LoginView.swift",
+        "Sources/Features/Auth/RegistrationView.swift",
+        "Sources/Features/Auth/PasswordRecoveryView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:session",
@@ -1591,10 +1720,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/App/AppSession.swift",
+        "Sources/Data/API/APIClient.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:account",
@@ -1613,10 +1745,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Account/AccountSecurityView.swift",
+        "Sources/Features/Profile/ProfileEditView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:catalog",
@@ -1635,10 +1770,14 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DiningHallsView.swift",
+        "Sources/Features/Catalog/StallsView.swift",
+        "Sources/Features/Catalog/StallDishesView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:search",
@@ -1652,10 +1791,12 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DishSearchView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:dish-media",
@@ -1669,10 +1810,12 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/DishDetailView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:reviews",
@@ -1696,10 +1839,14 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/DishReviewsSection.swift",
+        "Sources/Features/Reviews/ReviewThreadView.swift",
+        "Sources/Features/Reviews/VenueReviewsView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:submissions",
@@ -1718,10 +1865,15 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Submissions/ImageSubmissionView.swift",
+        "Sources/Features/Submissions/DishSubmissionView.swift",
+        "Sources/Features/Submissions/StallSubmissionView.swift",
+        "Sources/Features/Submissions/MySubmissionsView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:community-feed",
@@ -1740,10 +1892,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityFeedView.swift",
+        "Sources/Features/Community/CommunityDetailView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:community-detail",
@@ -1757,10 +1912,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityFeedView.swift",
+        "Sources/Features/Community/CommunityDetailView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:drafts",
@@ -1774,10 +1932,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityComposeView.swift",
+        "Sources/Platform/FileCommunityDraftStore.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:post-edit-pins",
@@ -1796,10 +1957,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Community/CommunityEditView.swift",
+        "Sources/Features/Community/CommunityPinsView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:media-platform",
@@ -1823,10 +1987,14 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Platform/PhotoPicker.swift",
+        "Sources/Platform/ImageProcessor.swift",
+        "Sources/Features/Catalog/DishDetailView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:collections",
@@ -1894,10 +2062,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Social/SocialView.swift",
+        "Sources/Features/Profile/ProfileView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:chat",
@@ -1950,10 +2121,12 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Feedback/FeedbackView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:corrections",
@@ -2114,10 +2287,12 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Catalog/PriceHistoryView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:map",
@@ -2131,10 +2306,12 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Map/CampusMapView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:navigation-errors",
@@ -2158,10 +2335,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/SharedUI/StateViews.swift",
+        "Sources/App/MainTabView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     },
     {
       "id": "capability:settings-update",
@@ -2197,10 +2377,12 @@
         }
       ],
       "availability": "integration-only",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Reviews/QuickReviewView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
     }
   ]
 }
