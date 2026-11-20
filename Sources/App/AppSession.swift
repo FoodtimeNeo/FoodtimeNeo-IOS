@@ -169,6 +169,19 @@ final class AppSession: ObservableObject {
         state = .signedOut
     }
 
+    func currentProfile() async throws -> UserProfile {
+        try await auth.currentProfile()
+    }
+
+    func updateProfile(displayName: String, avatarUrl: String?) async throws -> UserProfile {
+        let updated = try await auth.updateProfile(
+            displayName: displayName,
+            avatarUrl: avatarUrl
+        )
+        state = .signedIn(updated.asUser)
+        return updated
+    }
+
     func logout() async {
         do {
             try await auth.logout()

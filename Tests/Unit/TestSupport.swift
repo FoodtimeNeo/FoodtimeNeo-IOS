@@ -107,6 +107,8 @@ final class FakeAuthService: AuthService {
     )
     var resetPasswordError: Error?
     var changePasswordError: Error?
+    var profileResult: Result<UserProfile, Error> = .success(TestFixtures.profile)
+    var updateProfileResult: Result<UserProfile, Error> = .success(TestFixtures.profile)
     var sessionResult: Result<SessionSnapshot, Error> = .failure(AppError.unauthenticated)
     var capabilitiesResult: Result<CapabilitySnapshot, Error> = .success(.empty)
     var logoutError: Error?
@@ -116,6 +118,8 @@ final class FakeAuthService: AuthService {
     private(set) var passwordResetCodeEmails: [String] = []
     private(set) var resetPasswordCalls = 0
     private(set) var changePasswordCalls = 0
+    private(set) var updateProfileCalls = 0
+    private(set) var lastUpdatedDisplayName: String?
 
     func registrationPolicy() async throws -> RegistrationPolicy {
         policy
@@ -171,6 +175,16 @@ final class FakeAuthService: AuthService {
         if let changePasswordError { throw changePasswordError }
     }
 
+    func currentProfile() async throws -> UserProfile {
+        try profileResult.get()
+    }
+
+    func updateProfile(displayName: String, avatarUrl: String?) async throws -> UserProfile {
+        updateProfileCalls += 1
+        lastUpdatedDisplayName = displayName
+        return try updateProfileResult.get()
+    }
+
     func currentSession() async throws -> SessionSnapshot {
         try sessionResult.get()
     }
@@ -211,6 +225,18 @@ enum TestFixtures {
         email: "20260001@bjtu.edu.cn",
         displayName: "干饭人012345",
         role: "user"
+    )
+
+    static let profile = UserProfile(
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        role: user.role,
+        avatarUrl: nil,
+        followingCount: 3,
+        followerCount: 5,
+        schoolEmail: nil,
+        schoolEmailVerified: false
     )
 
     static func envelope(_ data: String, code: String = "OK", message: String = "success") -> String {

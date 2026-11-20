@@ -93,6 +93,34 @@ final class AppSessionTests: XCTestCase {
         XCTAssertEqual(auth.changePasswordCalls, 1)
     }
 
+    func testUpdateProfileRefreshesSessionUser() async throws {
+        let jar = MemoryCookieJar()
+        jar.sessionCookiePresent = true
+        let auth = FakeAuthService()
+        auth.sessionResult = .success(SessionSnapshot(user: TestFixtures.user, mode: .normal))
+        let updatedProfile = UserProfile(
+            id: TestFixtures.user.id,
+            email: TestFixtures.user.email,
+            displayName: "新昵称",
+            role: TestFixtures.user.role,
+            avatarUrl: nil,
+            followingCount: 3,
+            followerCount: 5,
+            schoolEmail: nil,
+            schoolEmailVerified: false
+        )
+        auth.updateProfileResult = .success(updatedProfile)
+        let session = makeSession(auth: auth, jar: jar)
+        await session.start()
+
+        let result = try await session.updateProfile(displayName: " 新昵称 ", avatarUrl: nil)
+
+        XCTAssertEqual(result.displayName, "新昵称")
+        XCTAssertEqual(session.state, .signedIn(updatedProfile.asUser))
+        XCTAssertEqual(auth.updateProfileCalls, 1)
+        XCTAssertEqual(auth.lastUpdatedDisplayName, " 新昵称 ")
+    }
+
     func testUnauthorizedClearsSessionAndCapabilities() async {
         let jar = MemoryCookieJar()
         jar.sessionCookiePresent = true

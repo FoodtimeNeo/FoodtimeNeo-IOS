@@ -15,6 +15,8 @@ protocol AuthService: AnyObject {
     func verifyPasswordResetCode(email: String, verificationCode: String) async throws -> PasswordResetGrant
     func resetPassword(resetToken: String, newPassword: String) async throws
     func changePassword(oldPassword: String, newPassword: String) async throws
+    func currentProfile() async throws -> UserProfile
+    func updateProfile(displayName: String, avatarUrl: String?) async throws -> UserProfile
     func currentSession() async throws -> SessionSnapshot
     func capabilities() async throws -> CapabilitySnapshot
     func logout() async throws

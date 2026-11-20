@@ -58,6 +58,7 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 注册 | `POST /auth/register`（201，返回用户，不自动登录） |
 | 找回密码 | `POST /auth/password-reset/email-code`、`/verify`、`/password-reset` |
 | 修改密码 | `PUT /users/me/password`（成功后当前会话失效） |
+| 个人资料 | `GET/PUT /users/me/profile`（PUT 整体替换昵称与头像引用） |
 | 能力 | `GET /users/me/capabilities` |
 | 食堂/档口/菜品 | `GET /dining-halls`、`GET /dining-halls/{id}/stalls`、`GET /stalls/{id}/dishes` |
 

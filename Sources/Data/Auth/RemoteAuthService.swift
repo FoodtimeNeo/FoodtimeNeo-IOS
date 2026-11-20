@@ -164,6 +164,25 @@ final class RemoteAuthService: AuthService {
         try await api.sendVoid(request)
     }
 
+    func currentProfile() async throws -> UserProfile {
+        try await api.send(.get("users/me/profile"), as: UserProfile.self)
+    }
+
+    func updateProfile(displayName: String, avatarUrl: String?) async throws -> UserProfile {
+        let body = ProfileUpdateBody(
+            displayName: ProfileValidation.normalizedDisplayName(displayName),
+            avatarUrl: avatarUrl
+        )
+        let request = try APIRequest.json(
+            .put,
+            "users/me/profile",
+            body: body,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: UserProfile.self)
+    }
+
     func currentSession() async throws -> SessionSnapshot {
         let response: SessionMeResponse = try await api.send(
             .get("auth/me"),
@@ -203,6 +222,29 @@ final class RemoteAuthService: AuthService {
 
 private struct RegistrationCodeBody: Encodable {
     let email: String
+}
+
+/// PUT /users/me/profile replaces both editable fields. Always encode the
+/// avatar key, including null, so a display-name edit never silently clears it
+/// when the caller passes the current reference.
+private struct ProfileUpdateBody: Encodable {
+    let displayName: String
+    let avatarUrl: String?
+
+    enum CodingKeys: String, CodingKey {
+        case displayName
+        case avatarUrl
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(displayName, forKey: .displayName)
+        if let avatarUrl {
+            try container.encode(avatarUrl, forKey: .avatarUrl)
+        } else {
+            try container.encodeNil(forKey: .avatarUrl)
+        }
+    }
 }
 
 private struct PasswordResetCodeBody: Encodable {

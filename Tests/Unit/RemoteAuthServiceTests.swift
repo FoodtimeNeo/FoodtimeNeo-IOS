@@ -151,6 +151,49 @@ final class RemoteAuthServiceTests: XCTestCase {
         XCTAssertEqual(json["newPassword"] as? String, "New12345!")
     }
 
+    func testCurrentProfileDecodesCountsAndSchoolEmail() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"9e55b67f-f051-4019-bafd-a4082c95f2a6","email":"user@example.com","displayName":"干饭人012345","role":"user","avatarUrl":null,"followingCount":3,"followerCount":5,"schoolEmail":"20260001@bjtu.edu.cn","schoolEmailVerified":true}
+            """))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let profile = try await service.currentProfile()
+
+        XCTAssertEqual(profile.displayName, "干饭人012345")
+        XCTAssertEqual(profile.followingCount, 3)
+        XCTAssertEqual(profile.followerCount, 5)
+        XCTAssertEqual(profile.schoolEmail, "20260001@bjtu.edu.cn")
+        XCTAssertTrue(profile.schoolEmailVerified)
+    }
+
+    func testUpdateProfileAlwaysEncodesAvatarKey() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-7"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"9e55b67f-f051-4019-bafd-a4082c95f2a6","email":"user@example.com","displayName":"干饭达人","role":"user","avatarUrl":null,"followingCount":3,"followerCount":5,"schoolEmail":null,"schoolEmailVerified":false}
+            """))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let profile = try await service.updateProfile(displayName: " 干饭达人 ", avatarUrl: nil)
+
+        XCTAssertEqual(profile.displayName, "干饭达人")
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["displayName"] as? String, "干饭达人")
+        XCTAssertTrue(json["avatarUrl"] is NSNull)
+    }
+
     func testEmailCodeInvalidSurfacesBusinessCode() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [
