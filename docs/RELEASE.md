@@ -3,7 +3,7 @@
 ## 已完成（仓库内可验证）
 
 - `Resources/PrivacyInfo.xcprivacy`：声明不跟踪、无跟踪域；收集邮箱/昵称/用户 ID/照片/用户内容/浏览历史，均关联到账号且仅用于 App 功能；`UserDefaults` 以 `CA92.1` 理由访问。
-- `project.yml` 使用 `GENERATE_INFOPLIST_FILE`，最低 iOS 17，iPhone/iPad 双设备族，版本 `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` 可在 XcodeGen 生成时覆盖。
+- `project.yml` 使用 `GENERATE_INFOPLIST_FILE`，最低 iOS 17，iPhone/iPad 双设备族，版本 `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` 可在 XcodeGen 生成时覆盖；已声明美食饮品分类与 `ITSAppUsesNonExemptEncryption = NO`（仅 HTTPS）。
 - 设置页已展示版本/构建号与测试阶段后缀（`feature/settings-update`）。
 
 ## TestFlight 前置（需用户提供，本仓库不保存）
