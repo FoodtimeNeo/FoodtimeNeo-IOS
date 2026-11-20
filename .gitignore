@@ -21,3 +21,7 @@ xcuserdata/
 *.p8
 *.mobileprovision
 *.provisionprofile
+
+# Repository tooling
+__pycache__/
+*.py[cod]

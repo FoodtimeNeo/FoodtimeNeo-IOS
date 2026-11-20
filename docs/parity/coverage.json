@@ -1,0 +1,2206 @@
+{
+  "schemaVersion": 1,
+  "capturedOn": "2026-11-20",
+  "goal": "全部Android能力及后续更新在独立iOS客户端持续对齐",
+  "reference": {
+    "android": {
+      "repository": "FoodtimeNeo/FoodtimeNeo-Android",
+      "branch": "main",
+      "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+      "versionLabel": "v2.0.0β",
+      "integrationBranch": "dev",
+      "integrationCommit": "ff1ed41c21b6361a3ec7ae0280878a2806c14a7a"
+    },
+    "backend": {
+      "repository": "FoodtimeNeo/FoodtimeNeo-Backend",
+      "branch": "main",
+      "commit": "e8f34998930781230711d8e8dd109c32d34b1ba8"
+    },
+    "web": {
+      "repository": "FoodtimeNeo/FoodtimeNeo-Web",
+      "branch": "main",
+      "commit": "b6e2d8f7c49016c0d53aea94b0472f3f12595a7c"
+    }
+  },
+  "lastReviewedAndroidCommit": null,
+  "lastFullyAlignedAndroidCommit": null,
+  "registeredRouteCounts": {
+    "main": 71,
+    "dev": 72,
+    "union": 72
+  },
+  "approvedPlatformDifferences": [],
+  "coverage": [
+    {
+      "id": "route:account-lifecycle",
+      "title": "account-lifecycle",
+      "kind": "route",
+      "androidRoute": "account-lifecycle",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AccountLifecycleScreen.java",
+        "symbol": "AccountLifecycleScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin",
+      "title": "admin",
+      "kind": "route",
+      "androidRoute": "admin",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.home"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-appeals",
+      "title": "admin-appeals",
+      "kind": "route",
+      "androidRoute": "admin-appeals",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminAppealsScreen.java",
+        "symbol": "AdminAppealsScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-audit",
+      "title": "admin-audit",
+      "kind": "route",
+      "androidRoute": "admin-audit",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.audit"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-community",
+      "title": "admin-community",
+      "kind": "route",
+      "androidRoute": "admin-community",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityAdminScreen.java",
+        "symbol": "CommunityAdminScreen.queue"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-community-detail",
+      "title": "admin-community-detail",
+      "kind": "route",
+      "androidRoute": "admin-community-detail",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityAdminScreen.java",
+        "symbol": "CommunityAdminScreen.detail"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-corrections",
+      "title": "admin-corrections",
+      "kind": "route",
+      "androidRoute": "admin-corrections",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CorrectionScreen.java",
+        "symbol": "CorrectionScreen.admin"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-dashboard",
+      "title": "admin-dashboard",
+      "kind": "route",
+      "androidRoute": "admin-dashboard",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminDashboardScreen.java",
+        "symbol": "AdminDashboardScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-data",
+      "title": "admin-data",
+      "kind": "route",
+      "androidRoute": "admin-data",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.data"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-edit",
+      "title": "admin-edit",
+      "kind": "route",
+      "androidRoute": "admin-edit",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.edit"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-feedback",
+      "title": "admin-feedback",
+      "kind": "route",
+      "androidRoute": "admin-feedback",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FeedbackScreen.java",
+        "symbol": "FeedbackScreen.list"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-feedback-detail",
+      "title": "admin-feedback-detail",
+      "kind": "route",
+      "androidRoute": "admin-feedback-detail",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FeedbackScreen.java",
+        "symbol": "FeedbackScreen.detail"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-logs",
+      "title": "admin-logs",
+      "kind": "route",
+      "androidRoute": "admin-logs",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.logs"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-new",
+      "title": "admin-new",
+      "kind": "route",
+      "androidRoute": "admin-new",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.edit"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-notice-create",
+      "title": "admin-notice-create",
+      "kind": "route",
+      "androidRoute": "admin-notice-create",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminNoticesScreen.java",
+        "symbol": "AdminNoticesScreen.create"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-notices",
+      "title": "admin-notices",
+      "kind": "route",
+      "androidRoute": "admin-notices",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminNoticesScreen.java",
+        "symbol": "AdminNoticesScreen.settings"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-report-thread",
+      "title": "admin-report-thread",
+      "kind": "route",
+      "androidRoute": "admin-report-thread",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminReportThreadScreen.java",
+        "symbol": "AdminReportThreadScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-reports",
+      "title": "admin-reports",
+      "kind": "route",
+      "androidRoute": "admin-reports",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReportsScreen.java",
+        "symbol": "ReportsScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-reviews",
+      "title": "admin-reviews",
+      "kind": "route",
+      "androidRoute": "admin-reviews",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.reviews"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:admin-users",
+      "title": "admin-users",
+      "kind": "route",
+      "androidRoute": "admin-users",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java",
+        "symbol": "AdminScreen.users"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:appeal-compose",
+      "title": "appeal-compose",
+      "kind": "route",
+      "androidRoute": "appeal-compose",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AppealComposeScreen.java",
+        "symbol": "AppealComposeScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:avatar-crop",
+      "title": "avatar-crop",
+      "kind": "route",
+      "androidRoute": "avatar-crop",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AvatarCropScreen.java",
+        "symbol": "AvatarCropScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:bind-school-email",
+      "title": "bind-school-email",
+      "kind": "route",
+      "androidRoute": "bind-school-email",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/SchoolEmailScreen.java",
+        "symbol": "SchoolEmailScreen.binder"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:blocked-users",
+      "title": "blocked-users",
+      "kind": "route",
+      "androidRoute": "blocked-users",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/BlockedUsersScreen.java",
+        "symbol": "BlockedUsersScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:campus-map",
+      "title": "campus-map",
+      "kind": "route",
+      "androidRoute": "campus-map",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CampusMapScreen.java",
+        "symbol": "CampusMapScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community",
+      "title": "community",
+      "kind": "route",
+      "androidRoute": "community",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java",
+        "symbol": "CommunityScreen.feed"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-author",
+      "title": "community-author",
+      "kind": "route",
+      "androidRoute": "community-author",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityDiscoveryScreen.java",
+        "symbol": "CommunityDiscoveryScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-create",
+      "title": "community-create",
+      "kind": "route",
+      "androidRoute": "community-create",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java",
+        "symbol": "CommunityScreen.create"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-detail",
+      "title": "community-detail",
+      "kind": "route",
+      "androidRoute": "community-detail",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java",
+        "symbol": "CommunityScreen.detail"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-edit",
+      "title": "community-edit",
+      "kind": "route",
+      "androidRoute": "community-edit",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/PostEditScreen.java",
+        "symbol": "PostEditScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-favorites",
+      "title": "community-favorites",
+      "kind": "route",
+      "androidRoute": "community-favorites",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java",
+        "symbol": "CommunityScreen.collection"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-following",
+      "title": "community-following",
+      "kind": "route",
+      "androidRoute": "community-following",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java",
+        "symbol": "CommunityScreen.feed"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-mine",
+      "title": "community-mine",
+      "kind": "route",
+      "androidRoute": "community-mine",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java",
+        "symbol": "CommunityScreen.collection"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-pins",
+      "title": "community-pins",
+      "kind": "route",
+      "androidRoute": "community-pins",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityPinScreen.java",
+        "symbol": "CommunityPinScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:community-search",
+      "title": "community-search",
+      "kind": "route",
+      "androidRoute": "community-search",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityDiscoveryScreen.java",
+        "symbol": "CommunityDiscoveryScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:correction",
+      "title": "correction",
+      "kind": "route",
+      "androidRoute": "correction",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CorrectionScreen.java",
+        "symbol": "CorrectionScreen.submit"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:detail",
+      "title": "detail",
+      "kind": "route",
+      "androidRoute": "detail",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishScreen.java",
+        "symbol": "DishScreen.detail"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:dining",
+      "title": "dining",
+      "kind": "route",
+      "androidRoute": "dining",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DiningScreen.java",
+        "symbol": "DiningScreen.halls"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:direct-chat",
+      "title": "direct-chat",
+      "kind": "route",
+      "androidRoute": "direct-chat",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ChatScreen.java",
+        "symbol": "ChatScreen.chat"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:dish-search",
+      "title": "dish-search",
+      "kind": "route",
+      "androidRoute": "dish-search",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishSearchScreen.java",
+        "symbol": "DishSearchScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:dishes",
+      "title": "dishes",
+      "kind": "route",
+      "androidRoute": "dishes",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishScreen.java",
+        "symbol": "DishScreen.dishes"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:favorite-dishes",
+      "title": "favorite-dishes",
+      "kind": "route",
+      "androidRoute": "favorite-dishes",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FavoriteDishesScreen.java",
+        "symbol": "FavoriteDishesScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:feedback",
+      "title": "feedback",
+      "kind": "route",
+      "androidRoute": "feedback",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FeedbackScreen.java",
+        "symbol": "FeedbackScreen.list"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:feedback-detail",
+      "title": "feedback-detail",
+      "kind": "route",
+      "androidRoute": "feedback-detail",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FeedbackScreen.java",
+        "symbol": "FeedbackScreen.detail"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:followers",
+      "title": "followers",
+      "kind": "route",
+      "androidRoute": "followers",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FollowListScreen.java",
+        "symbol": "FollowListScreen.followers"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:following",
+      "title": "following",
+      "kind": "route",
+      "androidRoute": "following",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FollowListScreen.java",
+        "symbol": "FollowListScreen.following"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:gallery",
+      "title": "gallery",
+      "kind": "route",
+      "androidRoute": "gallery",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishScreen.java",
+        "symbol": "DishScreen.gallery"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:history",
+      "title": "history",
+      "kind": "route",
+      "androidRoute": "history",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/HistoryScreen.java",
+        "symbol": "HistoryScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:inbox",
+      "title": "inbox",
+      "kind": "route",
+      "androidRoute": "inbox",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/InboxScreen.java",
+        "symbol": "InboxScreen.inbox"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:mine-review-replies",
+      "title": "mine-review-replies",
+      "kind": "route",
+      "androidRoute": "mine-review-replies",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewReplyScreen.java",
+        "symbol": "ReviewReplyScreen.mine"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:mine-reviews",
+      "title": "mine-reviews",
+      "kind": "route",
+      "androidRoute": "mine-reviews",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ProfileScreen.java",
+        "symbol": "ProfileScreen.reviews"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:mine-submissions",
+      "title": "mine-submissions",
+      "kind": "route",
+      "androidRoute": "mine-submissions",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/SubmissionScreen.java",
+        "symbol": "SubmissionScreen.mine"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:my-corrections",
+      "title": "my-corrections",
+      "kind": "route",
+      "androidRoute": "my-corrections",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CorrectionScreen.java",
+        "symbol": "CorrectionScreen.mine"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:notification-settings",
+      "title": "notification-settings",
+      "kind": "route",
+      "androidRoute": "notification-settings",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/NotificationSettingsScreen.java",
+        "symbol": "NotificationSettingsScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:password",
+      "title": "password",
+      "kind": "route",
+      "androidRoute": "password",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/PasswordScreen.java",
+        "symbol": "PasswordScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:price-history",
+      "title": "price-history",
+      "kind": "route",
+      "androidRoute": "price-history",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/PriceHistoryScreen.java",
+        "symbol": "PriceHistoryScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:profile",
+      "title": "profile",
+      "kind": "route",
+      "androidRoute": "profile",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ProfileScreen.java",
+        "symbol": "ProfileScreen.profile"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:profile-edit",
+      "title": "profile-edit",
+      "kind": "route",
+      "androidRoute": "profile-edit",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ProfileScreen.java",
+        "symbol": "ProfileScreen.edit"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:quick-review",
+      "title": "quick-review",
+      "kind": "route",
+      "androidRoute": "quick-review",
+      "androidSource": {
+        "branch": "dev",
+        "commit": "ff1ed41c21b6361a3ec7ae0280878a2806c14a7a",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewScreen.java",
+        "symbol": "ReviewScreen.quick"
+      },
+      "availability": "integration-only",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "dev"
+      ]
+    },
+    {
+      "id": "route:reply-create",
+      "title": "reply-create",
+      "kind": "route",
+      "androidRoute": "reply-create",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewReplyScreen.java",
+        "symbol": "ReviewReplyScreen.create"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:report-followups",
+      "title": "report-followups",
+      "kind": "route",
+      "androidRoute": "report-followups",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReportFollowUpScreen.java",
+        "symbol": "ReportFollowUpScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:report-receipts",
+      "title": "report-receipts",
+      "kind": "route",
+      "androidRoute": "report-receipts",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReportReceiptScreen.java",
+        "symbol": "ReportReceiptScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:review",
+      "title": "review",
+      "kind": "route",
+      "androidRoute": "review",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewScreen.java",
+        "symbol": "ReviewScreen.create"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:review-replies",
+      "title": "review-replies",
+      "kind": "route",
+      "androidRoute": "review-replies",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewReplyScreen.java",
+        "symbol": "ReviewReplyScreen.thread"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:stalls",
+      "title": "stalls",
+      "kind": "route",
+      "androidRoute": "stalls",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DiningScreen.java",
+        "symbol": "DiningScreen.stalls"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:submit-dish",
+      "title": "submit-dish",
+      "kind": "route",
+      "androidRoute": "submit-dish",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/UploadScreen.java",
+        "symbol": "UploadScreen.dish"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:submit-stall",
+      "title": "submit-stall",
+      "kind": "route",
+      "androidRoute": "submit-stall",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/UploadScreen.java",
+        "symbol": "UploadScreen.stall"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:upload-photo",
+      "title": "upload-photo",
+      "kind": "route",
+      "androidRoute": "upload-photo",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/UploadScreen.java",
+        "symbol": "UploadScreen.photo"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:user-search",
+      "title": "user-search",
+      "kind": "route",
+      "androidRoute": "user-search",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/UserSearchScreen.java",
+        "symbol": "UserSearchScreen.show"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:venue-mine",
+      "title": "venue-mine",
+      "kind": "route",
+      "androidRoute": "venue-mine",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/VenueScreen.java",
+        "symbol": "VenueScreen.mine"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:venue-reviews",
+      "title": "venue-reviews",
+      "kind": "route",
+      "androidRoute": "venue-reviews",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/VenueScreen.java",
+        "symbol": "VenueScreen.reviews"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "route:venue-write",
+      "title": "venue-write",
+      "kind": "route",
+      "androidRoute": "venue-write",
+      "androidSource": {
+        "branch": "main",
+        "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+        "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/VenueScreen.java",
+        "symbol": "VenueScreen.write"
+      },
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": "",
+      "androidBranches": [
+        "main",
+        "dev"
+      ]
+    },
+    {
+      "id": "capability:auth",
+      "title": "登录、注册模式/邀请码、邮箱验证码、密码找回与改密",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AuthScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/PasswordRecoveryScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/PasswordScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:session",
+      "title": "Cookie/CSRF、身份恢复、受限申诉会话、切号隔离与迟到响应",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/MainActivity.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/StartupScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AppealOnlyScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:account",
+      "title": "学校邮箱绑定/解绑、注销、验证码及冷却提示",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/SchoolEmailScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AccountLifecycleScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:catalog",
+      "title": "食堂/档口/菜品目录、启停可见性与每日推荐",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DiningScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:search",
+      "title": "搜菜筛选排序、未知数据、数字省略分页、返回页码和位置",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishSearchScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:dish-media",
+      "title": "详情/图册、完整比例、多图手势、图片读写失败与重试",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:reviews",
+      "title": "菜品及食堂/档口点评、评分、点赞、楼中楼回复与本人记录",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewReplyScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/VenueScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:submissions",
+      "title": "图片/菜品/档口投稿、本人提交记录、审核状态与失败重试",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/UploadScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/SubmissionScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:community-feed",
+      "title": "发现/关注/搜索/作者/本人食记、游标和列表缓存位置",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityDiscoveryScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:community-detail",
+      "title": "详情、评论回复、点赞、转发分享、收藏和浏览量幂等",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:drafts",
+      "title": "每账号本机单份带图草稿、自动保存、恢复与清理",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:post-edit-pins",
+      "title": "原创/转发修改重审保留互动、置顶名额/隐藏/排序/恢复",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/PostEditScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityPinScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:media-platform",
+      "title": "相册优先选择、裁剪/方向/格式、资源持久化、平面Emoji、缓存及连续缩放",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AvatarCropScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/UploadScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/Ui.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:collections",
+      "title": "菜品/帖子收藏分离、默认分组、多分组、新建/更名/排序/删除和取消收藏",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FavoriteDishesScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FavoritePostsScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:history",
+      "title": "帖子/菜品各50条、跨设备历史、开关、失效项及清理",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/HistoryScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:profile-social",
+      "title": "资料/头像、关注粉丝、用户搜索、黑名单、账号与隐私入口",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ProfileScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FollowListScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/UserSearchScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/BlockedUsersScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:chat",
+      "title": "私聊会话、未读、消息复制/举报、顶部拉黑及删除会话",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ChatScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:notifications",
+      "title": "信箱、七类通知、分类开关/迁移/游标/去重/隐私与目标跳转",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/InboxScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/NotificationSettingsScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:feedback",
+      "title": "反馈分类/限额/记录/回复历史、超管导出CSV及批量回复状态",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/FeedbackScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:corrections",
+      "title": "目录纠错、证据/限额、超管审核应用及revision冲突",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CorrectionScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:reports-appeals",
+      "title": "举报回执、追问、双方申诉、受限登录、公开/私密材料隔离",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReportReceiptScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReportFollowUpScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AppealComposeScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AppealOnlyScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:admin-moderation",
+      "title": "审核队列、举报决定/动作/追问/申诉、日志及能力授权",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CommunityAdminScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminReportThreadScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminAppealsScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:admin-catalog",
+      "title": "目录编辑/启停/删除、超管详情快捷入口、图册与封面及图片关联",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DiningScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:admin-notices",
+      "title": "公告草稿、独立启停、发布/开始/截止、更新类和普通类弹窗",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminNoticesScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:admin-users-data",
+      "title": "用户管理、角色/状态及数据看板、搜索/分页与权限边界",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/AdminDashboardScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:prices",
+      "title": "计价单位、阶梯走势/范围、超管历史更正/删除/审计和当前价同步",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/PriceHistoryScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:map",
+      "title": "六处已确认区域、离线底图、拖拽/缩放/点选/楼层入口与失败重试",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/CampusMapScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:navigation-errors",
+      "title": "手账风格、底栏/首页/搜索、返回栈、加载空错状态、输入保留及重试",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/MainActivity.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/LoadingScreen.java"
+        },
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ProfileScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:settings-update",
+      "title": "缓存清理、版本阶段展示、检查更新与iOS分发等效方案",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "main",
+          "commit": "32215aab169bfe9ca40d7189a09c59c325744f21",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ProfileScreen.java"
+        }
+      ],
+      "availability": "released",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    },
+    {
+      "id": "capability:quick-review",
+      "title": "Android dev新增的一键点评入口、选菜/搜索与共享点评表单",
+      "kind": "capability",
+      "androidSources": [
+        {
+          "branch": "dev",
+          "commit": "ff1ed41c21b6361a3ec7ae0280878a2806c14a7a",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/ReviewScreen.java"
+        },
+        {
+          "branch": "dev",
+          "commit": "ff1ed41c21b6361a3ec7ae0280878a2806c14a7a",
+          "path": "app/src/main/java/cn/edu/bjtu/foodtime/presentation/DishPickerScreen.java"
+        }
+      ],
+      "availability": "integration-only",
+      "status": "not-started",
+      "iosPaths": [],
+      "evidence": [],
+      "notes": ""
+    }
+  ]
+}
