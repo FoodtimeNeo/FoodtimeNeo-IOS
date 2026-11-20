@@ -4,6 +4,7 @@ import SwiftUI
 struct CommunityFeedView: View {
     @EnvironmentObject private var session: AppSession
     @StateObject private var model: CommunityFeedViewModel
+    @State private var showCompose = false
 
     init(service: CommunityService) {
         _model = StateObject(wrappedValue: CommunityFeedViewModel(service: service))
@@ -50,6 +51,19 @@ struct CommunityFeedView: View {
         }
         .navigationTitle("社区")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("写食记") { showCompose = true }
+            }
+        }
+        .sheet(isPresented: $showCompose) {
+            CommunityComposeView(
+                community: session.community,
+                submissions: session.submissions
+            ) {
+                Task { await model.load(reset: true) }
+            }
+        }
         .task {
             if model.posts.isEmpty {
                 await model.load(reset: true)

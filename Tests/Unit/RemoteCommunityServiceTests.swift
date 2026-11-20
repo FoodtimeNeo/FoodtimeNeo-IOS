@@ -66,6 +66,37 @@ final class RemoteCommunityServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests[3].url?.path, "/api/v1/community/comments/c-2/like")
     }
 
+    func testCreatePostSendsImagesAndRequestID() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-c3"}
+            """)),
+            .init(status: 202, body: TestFixtures.envelope("""
+            {"id":"post-2"}
+            """))
+        ]
+        let service = RemoteCommunityService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let receipt = try await service.createPost(
+            title: "标题",
+            content: "正文",
+            imageURLs: ["/api/v1/media/media-1"],
+            requestID: "request-post-1"
+        )
+
+        XCTAssertEqual(receipt.id, "post-2")
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["title"] as? String, "标题")
+        XCTAssertEqual(json["content"] as? String, "正文")
+        XCTAssertEqual(json["imageUrls"] as? [String], ["/api/v1/media/media-1"])
+        XCTAssertEqual(json["clientRequestId"] as? String, "request-post-1")
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/community/posts")
+    }
+
     func testPostLikeFavoriteAndView() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

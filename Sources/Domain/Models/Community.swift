@@ -47,6 +47,10 @@ struct CommunityPost: Codable, Identifiable, Equatable, Sendable {
     let linkedDish: LinkedDish?
 }
 
+struct CommunityPostReceipt: Codable, Equatable, Sendable {
+    let id: String
+}
+
 struct CommunityFeedPage: Codable, Equatable, Sendable {
     let items: [CommunityPost]
     let total: Int

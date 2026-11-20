@@ -389,7 +389,9 @@ final class FakeCommunityService: CommunityService {
         favoritedByMe: nil, favoriteCount: nil, counterVersion: 1
     )
     var viewCount = 1
+    var createPostResult = CommunityPostReceipt(id: "post-2")
     private(set) var commentCalls = 0
+    private(set) var createPostCalls = 0
     private(set) var likeCalls: [String] = []
 
     func feed(
@@ -445,6 +447,16 @@ final class FakeCommunityService: CommunityService {
 
     func recordView(postID: String, requestID: String) async throws -> Int {
         viewCount
+    }
+
+    func createPost(
+        title: String,
+        content: String,
+        imageURLs: [String],
+        requestID: String
+    ) async throws -> CommunityPostReceipt {
+        createPostCalls += 1
+        return createPostResult
     }
 }
 

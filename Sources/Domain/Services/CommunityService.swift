@@ -27,4 +27,10 @@ protocol CommunityService: AnyObject {
     func favoritePost(id: String, favorited: Bool) async throws -> CommunityLikeState
     func likeComment(id: String, liked: Bool) async throws -> CommunityLikeState
     func recordView(postID: String, requestID: String) async throws -> Int
+    func createPost(
+        title: String,
+        content: String,
+        imageURLs: [String],
+        requestID: String
+    ) async throws -> CommunityPostReceipt
 }
