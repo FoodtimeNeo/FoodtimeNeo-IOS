@@ -166,6 +166,204 @@ final class RemoteAdminService: AdminService {
         )
     }
 
+    func reportsPending(page: Int, size: Int) async throws -> Page<AdminReportRow> {
+        try await api.send(
+            .get(
+                "admin/reports",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<AdminReportRow>.self
+        )
+    }
+
+    func decideReport(
+        id: String,
+        outcome: String,
+        publicReason: String,
+        internalNote: String?
+    ) async throws -> AdminReportDecisionReceipt {
+        struct Body: Encodable {
+            let outcome: String
+            let publicReason: String
+            let internalNote: String?
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/reports/\(encoded(id))/decision",
+            body: Body(
+                outcome: outcome,
+                publicReason: publicReason,
+                internalNote: internalNote
+            ),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminReportDecisionReceipt.self)
+    }
+
+    func reportDecisions(page: Int, size: Int) async throws -> Page<AdminReportDecision> {
+        try await api.send(
+            .get(
+                "admin/reports/decisions",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<AdminReportDecision>.self
+        )
+    }
+
+    func reportFollowUps(
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminReportFollowUp> {
+        try await api.send(
+            .get(
+                "admin/reports/\(encoded(id))/follow-ups",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<AdminReportFollowUp>.self
+        )
+    }
+
+    func addReportFollowUp(
+        id: String,
+        content: String,
+        internalNote: String?,
+        evidenceUrls: [String],
+        clientRequestID: String
+    ) async throws -> AdminReportFollowUp {
+        struct Body: Encodable {
+            let content: String
+            let internalNote: String?
+            let evidenceUrls: [String]
+            let clientRequestId: String
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/reports/\(encoded(id))/follow-ups",
+            body: Body(
+                content: content,
+                internalNote: internalNote,
+                evidenceUrls: evidenceUrls,
+                clientRequestId: clientRequestID
+            ),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminReportFollowUp.self)
+    }
+
+    func reportActions(id: String) async throws -> [AdminReportAction] {
+        try await api.send(
+            .get("admin/reports/\(encoded(id))/actions"),
+            as: [AdminReportAction].self
+        )
+    }
+
+    func performReportAction(
+        id: String,
+        actionType: String,
+        targetID: String?,
+        note: String?
+    ) async throws -> AdminReportAction {
+        struct Body: Encodable {
+            let actionType: String
+            let targetId: String?
+            let note: String?
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/reports/\(encoded(id))/actions",
+            body: Body(actionType: actionType, targetId: targetID, note: note),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminReportAction.self)
+    }
+
+    func markReportReviewed(id: String) async throws {
+        try await api.sendVoid(
+            .put("admin/reports/\(encoded(id))/review")
+        )
+    }
+
+    func appeals(
+        status: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminAppeal> {
+        var query = [
+            URLQueryItem(name: "page", value: String(max(1, page))),
+            URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+        ]
+        if let status, !status.isEmpty {
+            query.append(URLQueryItem(name: "status", value: status))
+        }
+        return try await api.send(
+            .get("admin/appeals", query: query),
+            as: Page<AdminAppeal>.self
+        )
+    }
+
+    func appealDetail(id: String) async throws -> AdminAppeal {
+        try await api.send(
+            .get("admin/appeals/\(encoded(id))"),
+            as: AdminAppeal.self
+        )
+    }
+
+    func startAppeal(id: String, expectedRevision: Int) async throws -> AdminAppeal {
+        let request = APIRequest(
+            method: .post,
+            path: "admin/appeals/\(encoded(id))/start",
+            query: [
+                URLQueryItem(name: "expectedRevision", value: String(expectedRevision))
+            ],
+            body: nil,
+            requiresAuth: true,
+            requiresCSRF: true,
+            contentType: nil
+        )
+        return try await api.send(request, as: AdminAppeal.self)
+    }
+
+    func resolveAppeal(
+        id: String,
+        outcome: String,
+        publicReason: String,
+        internalNote: String?,
+        expectedRevision: Int
+    ) async throws -> AdminAppeal {
+        struct Body: Encodable {
+            let outcome: String
+            let publicReason: String
+            let internalNote: String?
+            let expectedRevision: Int
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/appeals/\(encoded(id))/resolve",
+            body: Body(
+                outcome: outcome,
+                publicReason: publicReason,
+                internalNote: internalNote,
+                expectedRevision: expectedRevision
+            ),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminAppeal.self)
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

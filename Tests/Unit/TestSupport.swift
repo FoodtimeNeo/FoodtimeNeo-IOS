@@ -430,10 +430,112 @@ final class FakeAdminService: AdminService {
         )
     )
     var deleteCommunityError: Error?
+    var pendingReportsResult = Result<Page<AdminReportRow>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var reportDecisionResult = AdminReportDecisionReceipt(
+        id: "decision-1",
+        reportId: "report-1",
+        outcome: "upheld",
+        publicReason: "违规",
+        internalNote: nil,
+        reviewerId: "admin-1",
+        createdAt: Date()
+    )
+    var reportDecisionsResult = Result<Page<AdminReportDecision>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var reportFollowUpsResult = Result<Page<AdminReportFollowUp>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var reportFollowUpResult = AdminReportFollowUp(
+        id: "follow-1",
+        reportId: "report-1",
+        authorRole: "admin",
+        authorName: "管理员",
+        content: "请补充证据",
+        internalNote: nil,
+        evidenceUrls: [],
+        createdAt: Date()
+    )
+    var reportActionsResult = Result<[AdminReportAction], Error>.success([])
+    var reportActionResult = AdminReportAction(
+        id: "action-1",
+        decisionId: "decision-1",
+        actionType: "remove_post",
+        targetType: "community-post",
+        targetId: "post-1",
+        performedBy: "admin-1",
+        note: nil,
+        createdAt: Date()
+    )
+    var markReviewedError: Error?
+    var appealsResult = Result<Page<AdminAppeal>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var appealDetailResult = Result<AdminAppeal, Error>.success(
+        AdminAppeal(
+            id: "appeal-1",
+            decisionId: "decision-1",
+            appellantId: "u-1",
+            appellantName: "干饭人",
+            side: "author",
+            content: "请求复核",
+            status: "submitted",
+            outcome: nil,
+            publicReason: nil,
+            internalNote: nil,
+            revision: 1,
+            createdAt: Date(),
+            resolvedAt: nil,
+            evidenceUrls: []
+        )
+    )
+    var startAppealResult = Result<AdminAppeal, Error>.success(
+        AdminAppeal(
+            id: "appeal-1",
+            decisionId: "decision-1",
+            appellantId: "u-1",
+            appellantName: "干饭人",
+            side: "author",
+            content: "请求复核",
+            status: "under_review",
+            outcome: nil,
+            publicReason: nil,
+            internalNote: nil,
+            revision: 2,
+            createdAt: Date(),
+            resolvedAt: nil,
+            evidenceUrls: []
+        )
+    )
+    var resolveAppealResult = Result<AdminAppeal, Error>.success(
+        AdminAppeal(
+            id: "appeal-1",
+            decisionId: "decision-1",
+            appellantId: "u-1",
+            appellantName: "干饭人",
+            side: "author",
+            content: "请求复核",
+            status: "resolved",
+            outcome: "rejected",
+            publicReason: "维持原判",
+            internalNote: nil,
+            revision: 3,
+            createdAt: Date(),
+            resolvedAt: Date(),
+            evidenceUrls: []
+        )
+    )
     private(set) var updateCalls = 0
     private(set) var moderationCalls = 0
     private(set) var communityModerationCalls = 0
     private(set) var communityDeleteCalls = 0
+    private(set) var reportDecisionCalls = 0
+    private(set) var reportActionCalls = 0
+    private(set) var reportFollowUpCalls = 0
+    private(set) var startAppealCalls = 0
+    private(set) var resolveAppealCalls = 0
 
     func dashboard(days: Int) async throws -> AdminDashboard {
         try dashboardResult.get()
@@ -503,6 +605,89 @@ final class FakeAdminService: AdminService {
     func deleteCommunityContent(kind: String, id: String) async throws {
         communityDeleteCalls += 1
         if let deleteCommunityError { throw deleteCommunityError }
+    }
+
+    func reportsPending(page: Int, size: Int) async throws -> Page<AdminReportRow> {
+        try pendingReportsResult.get()
+    }
+
+    func decideReport(
+        id: String,
+        outcome: String,
+        publicReason: String,
+        internalNote: String?
+    ) async throws -> AdminReportDecisionReceipt {
+        reportDecisionCalls += 1
+        return reportDecisionResult
+    }
+
+    func reportDecisions(page: Int, size: Int) async throws -> Page<AdminReportDecision> {
+        try reportDecisionsResult.get()
+    }
+
+    func reportFollowUps(
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminReportFollowUp> {
+        try reportFollowUpsResult.get()
+    }
+
+    func addReportFollowUp(
+        id: String,
+        content: String,
+        internalNote: String?,
+        evidenceUrls: [String],
+        clientRequestID: String
+    ) async throws -> AdminReportFollowUp {
+        reportFollowUpCalls += 1
+        return reportFollowUpResult
+    }
+
+    func reportActions(id: String) async throws -> [AdminReportAction] {
+        try reportActionsResult.get()
+    }
+
+    func performReportAction(
+        id: String,
+        actionType: String,
+        targetID: String?,
+        note: String?
+    ) async throws -> AdminReportAction {
+        reportActionCalls += 1
+        return reportActionResult
+    }
+
+    func markReportReviewed(id: String) async throws {
+        if let markReviewedError { throw markReviewedError }
+    }
+
+    func appeals(
+        status: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminAppeal> {
+        try appealsResult.get()
+    }
+
+    func appealDetail(id: String) async throws -> AdminAppeal {
+        try appealDetailResult.get()
+    }
+
+    func startAppeal(id: String, expectedRevision: Int) async throws -> AdminAppeal {
+        startAppealCalls += 1
+        return try startAppealResult.get()
+    }
+
+    func resolveAppeal(
+        id: String,
+        outcome: String,
+        publicReason: String,
+        internalNote: String?,
+        expectedRevision: Int
+    ) async throws -> AdminAppeal {
+        resolveAppealCalls += 1
+        return try resolveAppealResult.get()
     }
 }
 

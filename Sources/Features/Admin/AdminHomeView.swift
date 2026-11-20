@@ -103,6 +103,16 @@ struct AdminHomeView: View {
                     adminLinkRow("社区审核", detail: "食记/评论队列、详情与删除")
                 }
                 NavigationLink {
+                    AdminReportsView(service: service)
+                } label: {
+                    adminLinkRow("举报处理", detail: "待处理举报、决定、追问与动作")
+                }
+                NavigationLink {
+                    AdminAppealsView(service: service)
+                } label: {
+                    adminLinkRow("申诉复核", detail: "开始复核与结束复核")
+                }
+                NavigationLink {
                     ModerationLogsView(service: service)
                 } label: {
                     adminLinkRow("审核日志", detail: "AI 与人工审核记录")

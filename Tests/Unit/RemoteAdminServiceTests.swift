@@ -203,6 +203,177 @@ final class RemoteAdminServiceTests: XCTestCase {
         )
     }
 
+    func testReportsPendingDecisionAndHistory() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"report-1","targetType":"community-post","targetId":"post-1","targetUserId":"u-1","postId":"post-1","reason":"spam","excerpt":"广告","createdAt":"2099-11-20T04:00:00Z"}],"total":1,"page":1,"size":20}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"decision-1","reportId":"report-1","outcome":"upheld","publicReason":"违规","internalNote":null,"reviewerId":"admin-1","createdAt":"2099-11-20T04:10:00Z"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"decisionId":"decision-1","reportId":"report-1","outcome":"upheld","publicReason":"违规","targetType":"community-post","targetId":"post-1","targetUserId":"u-1","createdAt":"2099-11-20T04:10:00Z"}],"total":1,"page":1,"size":20}
+            """))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let pending = try await service.reportsPending(page: 1, size: 20)
+        let receipt = try await service.decideReport(
+            id: "report-1",
+            outcome: "upheld",
+            publicReason: "违规",
+            internalNote: nil
+        )
+        let history = try await service.reportDecisions(page: 1, size: 20)
+
+        XCTAssertEqual(pending.items.first?.reason, "spam")
+        XCTAssertEqual(receipt.outcome, "upheld")
+        XCTAssertEqual(history.items.first?.decisionId, "decision-1")
+        XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/admin/reports")
+        XCTAssertEqual(
+            transport.requests[2].url?.path,
+            "/api/v1/admin/reports/report-1/decision"
+        )
+        let body = try XCTUnwrap(transport.requests[2].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["outcome"] as? String, "upheld")
+        XCTAssertEqual(json["publicReason"] as? String, "违规")
+        XCTAssertEqual(transport.requests[3].url?.path, "/api/v1/admin/reports/decisions")
+    }
+
+    func testReportFollowUpsActionsAndReview() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 201, body: TestFixtures.envelope("""
+            {"id":"follow-1","reportId":"report-1","authorRole":"admin","authorName":"管理员","content":"请补充证据","internalNote":null,"evidenceUrls":[],"createdAt":"2099-11-20T04:20:00Z"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            [{"id":"action-1","decisionId":"decision-1","actionType":"remove_post","targetType":"community-post","targetId":"post-1","performedBy":"admin-1","note":null,"createdAt":"2099-11-20T04:30:00Z"}]
+            """)),
+            .init(status: 201, body: TestFixtures.envelope("""
+            {"id":"action-2","decisionId":"decision-1","actionType":"disable_user","targetType":"user","targetId":"u-1","performedBy":"admin-1","note":"重复违规","createdAt":"2099-11-20T04:31:00Z"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("null")),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[],"total":0,"page":1,"size":20}
+            """))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let followUp = try await service.addReportFollowUp(
+            id: "report-1",
+            content: "请补充证据",
+            internalNote: nil,
+            evidenceUrls: [],
+            clientRequestID: "req-1"
+        )
+        let actions = try await service.reportActions(id: "report-1")
+        let performed = try await service.performReportAction(
+            id: "report-1",
+            actionType: "disable_user",
+            targetID: "u-1",
+            note: "重复违规"
+        )
+        try await service.markReportReviewed(id: "report-1")
+        _ = try await service.reportFollowUps(id: "report-1", page: 1, size: 20)
+
+        XCTAssertEqual(followUp.authorRole, "admin")
+        XCTAssertEqual(actions.first?.actionType, "remove_post")
+        XCTAssertEqual(performed.actionType, "disable_user")
+        XCTAssertEqual(
+            transport.requests[1].url?.path,
+            "/api/v1/admin/reports/report-1/follow-ups"
+        )
+        let followBody = try XCTUnwrap(transport.requests[1].httpBody)
+        let followJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: followBody) as? [String: Any]
+        )
+        XCTAssertEqual(followJSON["clientRequestId"] as? String, "req-1")
+        XCTAssertEqual(transport.requests[3].httpMethod, "POST")
+        let actionBody = try XCTUnwrap(transport.requests[3].httpBody)
+        let actionJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: actionBody) as? [String: Any]
+        )
+        XCTAssertEqual(actionJSON["actionType"] as? String, "disable_user")
+        XCTAssertEqual(actionJSON["targetId"] as? String, "u-1")
+        XCTAssertEqual(transport.requests[4].httpMethod, "PUT")
+        XCTAssertEqual(
+            transport.requests[4].url?.path,
+            "/api/v1/admin/reports/report-1/review"
+        )
+    }
+
+    func testAppealsListDetailStartAndResolve() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"appeal-1","decisionId":"decision-1","appellantId":"u-1","appellantName":"干饭人","side":"author","content":"请求复核","status":"submitted","outcome":null,"publicReason":null,"internalNote":null,"revision":1,"createdAt":"2099-11-20T05:00:00Z","resolvedAt":null,"evidenceUrls":[]}],"total":1,"page":1,"size":20}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"appeal-1","decisionId":"decision-1","appellantId":"u-1","appellantName":"干饭人","side":"author","content":"请求复核","status":"submitted","outcome":null,"publicReason":null,"internalNote":"内部","revision":1,"createdAt":"2099-11-20T05:00:00Z","resolvedAt":null,"evidenceUrls":[]}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"appeal-1","decisionId":"decision-1","appellantId":"u-1","appellantName":"干饭人","side":"author","content":"请求复核","status":"under_review","outcome":null,"publicReason":null,"internalNote":null,"revision":2,"createdAt":"2099-11-20T05:00:00Z","resolvedAt":null,"evidenceUrls":[]}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"appeal-1","decisionId":"decision-1","appellantId":"u-1","appellantName":"干饭人","side":"author","content":"请求复核","status":"resolved","outcome":"rejected","publicReason":"维持原判","internalNote":null,"revision":3,"createdAt":"2099-11-20T05:00:00Z","resolvedAt":"2099-11-20T06:00:00Z","evidenceUrls":[]}
+            """))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.appeals(status: "submitted", page: 1, size: 20)
+        _ = try await service.appealDetail(id: "appeal-1")
+        let started = try await service.startAppeal(id: "appeal-1", expectedRevision: 1)
+        let resolved = try await service.resolveAppeal(
+            id: "appeal-1",
+            outcome: "rejected",
+            publicReason: "维持原判",
+            internalNote: nil,
+            expectedRevision: 2
+        )
+
+        XCTAssertEqual(page.items.first?.status, "submitted")
+        XCTAssertEqual(started.status, "under_review")
+        XCTAssertEqual(resolved.status, "resolved")
+        let query = URLComponents(
+            url: try XCTUnwrap(transport.requests[0].url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(query?.first(where: { $0.name == "status" })?.value, "submitted")
+        let startQuery = URLComponents(
+            url: try XCTUnwrap(transport.requests[3].url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(
+            startQuery?.first(where: { $0.name == "expectedRevision" })?.value,
+            "1"
+        )
+        XCTAssertEqual(
+            transport.requests[3].url?.path,
+            "/api/v1/admin/appeals/appeal-1/start"
+        )
+        let body = try XCTUnwrap(transport.requests[4].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["outcome"] as? String, "rejected")
+        XCTAssertEqual(json["expectedRevision"] as? Int, 2)
+    }
+
     func testUpdateUserSendsRoleAndStatus() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [
