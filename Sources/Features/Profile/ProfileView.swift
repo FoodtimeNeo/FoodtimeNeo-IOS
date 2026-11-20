@@ -17,6 +17,7 @@ struct ProfileView: View {
         case reportReceipts
         case inbox
         case notificationSettings
+        case settings
 
         var id: String { rawValue }
     }
@@ -87,6 +88,8 @@ struct ProfileView: View {
                             .buttonStyle(InkButtonStyle())
                         Button("提醒设置") { activeSheet = .notificationSettings }
                             .buttonStyle(InkButtonStyle())
+                        Button("设置与更新") { activeSheet = .settings }
+                            .buttonStyle(InkButtonStyle())
                         if !user.isAdmin {
                             Button("账号安全与注销") { activeSheet = .accountSecurity }
                                 .buttonStyle(InkButtonStyle())
@@ -140,6 +143,8 @@ struct ProfileView: View {
                 InboxView(inbox: session.inbox, messages: session.messages)
             case .notificationSettings:
                 NotificationSettingsView(service: session.notifications)
+            case .settings:
+                SettingsView()
             }
         }
         .alert("退出登录？", isPresented: $confirmLogout) {
