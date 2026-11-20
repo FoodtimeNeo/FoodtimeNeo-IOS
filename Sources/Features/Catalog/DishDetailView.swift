@@ -89,6 +89,28 @@ struct DishDetailView: View {
                 }
             }
             .buttonStyle(.plain)
+            NavigationLink {
+                CorrectionFormView(
+                    dish: detail,
+                    corrections: session.corrections,
+                    submissions: session.submissions
+                )
+            } label: {
+                PaperCard {
+                    HStack(spacing: 10) {
+                        Image(systemName: "checklist")
+                            .foregroundStyle(Zine.red)
+                        Text("目录纠错")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(Zine.ink)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Zine.muted)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
             DishReviewsSection(session: session, dishID: detail.id)
             if !model.imageURLs.isEmpty {
                 galleryStrip

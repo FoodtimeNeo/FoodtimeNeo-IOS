@@ -13,6 +13,7 @@ struct ProfileView: View {
         case mySubmissions
         case collections
         case history
+        case myCorrections
         case inbox
         case notificationSettings
 
@@ -75,6 +76,8 @@ struct ProfileView: View {
                             .buttonStyle(InkButtonStyle())
                         Button("浏览历史") { activeSheet = .history }
                             .buttonStyle(InkButtonStyle())
+                        Button("目录纠错") { activeSheet = .myCorrections }
+                            .buttonStyle(InkButtonStyle())
                         Button("建议与反馈") { activeSheet = .feedback }
                             .buttonStyle(InkButtonStyle())
                         Button("修改密码") { activeSheet = .changePassword }
@@ -122,6 +125,8 @@ struct ProfileView: View {
                 CollectionsView(session: session)
             case .history:
                 HistoryView(session: session)
+            case .myCorrections:
+                MyCorrectionsView(service: session.corrections)
             case .inbox:
                 InboxView(inbox: session.inbox, messages: session.messages)
             case .notificationSettings:

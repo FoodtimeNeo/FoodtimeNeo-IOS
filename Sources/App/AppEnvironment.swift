@@ -18,6 +18,7 @@ struct AppEnvironment {
     let inbox: InboxService
     let messages: MessageService
     let notifications: NotificationService
+    let corrections: CorrectionService
     let cookieJar: SystemCookieJar
     let archive: KeychainCookieArchive
 
@@ -65,6 +66,7 @@ struct AppEnvironment {
             inbox: RemoteInboxService(api: api),
             messages: RemoteMessageService(api: api),
             notifications: RemoteNotificationService(api: api),
+            corrections: RemoteCorrectionService(api: api),
             cookieJar: jar,
             archive: archive
         )
