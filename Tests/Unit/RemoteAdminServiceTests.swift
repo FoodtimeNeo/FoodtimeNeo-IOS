@@ -471,6 +471,62 @@ final class RemoteAdminServiceTests: XCTestCase {
         XCTAssertEqual(json["reason"] as? String, "包含广告")
     }
 
+    func testCorrectionsListDetailAndDecision() async throws {
+        let correctionJSON = """
+        {"correction":{"id":"correction-1","targetType":"dish","targetId":"dish-1","targetSummary":"红烧肉","baseRevision":3,"originalName":"红烧肉","originalDescription":null,"originalPrice":12,"proposedName":"红烧肉（大份）","proposedDescription":null,"proposedPrice":14,"changedFields":["name","price"],"reason":"价格和名称不符","status":"pending","reviewNote":null,"createdAt":"2099-11-20T04:00:00Z","reviewedAt":null,"revision":1,"evidenceUrls":[],"originalPriceUnit":"份","proposedPriceUnit":"份"},"submitterId":"u-1","submitterName":"干饭人","submitterEmail":"user@example.com"}
+        """
+        let rowJSON = """
+        {"correction":{"id":"correction-1","targetType":"dish","targetId":"dish-1","targetSummary":"红烧肉","baseRevision":3,"originalName":"红烧肉","originalDescription":null,"originalPrice":12,"proposedName":"红烧肉（大份）","proposedDescription":null,"proposedPrice":14,"changedFields":["name","price"],"reason":"价格和名称不符","status":"approved","reviewNote":"已核对","createdAt":"2099-11-20T04:00:00Z","reviewedAt":"2099-11-20T05:00:00Z","revision":2,"evidenceUrls":[],"originalPriceUnit":"份","proposedPriceUnit":"份"},"submitterId":"u-1","submitterName":"干饭人","submitterEmail":"user@example.com"}
+        """
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[\(correctionJSON)],"total":1,"page":1,"size":20}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope(correctionJSON)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope(rowJSON))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.corrections(
+            status: "pending",
+            targetType: "dish",
+            page: 1,
+            size: 20
+        )
+        _ = try await service.correctionDetail(id: "correction-1")
+        let decided = try await service.decideCorrection(
+            id: "correction-1",
+            decision: "approved",
+            reviewNote: "已核对",
+            expectedRevision: 1
+        )
+
+        XCTAssertEqual(page.items.first?.submitterEmail, "user@example.com")
+        XCTAssertEqual(page.items.first?.correction.proposedPrice, 14)
+        XCTAssertEqual(decided.correction.status, "approved")
+        let query = URLComponents(
+            url: try XCTUnwrap(transport.requests[0].url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(query?.first(where: { $0.name == "status" })?.value, "pending")
+        XCTAssertEqual(query?.first(where: { $0.name == "targetType" })?.value, "dish")
+        XCTAssertEqual(
+            transport.requests[3].url?.path,
+            "/api/v1/admin/catalog-corrections/correction-1/decision"
+        )
+        let body = try XCTUnwrap(transport.requests[3].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["decision"] as? String, "approved")
+        XCTAssertEqual(json["reviewNote"] as? String, "已核对")
+        XCTAssertEqual(json["expectedRevision"] as? Int, 1)
+    }
+
     func testUpdateUserSendsRoleAndStatus() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

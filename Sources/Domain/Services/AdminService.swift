@@ -105,4 +105,18 @@ protocol AdminService: AnyObject {
         size: Int
     ) async throws -> Page<AdminReviewItem>
     func removeReview(id: String, reason: String) async throws
+
+    func corrections(
+        status: String?,
+        targetType: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCorrectionRow>
+    func correctionDetail(id: String) async throws -> AdminCorrectionRow
+    func decideCorrection(
+        id: String,
+        decision: String,
+        reviewNote: String?,
+        expectedRevision: Int
+    ) async throws -> AdminCorrectionRow
 }

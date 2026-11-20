@@ -458,6 +458,60 @@ final class RemoteAdminService: AdminService {
         try await api.sendVoid(request)
     }
 
+    func corrections(
+        status: String?,
+        targetType: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCorrectionRow> {
+        var query = [
+            URLQueryItem(name: "page", value: String(max(1, page))),
+            URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+        ]
+        if let status, !status.isEmpty {
+            query.append(URLQueryItem(name: "status", value: status))
+        }
+        if let targetType, !targetType.isEmpty {
+            query.append(URLQueryItem(name: "targetType", value: targetType))
+        }
+        return try await api.send(
+            .get("admin/catalog-corrections", query: query),
+            as: Page<AdminCorrectionRow>.self
+        )
+    }
+
+    func correctionDetail(id: String) async throws -> AdminCorrectionRow {
+        try await api.send(
+            .get("admin/catalog-corrections/\(encoded(id))"),
+            as: AdminCorrectionRow.self
+        )
+    }
+
+    func decideCorrection(
+        id: String,
+        decision: String,
+        reviewNote: String?,
+        expectedRevision: Int
+    ) async throws -> AdminCorrectionRow {
+        struct Body: Encodable {
+            let decision: String
+            let reviewNote: String?
+            let expectedRevision: Int
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/catalog-corrections/\(encoded(id))/decision",
+            body: Body(
+                decision: decision,
+                reviewNote: reviewNote,
+                expectedRevision: expectedRevision
+            ),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminCorrectionRow.self)
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

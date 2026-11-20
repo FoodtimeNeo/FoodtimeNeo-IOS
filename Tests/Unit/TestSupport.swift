@@ -567,6 +567,69 @@ final class FakeAdminService: AdminService {
         Page(items: [], total: 0, page: 1, size: 20)
     )
     var removeReviewError: Error?
+    var correctionsResult = Result<Page<AdminCorrectionRow>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var correctionRowResult = Result<AdminCorrectionRow, Error>.success(
+        AdminCorrectionRow(
+            correction: AdminCorrection(
+                id: "correction-1",
+                targetType: "dish",
+                targetId: "dish-1",
+                targetSummary: "红烧肉",
+                baseRevision: 3,
+                originalName: "红烧肉",
+                originalDescription: nil,
+                originalPrice: Decimal(string: "12"),
+                proposedName: "红烧肉（大份）",
+                proposedDescription: nil,
+                proposedPrice: Decimal(string: "14"),
+                changedFields: ["name", "price"],
+                reason: "价格和名称不符",
+                status: "pending",
+                reviewNote: nil,
+                createdAt: Date(),
+                reviewedAt: nil,
+                revision: 1,
+                evidenceUrls: [],
+                originalPriceUnit: "份",
+                proposedPriceUnit: "份"
+            ),
+            submitterId: "u-1",
+            submitterName: "干饭人",
+            submitterEmail: "user@example.com"
+        )
+    )
+    var decideCorrectionResult = Result<AdminCorrectionRow, Error>.success(
+        AdminCorrectionRow(
+            correction: AdminCorrection(
+                id: "correction-1",
+                targetType: "dish",
+                targetId: "dish-1",
+                targetSummary: "红烧肉",
+                baseRevision: 3,
+                originalName: "红烧肉",
+                originalDescription: nil,
+                originalPrice: Decimal(string: "12"),
+                proposedName: "红烧肉（大份）",
+                proposedDescription: nil,
+                proposedPrice: Decimal(string: "14"),
+                changedFields: ["name", "price"],
+                reason: "价格和名称不符",
+                status: "approved",
+                reviewNote: "已核对",
+                createdAt: Date(),
+                reviewedAt: Date(),
+                revision: 2,
+                evidenceUrls: [],
+                originalPriceUnit: "份",
+                proposedPriceUnit: "份"
+            ),
+            submitterId: "u-1",
+            submitterName: "干饭人",
+            submitterEmail: "user@example.com"
+        )
+    )
     private(set) var reportDecisionCalls = 0
     private(set) var reportActionCalls = 0
     private(set) var reportFollowUpCalls = 0
@@ -576,6 +639,7 @@ final class FakeAdminService: AdminService {
     private(set) var catalogUpdateCalls = 0
     private(set) var catalogDeleteCalls = 0
     private(set) var removeReviewCalls = 0
+    private(set) var decideCorrectionCalls = 0
 
     func dashboard(days: Int) async throws -> AdminDashboard {
         try dashboardResult.get()
@@ -776,6 +840,29 @@ final class FakeAdminService: AdminService {
     func removeReview(id: String, reason: String) async throws {
         removeReviewCalls += 1
         if let removeReviewError { throw removeReviewError }
+    }
+
+    func corrections(
+        status: String?,
+        targetType: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCorrectionRow> {
+        try correctionsResult.get()
+    }
+
+    func correctionDetail(id: String) async throws -> AdminCorrectionRow {
+        try correctionRowResult.get()
+    }
+
+    func decideCorrection(
+        id: String,
+        decision: String,
+        reviewNote: String?,
+        expectedRevision: Int
+    ) async throws -> AdminCorrectionRow {
+        decideCorrectionCalls += 1
+        return try decideCorrectionResult.get()
     }
 }
 
