@@ -44,6 +44,15 @@ struct ModerationItem: Codable, Identifiable, Equatable, Sendable {
     let contentRevision: Int?
 }
 
+/// 社区审核详情：帖子与评论共用一个响应，按 kind 取对应字段。
+struct CommunityModerationDetail: Codable, Equatable, Sendable {
+    let post: CommunityPost?
+    let comment: CommunityComment?
+    let rootComment: CommunityComment?
+    let replyToComment: CommunityComment?
+    let userEmail: String?
+}
+
 struct ModerationResult: Codable, Equatable, Sendable {
     let id: String
     let status: String

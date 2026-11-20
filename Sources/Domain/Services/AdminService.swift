@@ -19,4 +19,22 @@ protocol AdminService: AnyObject {
         contentRevision: Int?
     ) async throws -> ModerationResult
     func moderationLogs(page: Int, size: Int) async throws -> Page<ModerationLog>
+    func communityQueue(
+        kind: String,
+        status: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<ModerationItem>
+    func moderateCommunity(
+        kind: String,
+        id: String,
+        action: String,
+        reason: String?,
+        contentRevision: Int?
+    ) async throws -> ModerationResult
+    func communityModerationDetail(
+        kind: String,
+        id: String
+    ) async throws -> CommunityModerationDetail
+    func deleteCommunityContent(kind: String, id: String) async throws
 }

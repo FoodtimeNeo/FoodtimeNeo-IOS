@@ -110,6 +110,99 @@ final class RemoteAdminServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests.first?.url?.path, "/api/v1/admin/moderation/logs")
     }
 
+    func testCommunityQueueUsesKindPathAndFilters() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"post-1","type":"community-post","targetId":null,"userId":"u-1","userDisplayName":"干饭人","name":"今天的食堂","content":"好吃","price":null,"imageUrl":null,"rating":null,"status":"pending","reason":null,"createdAt":"2099-11-20T04:00:00Z","aiRiskLevel":"medium","aiConfidence":0.7,"aiLabels":null,"aiReason":null,"aiCheckedAt":null,"userEmail":"user@example.com","contentRevision":3}],"total":1,"page":1,"size":20}
+            """))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.communityQueue(
+            kind: "posts",
+            status: "pending",
+            page: 1,
+            size: 20
+        )
+
+        XCTAssertEqual(page.items.first?.contentRevision, 3)
+        XCTAssertEqual(transport.requests.first?.url?.path, "/api/v1/admin/community/posts")
+        let query = URLComponents(
+            url: try XCTUnwrap(transport.requests.first?.url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(query?.first(where: { $0.name == "status" })?.value, "pending")
+    }
+
+    func testCommunityModerateSendsRevision() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"post-1","status":"approved","approvedId":"post-1"}
+            """))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let result = try await service.moderateCommunity(
+            kind: "posts",
+            id: "post-1",
+            action: "approve",
+            reason: nil,
+            contentRevision: 3
+        )
+
+        XCTAssertEqual(result.status, "approved")
+        XCTAssertEqual(
+            transport.requests[1].url?.path,
+            "/api/v1/admin/community/posts/post-1"
+        )
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["action"] as? String, "approve")
+        XCTAssertEqual(json["contentRevision"] as? Int, 3)
+    }
+
+    func testCommunityDetailAndDelete() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"post":null,"comment":null,"rootComment":null,"replyToComment":null,"userEmail":"user@example.com"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("null"))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let detail = try await service.communityModerationDetail(
+            kind: "comments",
+            id: "comment-1"
+        )
+        try await service.deleteCommunityContent(kind: "comments", id: "comment-1")
+
+        XCTAssertEqual(detail.userEmail, "user@example.com")
+        XCTAssertEqual(
+            transport.requests[0].url?.path,
+            "/api/v1/admin/community/comments/comment-1"
+        )
+        XCTAssertEqual(transport.requests[2].httpMethod, "DELETE")
+        XCTAssertEqual(
+            transport.requests[2].url?.path,
+            "/api/v1/admin/community/comments/comment-1"
+        )
+    }
+
     func testUpdateUserSendsRoleAndStatus() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

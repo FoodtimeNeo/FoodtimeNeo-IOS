@@ -412,8 +412,28 @@ final class FakeAdminService: AdminService {
     var logsResult = Result<Page<ModerationLog>, Error>.success(
         Page(items: [], total: 0, page: 1, size: 20)
     )
+    var communityQueueResult = Result<Page<ModerationItem>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var communityModerationResult = ModerationResult(
+        id: "cm-1",
+        status: "approved",
+        approvedId: nil
+    )
+    var communityDetailResult = Result<CommunityModerationDetail, Error>.success(
+        CommunityModerationDetail(
+            post: nil,
+            comment: nil,
+            rootComment: nil,
+            replyToComment: nil,
+            userEmail: nil
+        )
+    )
+    var deleteCommunityError: Error?
     private(set) var updateCalls = 0
     private(set) var moderationCalls = 0
+    private(set) var communityModerationCalls = 0
+    private(set) var communityDeleteCalls = 0
 
     func dashboard(days: Int) async throws -> AdminDashboard {
         try dashboardResult.get()
@@ -451,6 +471,38 @@ final class FakeAdminService: AdminService {
 
     func moderationLogs(page: Int, size: Int) async throws -> Page<ModerationLog> {
         try logsResult.get()
+    }
+
+    func communityQueue(
+        kind: String,
+        status: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<ModerationItem> {
+        try communityQueueResult.get()
+    }
+
+    func moderateCommunity(
+        kind: String,
+        id: String,
+        action: String,
+        reason: String?,
+        contentRevision: Int?
+    ) async throws -> ModerationResult {
+        communityModerationCalls += 1
+        return communityModerationResult
+    }
+
+    func communityModerationDetail(
+        kind: String,
+        id: String
+    ) async throws -> CommunityModerationDetail {
+        try communityDetailResult.get()
+    }
+
+    func deleteCommunityContent(kind: String, id: String) async throws {
+        communityDeleteCalls += 1
+        if let deleteCommunityError { throw deleteCommunityError }
     }
 }
 

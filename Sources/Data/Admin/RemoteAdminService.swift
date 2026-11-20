@@ -109,6 +109,63 @@ final class RemoteAdminService: AdminService {
         )
     }
 
+    func communityQueue(
+        kind: String,
+        status: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<ModerationItem> {
+        try await api.send(
+            .get(
+                "admin/community/\(encoded(kind))",
+                query: [
+                    URLQueryItem(name: "status", value: status),
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<ModerationItem>.self
+        )
+    }
+
+    func moderateCommunity(
+        kind: String,
+        id: String,
+        action: String,
+        reason: String?,
+        contentRevision: Int?
+    ) async throws -> ModerationResult {
+        struct Body: Encodable {
+            let action: String
+            let reason: String?
+            let contentRevision: Int?
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/community/\(encoded(kind))/\(encoded(id))",
+            body: Body(action: action, reason: reason, contentRevision: contentRevision),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: ModerationResult.self)
+    }
+
+    func communityModerationDetail(
+        kind: String,
+        id: String
+    ) async throws -> CommunityModerationDetail {
+        try await api.send(
+            .get("admin/community/\(encoded(kind))/\(encoded(id))"),
+            as: CommunityModerationDetail.self
+        )
+    }
+
+    func deleteCommunityContent(kind: String, id: String) async throws {
+        try await api.sendVoid(
+            .delete("admin/community/\(encoded(kind))/\(encoded(id))")
+        )
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

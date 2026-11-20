@@ -98,6 +98,11 @@ struct AdminHomeView: View {
                     adminLinkRow("审核队列", detail: "待审提交、AI 风险与通过/驳回")
                 }
                 NavigationLink {
+                    CommunityModerationView(service: service)
+                } label: {
+                    adminLinkRow("社区审核", detail: "食记/评论队列、详情与删除")
+                }
+                NavigationLink {
                     ModerationLogsView(service: service)
                 } label: {
                     adminLinkRow("审核日志", detail: "AI 与人工审核记录")
