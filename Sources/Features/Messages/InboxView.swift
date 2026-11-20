@@ -272,6 +272,7 @@ struct InboxView: View {
                         messages: session.messages,
                         social: session.social,
                         currentUserID: session.user?.id ?? "",
+                        reports: session.reports,
                         onRead: { model.handleConversationOpened(conversation.id) }
                     )
                 } label: {

@@ -22,6 +22,7 @@ struct CommunityDetailView: View {
     @State private var startingChatID: String?
     @State private var chatTargetID: String?
     @State private var chatError: String?
+    @State private var reportTarget: ReportTarget?
 
     init(postID: String, service: CommunityService) {
         _model = StateObject(
@@ -101,7 +102,15 @@ struct CommunityDetailView: View {
                 conversationID: conversationID,
                 messages: session.messages,
                 social: session.social,
-                currentUserID: session.user?.id ?? ""
+                currentUserID: session.user?.id ?? "",
+                reports: session.reports
+            )
+        }
+        .sheet(item: $reportTarget) { target in
+            ReportReasonView(
+                targetType: target.type,
+                targetID: target.targetID,
+                service: session.reports
             )
         }
     }
@@ -235,6 +244,11 @@ struct CommunityDetailView: View {
                     if post.userId == session.user?.id {
                         Button("编辑") { activeSheet = .edit }
                             .buttonStyle(LinkButtonStyle())
+                    } else {
+                        Button("举报") {
+                            reportTarget = ReportTarget(type: "post", targetID: post.id)
+                        }
+                        .buttonStyle(LinkButtonStyle())
                     }
                 }
                 .font(.subheadline)
@@ -305,6 +319,14 @@ struct CommunityDetailView: View {
                         .font(.caption)
                         .foregroundStyle(Zine.blue)
                         .buttonStyle(.plain)
+                    if comment.userId != session.user?.id, !comment.deleted {
+                        Button("举报") {
+                            reportTarget = ReportTarget(type: "comment", targetID: comment.id)
+                        }
+                        .font(.caption)
+                        .foregroundStyle(Zine.muted)
+                        .buttonStyle(.plain)
+                    }
                 }
             }
         }

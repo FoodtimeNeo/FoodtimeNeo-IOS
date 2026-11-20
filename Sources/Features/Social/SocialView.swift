@@ -10,6 +10,7 @@ struct SocialView: View {
     @State private var chatError: String?
     private let messages: MessageService
     private let social: SocialService
+    private let reports: ReportService
     private let currentUserID: String
 
     init(session: AppSession, currentUserID: String) {
@@ -18,6 +19,7 @@ struct SocialView: View {
         )
         messages = session.messages
         social = session.social
+        reports = session.reports
         self.currentUserID = currentUserID
     }
 
@@ -109,7 +111,8 @@ struct SocialView: View {
                     conversationID: conversationID,
                     messages: messages,
                     social: social,
-                    currentUserID: currentUserID
+                    currentUserID: currentUserID,
+                    reports: reports
                 )
             }
         }
