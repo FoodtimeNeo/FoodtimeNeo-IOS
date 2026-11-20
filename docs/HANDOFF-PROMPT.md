@@ -8,7 +8,7 @@
 
 ## 当前交接状态
 
-仓库已完成工程底座：XcodeGen 工程、SwiftUI 外壳、网络/会话/CSRF、Keychain Cookie 归档、登录/验证码、食堂→档口→菜品只读纵切片、macOS 编译与单测 CI。W1 注册（策略/邀请码/邮箱验证码）、找回/修改密码、资料昵称编辑、学校邮箱绑定/解绑与账号注销、关注/粉丝/搜索/黑名单、用户反馈已接入；W2 搜菜筛选/排序、菜品详情/图册、价格历史、校园地图、每日推荐已接入。完整对齐尚未开始，`coverage.json` 的 102 项目标仍全部 `not-started`。原生 SwiftUI 与最低 iOS 17 已确认；Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名、分发、后台通知/APNs 仍待确认。请先核对 `docs/BACKEND-INTEGRATION.md`、`docs/IOS-DECISIONS.md` 和最新源码，继续推进未确认项之外的实现；不要默认需要用户先购买Mac，也不要把Windows WebKit当Apple模拟器验证。
+仓库已完成工程底座：XcodeGen 工程、SwiftUI 外壳、网络/会话/CSRF、Keychain Cookie 归档、登录/验证码、食堂→档口→菜品只读纵切片、macOS 编译与单测 CI。W1 注册（策略/邀请码/邮箱验证码）、找回/修改密码、资料昵称编辑、学校邮箱绑定/解绑与账号注销、关注/粉丝/搜索/黑名单、用户反馈已接入；W2 搜菜筛选/排序、菜品详情/图册、价格历史、校园地图、每日推荐已接入；W3 菜品点评/点赞/我的点评已接入。完整对齐尚未开始，`coverage.json` 的 102 项目标仍全部 `not-started`。原生 SwiftUI 与最低 iOS 17 已确认；Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名、分发、后台通知/APNs 仍待确认。请先核对 `docs/BACKEND-INTEGRATION.md`、`docs/IOS-DECISIONS.md` 和最新源码，继续推进未确认项之外的实现；不要默认需要用户先购买Mac，也不要把Windows WebKit当Apple模拟器验证。
 
 已发布参照 Android main：`32215aab169bfe9ca40d7189a09c59c325744f21`（v2.0.0β）；Android dev：`ff1ed41c21b6361a3ec7ae0280878a2806c14a7a`，另有一键点评新流程，需要纳入跟进。Backend main：`e8f34998930781230711d8e8dd109c32d34b1ba8`；Web main：`b6e2d8f7c49016c0d53aea94b0472f3f12595a7c`。开始前重新核对最新提交，不能永远停在这份快照。线上部署版本需单独核实。
 

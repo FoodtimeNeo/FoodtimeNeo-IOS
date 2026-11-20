@@ -2,6 +2,7 @@ import SwiftUI
 
 @MainActor
 struct DishDetailView: View {
+    @EnvironmentObject private var session: AppSession
     private let catalog: CatalogService
     @StateObject private var model: DishDetailViewModel
     @State private var showGallery = false
@@ -61,6 +62,7 @@ struct DishDetailView: View {
                 }
             }
             .buttonStyle(.plain)
+            DishReviewsSection(session: session, dishID: detail.id)
             if !model.imageURLs.isEmpty {
                 galleryStrip
             }

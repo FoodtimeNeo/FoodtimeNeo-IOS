@@ -70,6 +70,8 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 菜品详情/图册 | `GET /dishes/{id}`、`/images`、`/rating` |
 | 价格历史 | `GET /dishes/{id}/price-history?days=0|30|90` |
 | 每日推荐 | `GET /recommendations/daily` |
+| 菜品点评 | `GET/POST /dishes/{id}/reviews`、`/rating`、`PUT/DELETE /reviews/{id}/like` |
+| 我的点评 | `GET/DELETE /users/me/reviews`、`GET /users/me/review-submissions` |
 
 ## 7. 验证要求
 

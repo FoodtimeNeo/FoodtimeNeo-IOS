@@ -300,6 +300,49 @@ final class FakeSocialService: SocialService {
     }
 }
 
+final class FakeReviewService: ReviewService {
+    var reviewsResult: Result<Page<Review>, Error> = .success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var submitResult: Result<ReviewCreatedReceipt, Error> = .success(TestFixtures.reviewReceipt)
+    var myReviewsResult: Result<Page<Review>, Error> = .success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var mySubmissionsResult: Result<Page<ReviewSubmission>, Error> = .success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var deleteError: Error?
+    var likeResult = ReviewLikeState(likedByMe: true, likeCount: 1, counterVersion: 1)
+    private(set) var submitCalls = 0
+    private(set) var likeCalls: [String] = []
+
+    func reviews(dishID: String, page: Int, size: Int) async throws -> Page<Review> {
+        try reviewsResult.get()
+    }
+
+    func submitReview(dishID: String, rating: Int, content: String) async throws -> ReviewCreatedReceipt {
+        submitCalls += 1
+        return try submitResult.get()
+    }
+
+    func myReviews(page: Int, size: Int) async throws -> Page<Review> {
+        try myReviewsResult.get()
+    }
+
+    func myReviewSubmissions(page: Int, size: Int) async throws -> Page<ReviewSubmission> {
+        try mySubmissionsResult.get()
+    }
+
+    func deleteMyReview(id: String) async throws {
+        if let deleteError { throw deleteError }
+    }
+
+    func setReviewLike(id: String, liked: Bool) async throws -> ReviewLikeState {
+        likeCalls.append(id)
+        return likeResult
+    }
+}
+
 final class FakeFeedbackService: FeedbackService {
     var createResult: Result<Feedback, Error> = .success(TestFixtures.feedback)
     var listResult: Result<Page<Feedback>, Error> = .success(
@@ -451,6 +494,15 @@ enum TestFixtures {
     static let deletionResult = AccountDeletionResult(
         deleted: true,
         emailsReusableAt: Date().addingTimeInterval(3600)
+    )
+
+    static let reviewReceipt = ReviewCreatedReceipt(
+        id: "sub-1",
+        dishId: "d-1",
+        rating: 5,
+        content: "好吃",
+        status: "pending",
+        submittedAt: Date()
     )
 
     static let feedback = Feedback(
