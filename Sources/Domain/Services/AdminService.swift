@@ -134,4 +134,24 @@ protocol AdminService: AnyObject {
     func deleteNotice(id: String) async throws
     func noticeSettings() async throws -> AdminNoticeSettings
     func updateNoticeSettings(noticeID: String?) async throws -> AdminNoticeSettings
+
+    func feedbackList(
+        archived: Bool,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminFeedbackRow>
+    func feedbackDetail(id: String) async throws -> AdminFeedbackRow
+    func feedbackReplies(
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminFeedbackReply>
+    func updateFeedback(
+        id: String,
+        reply: String?,
+        status: String?,
+        clientRequestID: String
+    ) async throws -> AdminFeedbackRow
+    func exportFeedback() async throws -> AdminFeedbackExport
+    func importFeedback(csv: String) async throws -> AdminFeedbackImportResult
 }

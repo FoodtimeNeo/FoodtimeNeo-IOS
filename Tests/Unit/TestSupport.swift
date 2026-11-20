@@ -664,6 +664,46 @@ final class FakeAdminService: AdminService {
     var updateNoticeSettingsResult = Result<AdminNoticeSettings, Error>.success(
         AdminNoticeSettings(noticeId: "notice-1")
     )
+    var feedbackListResult = Result<Page<AdminFeedbackRow>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var feedbackDetailResult = Result<AdminFeedbackRow, Error>.success(
+        AdminFeedbackRow(
+            id: "feedback-1",
+            type: "suggestion",
+            content: "希望增加夜宵",
+            status: "pending",
+            createdAt: Date(),
+            updatedAt: Date(),
+            userDisplayName: "干饭人",
+            latestReply: nil
+        )
+    )
+    var feedbackRepliesResult = Result<Page<AdminFeedbackReply>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 50)
+    )
+    var updateFeedbackResult = Result<AdminFeedbackRow, Error>.success(
+        AdminFeedbackRow(
+            id: "feedback-1",
+            type: "suggestion",
+            content: "希望增加夜宵",
+            status: "processing",
+            createdAt: Date(),
+            updatedAt: Date(),
+            userDisplayName: "干饭人",
+            latestReply: "已记录"
+        )
+    )
+    var exportFeedbackResult = Result<AdminFeedbackExport, Error>.success(
+        AdminFeedbackExport(
+            filename: "feedback-2026-11-21.csv",
+            csv: "\u{FEFF}反馈编号,反馈类型,反馈内容,处理状态,处理建议\r\n",
+            count: 1
+        )
+    )
+    var importFeedbackResult = Result<AdminFeedbackImportResult, Error>.success(
+        AdminFeedbackImportResult(updated: 1, skipped: 0, issues: [])
+    )
     var decideCorrectionResult = Result<AdminCorrectionRow, Error>.success(
         AdminCorrectionRow(
             correction: AdminCorrection(
@@ -708,6 +748,9 @@ final class FakeAdminService: AdminService {
     private(set) var scheduleNoticeCalls = 0
     private(set) var deleteNoticeCalls = 0
     private(set) var updateNoticeSettingsCalls = 0
+    private(set) var updateFeedbackCalls = 0
+    private(set) var exportFeedbackCalls = 0
+    private(set) var importFeedbackCalls = 0
 
     func dashboard(days: Int) async throws -> AdminDashboard {
         try dashboardResult.get()
@@ -970,6 +1013,46 @@ final class FakeAdminService: AdminService {
     func updateNoticeSettings(noticeID: String?) async throws -> AdminNoticeSettings {
         updateNoticeSettingsCalls += 1
         return try updateNoticeSettingsResult.get()
+    }
+
+    func feedbackList(
+        archived: Bool,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminFeedbackRow> {
+        try feedbackListResult.get()
+    }
+
+    func feedbackDetail(id: String) async throws -> AdminFeedbackRow {
+        try feedbackDetailResult.get()
+    }
+
+    func feedbackReplies(
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminFeedbackReply> {
+        try feedbackRepliesResult.get()
+    }
+
+    func updateFeedback(
+        id: String,
+        reply: String?,
+        status: String?,
+        clientRequestID: String
+    ) async throws -> AdminFeedbackRow {
+        updateFeedbackCalls += 1
+        return try updateFeedbackResult.get()
+    }
+
+    func exportFeedback() async throws -> AdminFeedbackExport {
+        exportFeedbackCalls += 1
+        return try exportFeedbackResult.get()
+    }
+
+    func importFeedback(csv: String) async throws -> AdminFeedbackImportResult {
+        importFeedbackCalls += 1
+        return try importFeedbackResult.get()
     }
 }
 

@@ -123,6 +123,11 @@ struct AdminHomeView: View {
                     adminLinkRow("公告管理", detail: "Markdown 编辑、排期与登录弹窗")
                 }
                 NavigationLink {
+                    AdminFeedbackView(service: service)
+                } label: {
+                    adminLinkRow("反馈管理", detail: "处理建议、状态与 CSV 导入导出")
+                }
+                NavigationLink {
                     AdminReportsView(service: service)
                 } label: {
                     adminLinkRow("举报处理", detail: "待处理举报、决定、追问与动作")

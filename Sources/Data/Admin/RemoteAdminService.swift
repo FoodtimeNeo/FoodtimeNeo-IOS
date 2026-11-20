@@ -609,6 +609,90 @@ final class RemoteAdminService: AdminService {
         return try await api.send(request, as: AdminNoticeSettings.self)
     }
 
+    func feedbackList(
+        archived: Bool,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminFeedbackRow> {
+        try await api.send(
+            .get(
+                "admin/feedback",
+                query: [
+                    URLQueryItem(name: "archived", value: archived ? "true" : "false"),
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<AdminFeedbackRow>.self
+        )
+    }
+
+    func feedbackDetail(id: String) async throws -> AdminFeedbackRow {
+        try await api.send(
+            .get("admin/feedback/\(encoded(id))"),
+            as: AdminFeedbackRow.self
+        )
+    }
+
+    func feedbackReplies(
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminFeedbackReply> {
+        try await api.send(
+            .get(
+                "admin/feedback/\(encoded(id))/replies",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<AdminFeedbackReply>.self
+        )
+    }
+
+    func updateFeedback(
+        id: String,
+        reply: String?,
+        status: String?,
+        clientRequestID: String
+    ) async throws -> AdminFeedbackRow {
+        struct Body: Encodable {
+            let reply: String?
+            let status: String?
+            let clientRequestId: String
+        }
+        let request = try APIRequest.json(
+            .put,
+            "admin/feedback/\(encoded(id))",
+            body: Body(reply: reply, status: status, clientRequestId: clientRequestID),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminFeedbackRow.self)
+    }
+
+    func exportFeedback() async throws -> AdminFeedbackExport {
+        try await api.send(
+            .post("admin/feedback/export"),
+            as: AdminFeedbackExport.self
+        )
+    }
+
+    func importFeedback(csv: String) async throws -> AdminFeedbackImportResult {
+        struct Body: Encodable {
+            let csv: String
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/feedback/import",
+            body: Body(csv: csv),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminFeedbackImportResult.self)
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

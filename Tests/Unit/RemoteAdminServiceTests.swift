@@ -632,6 +632,73 @@ final class RemoteAdminServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests[6].httpMethod, "DELETE")
     }
 
+    func testFeedbackListUpdateExportImport() async throws {
+        let rowJSON = """
+        {"id":"feedback-1","type":"suggestion","content":"希望增加夜宵","status":"pending","createdAt":"2099-11-20T04:00:00Z","updatedAt":"2099-11-20T04:00:00Z","userDisplayName":"干饭人","latestReply":null}
+        """
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[\(rowJSON)],"total":1,"page":1,"size":20}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope(rowJSON)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[],"total":0,"page":1,"size":50}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope(rowJSON)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"filename":"feedback-2026-11-21.csv","csv":"\\uFEFF反馈编号,反馈类型,反馈内容,处理状态,处理建议\\r\\n","count":1}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"updated":1,"skipped":0,"issues":[]}
+            """))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.feedbackList(archived: false, page: 1, size: 20)
+        _ = try await service.feedbackDetail(id: "feedback-1")
+        _ = try await service.feedbackReplies(id: "feedback-1", page: 1, size: 50)
+        _ = try await service.updateFeedback(
+            id: "feedback-1",
+            reply: "已记录",
+            status: "processing",
+            clientRequestID: "req-1"
+        )
+        let exported = try await service.exportFeedback()
+        let imported = try await service.importFeedback(csv: "反馈编号,反馈类型\r\n")
+
+        XCTAssertEqual(page.items.first?.content, "希望增加夜宵")
+        XCTAssertEqual(exported.count, 1)
+        XCTAssertTrue(exported.csv.hasPrefix("\u{FEFF}"))
+        XCTAssertEqual(imported.updated, 1)
+        let listQuery = URLComponents(
+            url: try XCTUnwrap(transport.requests[0].url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(listQuery?.first(where: { $0.name == "archived" })?.value, "false")
+        XCTAssertEqual(transport.requests[4].httpMethod, "PUT")
+        let updateBody = try XCTUnwrap(transport.requests[4].httpBody)
+        let updateJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: updateBody) as? [String: Any]
+        )
+        XCTAssertEqual(updateJSON["reply"] as? String, "已记录")
+        XCTAssertEqual(updateJSON["status"] as? String, "processing")
+        XCTAssertEqual(updateJSON["clientRequestId"] as? String, "req-1")
+        XCTAssertEqual(transport.requests[5].httpMethod, "POST")
+        XCTAssertEqual(transport.requests[5].url?.path, "/api/v1/admin/feedback/export")
+        XCTAssertEqual(transport.requests[6].url?.path, "/api/v1/admin/feedback/import")
+        let importBody = try XCTUnwrap(transport.requests[6].httpBody)
+        let importJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: importBody) as? [String: Any]
+        )
+        XCTAssertEqual(importJSON["csv"] as? String, "反馈编号,反馈类型\r\n")
+    }
+
     func testUpdateUserSendsRoleAndStatus() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [
