@@ -142,7 +142,7 @@ final class InboxViewModel: ObservableObject {
         errorMessage = nil
         do {
             try await inbox.markAllMessagesRead()
-            messages = messages.map { read($0) }
+            messages = messages.map { markRead($0) }
             messageUnread = 0
         } catch let error as AppError {
             errorMessage = error.localizedDescription
@@ -239,10 +239,10 @@ final class InboxViewModel: ObservableObject {
 
     private func replaceMessage(_ id: String, read: Bool) {
         guard let index = messages.firstIndex(where: { $0.id == id }) else { return }
-        messages[index] = read ? read(messages[index]) : messages[index]
+        messages[index] = read ? markRead(messages[index]) : messages[index]
     }
 
-    private func read(_ message: InboxMessage) -> InboxMessage {
+    private func markRead(_ message: InboxMessage) -> InboxMessage {
         InboxMessage(
             id: message.id,
             title: message.title,
