@@ -26,6 +26,7 @@ struct DishDetailView: View {
                     content
                 }
                 .padding(Zine.pagePadding)
+                .readableWidth(760)
             }
         }
         .navigationTitle(model.detail?.name ?? "菜品详情")

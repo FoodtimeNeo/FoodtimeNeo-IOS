@@ -37,6 +37,7 @@ struct AdminHomeView: View {
                     userList
                 }
                 .padding(Zine.pagePadding)
+                .readableWidth(900)
             }
             .refreshable { await model.load() }
         }

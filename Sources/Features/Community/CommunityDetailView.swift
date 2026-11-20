@@ -56,6 +56,7 @@ struct CommunityDetailView: View {
                     commentsSection
                 }
                 .padding(Zine.pagePadding)
+                .readableWidth(760)
             }
             .safeAreaInset(edge: .bottom) {
                 composer

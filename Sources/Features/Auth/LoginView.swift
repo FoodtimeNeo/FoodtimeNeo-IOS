@@ -26,7 +26,7 @@ struct LoginView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("北交干饭吧")
-                            .font(.system(size: 36, weight: .black, design: .serif))
+                            .font(.system(.largeTitle, design: .serif).weight(.black))
                             .foregroundStyle(Zine.ink)
                         Text("今天也要好好吃饭。")
                             .font(Zine.noteFont)
@@ -37,8 +37,9 @@ struct LoginView: View {
                     PaperCard {
                         VStack(alignment: .leading, spacing: 14) {
                             Text("登录")
-                                .font(.system(size: 24, weight: .bold, design: .serif))
+                                .font(Zine.sectionFont)
                                 .foregroundStyle(Zine.ink)
+                                .accessibilityAddTraits(.isHeader)
 
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("邮箱")
@@ -130,12 +131,13 @@ struct LoginView: View {
                     }
                     .buttonStyle(LinkButtonStyle())
 
-                    Text("当前已接入登录、注册、找回密码与食堂只读浏览。社区与管理功能按审计报告的波次继续接入，不把占位入口当作已完成。")
+                    Text("遇见好吃的，就记一笔。")
                         .font(.footnote)
                         .foregroundStyle(Zine.muted)
                         .padding(.bottom, 24)
                 }
                 .padding(.horizontal, Zine.pagePadding)
+                .readableWidth(560)
             }
             .scrollDismissesKeyboard(.interactively)
         }

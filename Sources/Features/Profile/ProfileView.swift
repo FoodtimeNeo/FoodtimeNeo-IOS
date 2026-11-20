@@ -92,6 +92,7 @@ struct ProfileView: View {
                             .buttonStyle(InkButtonStyle())
                     }
                     .padding(Zine.pagePadding)
+                    .readableWidth(720)
                 }
             }
             .navigationTitle("我的")

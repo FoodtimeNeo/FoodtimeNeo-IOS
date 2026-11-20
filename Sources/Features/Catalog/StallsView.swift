@@ -67,6 +67,7 @@ struct StallsView: View {
                     content
                 }
                 .padding(Zine.pagePadding)
+                .readableWidth()
             }
             .refreshable { await model.load() }
         }

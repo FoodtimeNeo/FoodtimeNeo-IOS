@@ -49,6 +49,7 @@ struct CommunityFeedView: View {
                     content
                 }
                 .padding(Zine.pagePadding)
+                .readableWidth()
             }
             .refreshable { await model.load(reset: true) }
         }
