@@ -63,6 +63,17 @@ struct CommunityDetailView: View {
         }
         .navigationTitle("食记")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if let post = model.post, post.status == "approved",
+               let url = CommunityShareLink.postURL(id: post.id) {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ShareLink(item: url) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .accessibilityLabel("分享食记")
+                }
+            }
+        }
         .task {
             await model.load()
             if let post = model.post, post.status == "approved" {
