@@ -19,8 +19,9 @@
 - W2 搜菜：关键词、食堂多选、价格区间、最低评分、排序与分页；详见 [搜菜筛选](docs/DISH-SEARCH.md)。
 - W2 详情/图册：菜品详情、评分、缩略图与全屏缩放图册；详见 [菜品详情与图册](docs/DISH-DETAIL.md)。
 - W2 价格历史：全部/30/90 天、单位与 null 分段、阶梯图与记录列表；详见 [价格历史](docs/PRICE-HISTORY.md)。
+- W2 校园地图：六区域底图、缩放/拖动/点选、食堂入口；详见 [校园地图](docs/CAMPUS-MAP.md)（底图再分发许可待确认）。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：地图、食堂/档口点评、菜品点评/回复/投稿、社区、收藏分组、历史、私信/通知、举报申诉、管理端、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
+- **尚未实现**：食堂/档口点评、菜品点评/回复/投稿、社区、收藏分组、历史、私信/通知、举报申诉、管理端、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
 - Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 

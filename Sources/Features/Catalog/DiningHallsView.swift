@@ -38,6 +38,24 @@ struct DiningHallsView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    NavigationLink {
+                        CampusMapView(catalog: catalog)
+                    } label: {
+                        PaperCard {
+                            HStack(spacing: 10) {
+                                Image(systemName: "map")
+                                    .foregroundStyle(Zine.red)
+                                Text("食堂地图")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(Zine.ink)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(Zine.muted)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
                     content
                 }
                 .padding(Zine.pagePadding)
