@@ -8,13 +8,13 @@
 
 ## 当前交接状态
 
-仓库仅完成结构、协作、对齐记录和基础CI初始化，尚无Xcode工程、业务实现或iOS安装包。框架、最低系统、Bundle ID、签名和分发尚未确定。请先核对这些关键决策，继续推进不依赖它们的源码调查，不要默认需要用户先购买Mac，也不要把Windows WebKit当Apple模拟器验证。
+仓库已完成工程底座：XcodeGen 工程、SwiftUI 外壳、网络/会话/CSRF、Keychain Cookie 归档、登录/验证码、食堂→档口→菜品只读纵切片、macOS 编译与单测 CI。W1 注册（策略/邀请码/邮箱验证码）、找回/修改密码、资料昵称编辑、学校邮箱绑定/解绑与账号注销、关注/粉丝/搜索/黑名单、用户反馈已接入；W2 搜菜筛选/排序、菜品详情/图册、价格历史、校园地图、每日推荐已接入；W3 菜品点评/点赞/回复/我的点评/我的回复、一键点评、食堂/档口点评、图片上传、菜品/档口投稿与我的投稿已接入；W4 社区信息流/详情/评论/楼中楼回复/点赞收藏浏览、发帖与每账号本机草稿已接入。完整对齐尚未开始，`coverage.json` 的 102 项目标仍全部 `not-started`。原生 SwiftUI 与最低 iOS 17 已确认；Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名、分发、后台通知/APNs 仍待确认。请先核对 `docs/BACKEND-INTEGRATION.md`、`docs/IOS-DECISIONS.md` 和最新源码，继续推进未确认项之外的实现；不要默认需要用户先购买Mac，也不要把Windows WebKit当Apple模拟器验证。
 
 已发布参照 Android main：`32215aab169bfe9ca40d7189a09c59c325744f21`（v2.0.0β）；Android dev：`ff1ed41c21b6361a3ec7ae0280878a2806c14a7a`，另有一键点评新流程，需要纳入跟进。Backend main：`e8f34998930781230711d8e8dd109c32d34b1ba8`；Web main：`b6e2d8f7c49016c0d53aea94b0472f3f12595a7c`。开始前重新核对最新提交，不能永远停在这份快照。线上部署版本需单独核实。
 
 ## 先读再动手
 
-阅读本仓 README、AGENTS.md、docs/ANDROID-PARITY.md、docs/parity/coverage.json、docs/ARCHITECTURE.md、docs/SYNC-PROCESS.md、docs/IOS-DECISIONS.md。
+阅读本仓 README、AGENTS.md、docs/ANDROID-PARITY.md、docs/parity/coverage.json、docs/ARCHITECTURE.md、docs/SYNC-PROCESS.md、docs/IOS-DECISIONS.md、docs/BACKEND-INTEGRATION.md、docs/DEVELOPMENT.md。
 
 随后读取Android的MainActivity注册表、全部Screen/菜单/弹窗、domain/repository、RemoteRepository与JSON adapters、图片/草稿/通知/更新实现及测试；交叉核对Backend真实Controller/DTO与能力策略。Android文档有旧版本文字，不能只按文档标题或旧计划开发。当前路由并集72项和跨页面能力30项只是防遗漏起点，不代表已经穷尽业务或完成验收。
 
@@ -30,7 +30,7 @@
 
 ## 验证与交付
 
-当前CI只检查仓库/对齐记录，不证明iOS构建或功能通过。建立工程后补齐macOS/Xcode编译、单测、真实测试后端及Apple模拟器验证；媒体、权限、后台、键盘/返回、动态字体和不同角色要专项测试。实机不可用时准确记录未执行，禁止用Mock、截图或Windows浏览器代替。
+当前CI包含仓库/对齐记录检查与macOS编译/单测，但仍不证明业务验收。继续补齐真实测试后端、Apple模拟器、真机及媒体、权限、后台、键盘/返回、动态字体和不同角色专项；实机不可用时准确记录未执行，禁止用Mock、截图或Windows浏览器代替。
 
 按README的feature→dev squash、dev→main merge commit流程工作，准确HEAD检查通过再合并。每个PR记录对应Android提交、覆盖ID、iOS实现/证据、平台差异和遗留项。不提交凭据或真实用户数据，不自行发布、部署或购买服务。
 
