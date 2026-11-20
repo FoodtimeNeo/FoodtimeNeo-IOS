@@ -10,6 +10,7 @@ struct ProfileView: View {
         case feedback
         case myReviews
         case myReplies
+        case mySubmissions
 
         var id: String { rawValue }
     }
@@ -40,6 +41,8 @@ struct ProfileView: View {
                         Button("我的点评") { activeSheet = .myReviews }
                             .buttonStyle(InkButtonStyle())
                         Button("我的回复") { activeSheet = .myReplies }
+                            .buttonStyle(InkButtonStyle())
+                        Button("我的投稿") { activeSheet = .mySubmissions }
                             .buttonStyle(InkButtonStyle())
                         Button("建议与反馈") { activeSheet = .feedback }
                             .buttonStyle(InkButtonStyle())
@@ -74,6 +77,8 @@ struct ProfileView: View {
                 MyReviewsView(session: session)
             case .myReplies:
                 MyRepliesView(session: session)
+            case .mySubmissions:
+                MySubmissionsView(session: session)
             }
         }
         .alert("退出登录？", isPresented: $confirmLogout) {
@@ -148,7 +153,7 @@ struct ProfileView: View {
                 Text("开发状态")
                     .font(.system(size: 18, weight: .bold, design: .serif))
                     .foregroundStyle(Zine.ink)
-                Text("当前已接入登录、注册、找回/修改密码、资料昵称编辑、关注/粉丝/用户搜索/黑名单、菜品点评/点赞/回复/我的点评/我的回复、建议与反馈、学校邮箱绑定/解绑、账号注销入口、会话恢复、能力读取和食堂目录/搜菜/详情/价格/地图。头像、投稿、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
+                Text("当前已接入登录、注册、找回/修改密码、资料昵称编辑、关注/粉丝/用户搜索/黑名单、菜品/食堂/档口点评与回复、图片上传、菜品/档口投稿与我的投稿、建议与反馈、学校邮箱绑定/解绑、账号注销入口、会话恢复、能力读取和食堂目录/搜菜/详情/价格/地图。头像、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
                     .font(.subheadline)
                     .foregroundStyle(Zine.muted)
             }

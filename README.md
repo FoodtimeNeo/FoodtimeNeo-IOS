@@ -26,8 +26,9 @@
 - W3 一键点评：食堂首页入口、搜菜选菜、复用点评表单；详见 [一键点评](docs/QUICK-REVIEW.md)。
 - W3 食堂/档口点评：评分汇总、筛选、提交、点赞、我的评价状态；详见 [食堂/档口点评](docs/VENUE-REVIEWS.md)。
 - W3 图片投稿：相册选择、方向归一/压缩、multipart 上传、菜品图片投稿；详见 [图片上传与投稿](docs/IMAGE-SUBMISSIONS.md)。
+- W3 目录投稿：菜品/档口投稿与我的菜品/档口/图片投稿；详见 [目录投稿](docs/CATALOG-SUBMISSIONS.md)。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：菜品/档口目录投稿、我的提交汇总、社区、收藏分组、历史、私信/通知、举报申诉、管理端、完整媒体/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
+- **尚未实现**：社区、收藏分组、历史、私信/通知、举报申诉、管理端、完整媒体/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
 - Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 

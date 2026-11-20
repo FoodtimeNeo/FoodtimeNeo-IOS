@@ -75,6 +75,7 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 点评回复 | `GET/POST /reviews/{id}/replies`、`PUT/DELETE /review-replies/{id}/like`、`GET /users/me/review-replies` |
 | 食堂/档口点评 | `GET /{dining-halls|stalls}/{id}/rating`、`/reviews`、`/reviews/me`、`POST /reviews`、`PUT/DELETE /venue-reviews/{id}/like` |
 | 图片上传/投稿 | `POST /uploads/images`（multipart）、`POST /dishes/{id}/image-submissions`、`GET /users/me/image-submissions` |
+| 目录投稿 | `POST /stalls/{id}/submissions`、`POST /dining-halls/{id}/submissions`、`GET /users/me/dish-submissions`、`/stall-submissions` |
 
 ## 7. 验证要求
 

@@ -384,8 +384,22 @@ final class FakeSubmissionService: SubmissionService {
     var myResult = Result<Page<ImageSubmission>, Error>.success(
         Page(items: [], total: 0, page: 1, size: 20)
     )
+    var dishSubmitResult = Result<CatalogSubmissionReceipt, Error>.success(
+        CatalogSubmissionReceipt(id: "ds-1", status: "pending", createdAt: Date())
+    )
+    var stallSubmitResult = Result<CatalogSubmissionReceipt, Error>.success(
+        CatalogSubmissionReceipt(id: "ss-1", status: "pending", createdAt: Date())
+    )
+    var myDishResult = Result<Page<DishSubmission>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var myStallResult = Result<Page<StallSubmission>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
     private(set) var uploadCalls = 0
     private(set) var submitCalls = 0
+    private(set) var dishSubmitCalls = 0
+    private(set) var stallSubmitCalls = 0
 
     func uploadImage(_ jpegData: Data) async throws -> UploadedImage {
         uploadCalls += 1
@@ -399,6 +413,35 @@ final class FakeSubmissionService: SubmissionService {
 
     func myImageSubmissions(page: Int, size: Int) async throws -> Page<ImageSubmission> {
         try myResult.get()
+    }
+
+    func submitDish(
+        stallID: String,
+        name: String,
+        description: String?,
+        price: Decimal?,
+        imageURL: String
+    ) async throws -> CatalogSubmissionReceipt {
+        dishSubmitCalls += 1
+        return try dishSubmitResult.get()
+    }
+
+    func submitStall(
+        hallID: String,
+        name: String,
+        description: String?,
+        coverImageURL: String
+    ) async throws -> CatalogSubmissionReceipt {
+        stallSubmitCalls += 1
+        return try stallSubmitResult.get()
+    }
+
+    func myDishSubmissions(page: Int, size: Int) async throws -> Page<DishSubmission> {
+        try myDishResult.get()
+    }
+
+    func myStallSubmissions(page: Int, size: Int) async throws -> Page<StallSubmission> {
+        try myStallResult.get()
     }
 }
 

@@ -46,6 +46,24 @@ struct StallDishesView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    NavigationLink {
+                        DishSubmissionView(stallID: stall.id, stallName: stall.name)
+                    } label: {
+                        PaperCard {
+                            HStack(spacing: 10) {
+                                Image(systemName: "plus.square")
+                                    .foregroundStyle(Zine.red)
+                                Text("投稿菜品")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(Zine.ink)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(Zine.muted)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
                     content
                 }
                 .padding(Zine.pagePadding)

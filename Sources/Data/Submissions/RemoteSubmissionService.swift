@@ -55,6 +55,76 @@ final class RemoteSubmissionService: SubmissionService {
         )
     }
 
+    func submitDish(
+        stallID: String,
+        name: String,
+        description: String?,
+        price: Decimal?,
+        imageURL: String
+    ) async throws -> CatalogSubmissionReceipt {
+        struct Body: Encodable {
+            let name: String
+            let description: String?
+            let price: Decimal?
+            let imageUrl: String
+        }
+        let request = try APIRequest.json(
+            .post,
+            "stalls/\(encoded(stallID))/submissions",
+            body: Body(name: name, description: description, price: price, imageUrl: imageURL),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: CatalogSubmissionReceipt.self)
+    }
+
+    func submitStall(
+        hallID: String,
+        name: String,
+        description: String?,
+        coverImageURL: String
+    ) async throws -> CatalogSubmissionReceipt {
+        struct Body: Encodable {
+            let name: String
+            let description: String?
+            let coverImageUrl: String
+        }
+        let request = try APIRequest.json(
+            .post,
+            "dining-halls/\(encoded(hallID))/submissions",
+            body: Body(name: name, description: description, coverImageUrl: coverImageURL),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: CatalogSubmissionReceipt.self)
+    }
+
+    func myDishSubmissions(page: Int, size: Int) async throws -> Page<DishSubmission> {
+        try await api.send(
+            .get(
+                "users/me/dish-submissions",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<DishSubmission>.self
+        )
+    }
+
+    func myStallSubmissions(page: Int, size: Int) async throws -> Page<StallSubmission> {
+        try await api.send(
+            .get(
+                "users/me/stall-submissions",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<StallSubmission>.self
+        )
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }
