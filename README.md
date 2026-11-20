@@ -13,8 +13,9 @@
 - W1 注册：注册策略、邀请码、邮箱验证码、密码校验、注册成功返回登录；详见 [注册流程](docs/AUTH-REGISTRATION.md)。
 - W1 密码：找回密码三步（发码/验证得 token/重置）与登录后修改密码；详见 [找回与修改密码](docs/AUTH-PASSWORD.md)。
 - W1 资料：读取资料/关注粉丝/学校邮箱状态，修改昵称并保留现有头像引用；详见 [个人资料](docs/PROFILE.md)。
+- W1 账号安全：学校邮箱绑定/解绑与账号注销（每日一次注销验证码、1 小时邮箱冷却）；详见 [账号安全](docs/ACCOUNT-SECURITY.md)。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：头像上传/裁剪、学校邮箱绑定/解绑、账号注销、点评与回复、投稿、社区、收藏分组、历史、私信/通知、反馈、举报申诉、管理端、价格历史、地图、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
+- **尚未实现**：头像上传/裁剪、关注/粉丝/用户搜索/黑名单、反馈、点评与回复、投稿、社区、收藏分组、历史、私信/通知、举报申诉、管理端、价格历史、地图、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
 - Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 

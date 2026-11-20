@@ -17,6 +17,12 @@ protocol AuthService: AnyObject {
     func changePassword(oldPassword: String, newPassword: String) async throws
     func currentProfile() async throws -> UserProfile
     func updateProfile(displayName: String, avatarUrl: String?) async throws -> UserProfile
+    func accountLifecycle() async throws -> AccountLifecycleSummary
+    func sendAccountLifecycleCode(_ action: AccountLifecycleAction) async throws -> AccountActionReceipt
+    func unbindSchoolEmail(verificationCode: String) async throws -> SchoolEmailUnbindResult
+    func deleteAccount(verificationCode: String) async throws -> AccountDeletionResult
+    func sendSchoolEmailCode(email: String) async throws -> EmailCodeReceipt
+    func bindSchoolEmail(email: String, verificationCode: String) async throws -> UserProfile
     func currentSession() async throws -> SessionSnapshot
     func capabilities() async throws -> CapabilitySnapshot
     func logout() async throws

@@ -121,6 +121,52 @@ final class AppSessionTests: XCTestCase {
         XCTAssertEqual(auth.lastUpdatedDisplayName, " 新昵称 ")
     }
 
+    func testDeleteAccountClearsSessionAndSetsNotice() async throws {
+        let jar = MemoryCookieJar()
+        jar.sessionCookiePresent = true
+        let auth = FakeAuthService()
+        auth.sessionResult = .success(SessionSnapshot(user: TestFixtures.user, mode: .normal))
+        auth.deleteAccountResult = .success(
+            AccountDeletionResult(deleted: true, emailsReusableAt: Date().addingTimeInterval(3600))
+        )
+        let session = makeSession(auth: auth, jar: jar)
+        await session.start()
+
+        _ = try await session.deleteAccount(verificationCode: "012345")
+
+        XCTAssertEqual(session.state, .signedOut)
+        XCTAssertFalse(jar.sessionCookiePresent)
+        XCTAssertNotNil(session.accountDeletionNotice)
+        XCTAssertEqual(auth.deleteAccountCalls, 1)
+    }
+
+    func testUnbindSchoolEmailRefreshesSessionUser() async throws {
+        let jar = MemoryCookieJar()
+        jar.sessionCookiePresent = true
+        let auth = FakeAuthService()
+        auth.sessionResult = .success(SessionSnapshot(user: TestFixtures.user, mode: .normal))
+        let visitor = UserProfile(
+            id: TestFixtures.user.id,
+            email: TestFixtures.user.email,
+            displayName: TestFixtures.user.displayName,
+            role: "visitor",
+            avatarUrl: nil,
+            followingCount: 0,
+            followerCount: 0,
+            schoolEmail: nil,
+            schoolEmailVerified: false
+        )
+        auth.unbindResult = .success(
+            SchoolEmailUnbindResult(profile: visitor, schoolEmailReusableAt: Date().addingTimeInterval(3600))
+        )
+        let session = makeSession(auth: auth, jar: jar)
+        await session.start()
+
+        _ = try await session.unbindSchoolEmail(verificationCode: "012345")
+
+        XCTAssertEqual(session.state, .signedIn(visitor.asUser))
+    }
+
     func testUnauthorizedClearsSessionAndCapabilities() async {
         let jar = MemoryCookieJar()
         jar.sessionCookiePresent = true

@@ -194,6 +194,84 @@ final class RemoteAuthServiceTests: XCTestCase {
         XCTAssertTrue(json["avatarUrl"] is NSNull)
     }
 
+    func testAccountLifecycleSummaryAndDeletionCode() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"verificationEmail":"user@example.com","schoolEmail":null,"canDelete":true,"canUnbind":false,"deletionCodeAvailableAt":null}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-8"}
+            """)),
+            .init(status: 202, body: TestFixtures.envelope("""
+            {"expiresAt":"2099-11-20T04:15:00Z","nextSendAt":"2099-11-21T00:00:00Z","verificationEmail":"user@example.com"}
+            """))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let summary = try await service.accountLifecycle()
+        let receipt = try await service.sendAccountLifecycleCode(.delete)
+
+        XCTAssertTrue(summary.canDelete)
+        XCTAssertNil(summary.schoolEmail)
+        XCTAssertEqual(receipt.verificationEmail, "user@example.com")
+        XCTAssertEqual(transport.requests.count, 3)
+        XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/users/me/account-lifecycle")
+        XCTAssertEqual(transport.requests[2].url?.path, "/api/v1/users/me/account-lifecycle/delete-code")
+        XCTAssertEqual(transport.requests[2].value(forHTTPHeaderField: "X-CSRF-TOKEN"), "token-8")
+    }
+
+    func testBindSchoolEmailNormalizesAddress() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-9"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"9e55b67f-f051-4019-bafd-a4082c95f2a6","email":"user@example.com","displayName":"干饭人012345","role":"user","avatarUrl":null,"followingCount":3,"followerCount":5,"schoolEmail":"20260001@bjtu.edu.cn","schoolEmailVerified":true}
+            """))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let profile = try await service.bindSchoolEmail(
+            email: "20260001@BJTU.EDU.CN",
+            verificationCode: "012345"
+        )
+
+        XCTAssertEqual(profile.schoolEmail, "20260001@bjtu.edu.cn")
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["email"] as? String, "20260001@bjtu.edu.cn")
+        XCTAssertEqual(json["verificationCode"] as? String, "012345")
+    }
+
+    func testDeleteAccountPostsVerificationCode() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-10"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"deleted":true,"emailsReusableAt":"2099-11-20T05:00:00Z"}
+            """))
+        ]
+        let service = RemoteAuthService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let result = try await service.deleteAccount(verificationCode: "012345")
+
+        XCTAssertTrue(result.deleted)
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/users/me/account-lifecycle/delete")
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["verificationCode"] as? String, "012345")
+    }
+
     func testEmailCodeInvalidSurfacesBusinessCode() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

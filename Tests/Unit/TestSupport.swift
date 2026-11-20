@@ -109,6 +109,14 @@ final class FakeAuthService: AuthService {
     var changePasswordError: Error?
     var profileResult: Result<UserProfile, Error> = .success(TestFixtures.profile)
     var updateProfileResult: Result<UserProfile, Error> = .success(TestFixtures.profile)
+    var accountLifecycleResult: Result<AccountLifecycleSummary, Error> = .success(TestFixtures.accountSummary)
+    var accountActionReceiptResult: Result<AccountActionReceipt, Error> = .success(TestFixtures.accountReceipt)
+    var unbindResult: Result<SchoolEmailUnbindResult, Error> = .success(TestFixtures.unbindResult)
+    var deleteAccountResult: Result<AccountDeletionResult, Error> = .success(TestFixtures.deletionResult)
+    var schoolEmailCodeResult: Result<EmailCodeReceipt, Error> = .success(
+        EmailCodeReceipt(expiresAt: nil, resendAfterSeconds: 60)
+    )
+    var bindSchoolEmailResult: Result<UserProfile, Error> = .success(TestFixtures.profile)
     var sessionResult: Result<SessionSnapshot, Error> = .failure(AppError.unauthenticated)
     var capabilitiesResult: Result<CapabilitySnapshot, Error> = .success(.empty)
     var logoutError: Error?
@@ -120,6 +128,9 @@ final class FakeAuthService: AuthService {
     private(set) var changePasswordCalls = 0
     private(set) var updateProfileCalls = 0
     private(set) var lastUpdatedDisplayName: String?
+    private(set) var accountActionCodes: [AccountLifecycleAction] = []
+    private(set) var bindSchoolEmailCalls = 0
+    private(set) var deleteAccountCalls = 0
 
     func registrationPolicy() async throws -> RegistrationPolicy {
         policy
@@ -185,6 +196,35 @@ final class FakeAuthService: AuthService {
         return try updateProfileResult.get()
     }
 
+    func accountLifecycle() async throws -> AccountLifecycleSummary {
+        try accountLifecycleResult.get()
+    }
+
+    func sendAccountLifecycleCode(
+        _ action: AccountLifecycleAction
+    ) async throws -> AccountActionReceipt {
+        accountActionCodes.append(action)
+        return try accountActionReceiptResult.get()
+    }
+
+    func unbindSchoolEmail(verificationCode: String) async throws -> SchoolEmailUnbindResult {
+        try unbindResult.get()
+    }
+
+    func deleteAccount(verificationCode: String) async throws -> AccountDeletionResult {
+        deleteAccountCalls += 1
+        return try deleteAccountResult.get()
+    }
+
+    func sendSchoolEmailCode(email: String) async throws -> EmailCodeReceipt {
+        try schoolEmailCodeResult.get()
+    }
+
+    func bindSchoolEmail(email: String, verificationCode: String) async throws -> UserProfile {
+        bindSchoolEmailCalls += 1
+        return try bindSchoolEmailResult.get()
+    }
+
     func currentSession() async throws -> SessionSnapshot {
         try sessionResult.get()
     }
@@ -237,6 +277,30 @@ enum TestFixtures {
         followerCount: 5,
         schoolEmail: nil,
         schoolEmailVerified: false
+    )
+
+    static let accountSummary = AccountLifecycleSummary(
+        verificationEmail: user.email,
+        schoolEmail: nil,
+        canDelete: true,
+        canUnbind: false,
+        deletionCodeAvailableAt: nil
+    )
+
+    static let accountReceipt = AccountActionReceipt(
+        expiresAt: Date().addingTimeInterval(900),
+        nextSendAt: Date().addingTimeInterval(86400),
+        verificationEmail: user.email
+    )
+
+    static let unbindResult = SchoolEmailUnbindResult(
+        profile: profile,
+        schoolEmailReusableAt: Date().addingTimeInterval(3600)
+    )
+
+    static let deletionResult = AccountDeletionResult(
+        deleted: true,
+        emailsReusableAt: Date().addingTimeInterval(3600)
     )
 
     static func envelope(_ data: String, code: String = "OK", message: String = "success") -> String {

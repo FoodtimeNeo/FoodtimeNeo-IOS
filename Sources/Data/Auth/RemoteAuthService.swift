@@ -183,6 +183,77 @@ final class RemoteAuthService: AuthService {
         return try await api.send(request, as: UserProfile.self)
     }
 
+    func accountLifecycle() async throws -> AccountLifecycleSummary {
+        try await api.send(
+            .get("users/me/account-lifecycle"),
+            as: AccountLifecycleSummary.self
+        )
+    }
+
+    func sendAccountLifecycleCode(
+        _ action: AccountLifecycleAction
+    ) async throws -> AccountActionReceipt {
+        try await api.send(
+            .post("users/me/account-lifecycle/\(action.rawValue)-code"),
+            as: AccountActionReceipt.self
+        )
+    }
+
+    func unbindSchoolEmail(verificationCode: String) async throws -> SchoolEmailUnbindResult {
+        let body = VerificationCodeBody(
+            verificationCode: verificationCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        let request = try APIRequest.json(
+            .post,
+            "users/me/account-lifecycle/unbind",
+            body: body,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: SchoolEmailUnbindResult.self)
+    }
+
+    func deleteAccount(verificationCode: String) async throws -> AccountDeletionResult {
+        let body = VerificationCodeBody(
+            verificationCode: verificationCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        let request = try APIRequest.json(
+            .post,
+            "users/me/account-lifecycle/delete",
+            body: body,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AccountDeletionResult.self)
+    }
+
+    func sendSchoolEmailCode(email: String) async throws -> EmailCodeReceipt {
+        let body = SchoolEmailCodeBody(email: SchoolEmailValidation.normalized(email))
+        let request = try APIRequest.json(
+            .post,
+            "auth/bind-email/email-code",
+            body: body,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: EmailCodeReceipt.self)
+    }
+
+    func bindSchoolEmail(email: String, verificationCode: String) async throws -> UserProfile {
+        let body = BindSchoolEmailBody(
+            email: SchoolEmailValidation.normalized(email),
+            verificationCode: verificationCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
+        let request = try APIRequest.json(
+            .post,
+            "users/me/bind-email",
+            body: body,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: UserProfile.self)
+    }
+
     func currentSession() async throws -> SessionSnapshot {
         let response: SessionMeResponse = try await api.send(
             .get("auth/me"),
@@ -245,6 +316,19 @@ private struct ProfileUpdateBody: Encodable {
             try container.encodeNil(forKey: .avatarUrl)
         }
     }
+}
+
+private struct VerificationCodeBody: Encodable {
+    let verificationCode: String
+}
+
+private struct SchoolEmailCodeBody: Encodable {
+    let email: String
+}
+
+private struct BindSchoolEmailBody: Encodable {
+    let email: String
+    let verificationCode: String
 }
 
 private struct PasswordResetCodeBody: Encodable {

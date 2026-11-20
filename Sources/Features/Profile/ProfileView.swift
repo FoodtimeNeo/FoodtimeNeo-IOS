@@ -2,11 +2,18 @@ import SwiftUI
 
 @MainActor
 struct ProfileView: View {
+    private enum ProfileSheet: String, Identifiable {
+        case editProfile
+        case changePassword
+        case accountSecurity
+
+        var id: String { rawValue }
+    }
+
     let user: User
     @ObservedObject var session: AppSession
     @State private var confirmLogout = false
-    @State private var showChangePassword = false
-    @State private var showEditProfile = false
+    @State private var activeSheet: ProfileSheet?
 
     var body: some View {
         NavigationStack {
@@ -22,10 +29,14 @@ struct ProfileView: View {
                         profileCard
                         capabilityCard
                         roadmapCard
-                        Button("编辑资料") { showEditProfile = true }
+                        Button("编辑资料") { activeSheet = .editProfile }
                             .buttonStyle(InkButtonStyle())
-                        Button("修改密码") { showChangePassword = true }
+                        Button("修改密码") { activeSheet = .changePassword }
                             .buttonStyle(InkButtonStyle())
+                        if !user.isAdmin {
+                            Button("账号安全与注销") { activeSheet = .accountSecurity }
+                                .buttonStyle(InkButtonStyle())
+                        }
                         Button("退出登录") { confirmLogout = true }
                             .buttonStyle(InkButtonStyle())
                     }
@@ -35,11 +46,15 @@ struct ProfileView: View {
             .navigationTitle("我的")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .sheet(isPresented: $showEditProfile) {
-            ProfileEditView(session: session)
-        }
-        .sheet(isPresented: $showChangePassword) {
-            ChangePasswordView(session: session)
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .editProfile:
+                ProfileEditView(session: session)
+            case .changePassword:
+                ChangePasswordView(session: session)
+            case .accountSecurity:
+                AccountSecurityView(session: session)
+            }
         }
         .alert("退出登录？", isPresented: $confirmLogout) {
             Button("取消", role: .cancel) {}
@@ -113,7 +128,7 @@ struct ProfileView: View {
                 Text("开发状态")
                     .font(.system(size: 18, weight: .bold, design: .serif))
                     .foregroundStyle(Zine.ink)
-                Text("当前已接入登录、注册、找回/修改密码、资料昵称编辑、会话恢复、能力读取和食堂三级只读浏览。头像、学校邮箱、注销、点评、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
+                Text("当前已接入登录、注册、找回/修改密码、资料昵称编辑、学校邮箱绑定/解绑、账号注销入口、会话恢复、能力读取和食堂三级只读浏览。头像、点评、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
                     .font(.subheadline)
                     .foregroundStyle(Zine.muted)
             }

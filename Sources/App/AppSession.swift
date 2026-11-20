@@ -13,6 +13,7 @@ enum SessionState: Equatable {
 final class AppSession: ObservableObject {
     @Published private(set) var state: SessionState = .launching
     @Published private(set) var capabilities: CapabilitySnapshot = .empty
+    @Published private(set) var accountDeletionNotice: String?
 
     let auth: AuthService
     let catalog: CatalogService
@@ -180,6 +181,50 @@ final class AppSession: ObservableObject {
         )
         state = .signedIn(updated.asUser)
         return updated
+    }
+
+    func accountLifecycle() async throws -> AccountLifecycleSummary {
+        try await auth.accountLifecycle()
+    }
+
+    func sendAccountLifecycleCode(_ action: AccountLifecycleAction) async throws -> AccountActionReceipt {
+        try await auth.sendAccountLifecycleCode(action)
+    }
+
+    func unbindSchoolEmail(verificationCode: String) async throws -> SchoolEmailUnbindResult {
+        let result = try await auth.unbindSchoolEmail(verificationCode: verificationCode)
+        state = .signedIn(result.profile.asUser)
+        return result
+    }
+
+    func deleteAccount(verificationCode: String) async throws -> AccountDeletionResult {
+        let result = try await auth.deleteAccount(verificationCode: verificationCode)
+        await clearLocalSession()
+        capabilities = .empty
+        if let reusableAt = result.emailsReusableAt {
+            accountDeletionNotice = "账号已注销。登录邮箱与学校邮箱可在 \(DisplayFormat.dateTime(reusableAt)) 后重新使用；新账号不继承旧数据。"
+        } else {
+            accountDeletionNotice = "账号已注销。旧内容显示为已注销用户，新账号不继承旧数据。"
+        }
+        state = .signedOut
+        return result
+    }
+
+    func sendSchoolEmailCode(email: String) async throws -> EmailCodeReceipt {
+        try await auth.sendSchoolEmailCode(email: email)
+    }
+
+    func bindSchoolEmail(email: String, verificationCode: String) async throws -> UserProfile {
+        let profile = try await auth.bindSchoolEmail(
+            email: email,
+            verificationCode: verificationCode
+        )
+        state = .signedIn(profile.asUser)
+        return profile
+    }
+
+    func clearAccountDeletionNotice() {
+        accountDeletionNotice = nil
     }
 
     func logout() async {

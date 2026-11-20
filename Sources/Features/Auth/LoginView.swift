@@ -4,9 +4,15 @@ import UIKit
 @MainActor
 struct LoginView: View {
     @ObservedObject var session: AppSession
+    private enum AuthSheet: String, Identifiable {
+        case registration
+        case passwordRecovery
+
+        var id: String { rawValue }
+    }
+
     @StateObject private var model: LoginViewModel
-    @State private var showRegistration = false
-    @State private var showPasswordRecovery = false
+    @State private var activeSheet: AuthSheet?
 
     init(session: AppSession) {
         self.session = session
@@ -115,9 +121,9 @@ struct LoginView: View {
                     }
 
                     HStack {
-                        Button("注册账号") { showRegistration = true }
+                        Button("注册账号") { activeSheet = .registration }
                         Spacer()
-                        Button("忘记密码？") { showPasswordRecovery = true }
+                        Button("忘记密码？") { activeSheet = .passwordRecovery }
                     }
                     .buttonStyle(LinkButtonStyle())
 
@@ -130,15 +136,27 @@ struct LoginView: View {
             }
             .scrollDismissesKeyboard(.interactively)
         }
-        .sheet(isPresented: $showRegistration) {
-            RegistrationView(session: session) { email in
-                model.email = email
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .registration:
+                RegistrationView(session: session) { email in
+                    model.email = email
+                }
+            case .passwordRecovery:
+                PasswordRecoveryView(session: session) { email in
+                    model.email = email
+                }
             }
         }
-        .sheet(isPresented: $showPasswordRecovery) {
-            PasswordRecoveryView(session: session) { email in
-                model.email = email
+        .alert("账号已注销", isPresented: Binding(
+            get: { session.accountDeletionNotice != nil },
+            set: { if !$0 { session.clearAccountDeletionNotice() } }
+        )) {
+            Button("知道了", role: .cancel) {
+                session.clearAccountDeletionNotice()
             }
+        } message: {
+            Text(session.accountDeletionNotice ?? "")
         }
     }
 }
