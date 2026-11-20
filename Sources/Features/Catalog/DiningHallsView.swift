@@ -20,6 +20,24 @@ struct DiningHallsView: View {
                         title: "食堂手账",
                         subtitle: "今天的好心情，从一顿热饭开始。"
                     )
+                    NavigationLink {
+                        DishSearchView(catalog: catalog)
+                    } label: {
+                        PaperCard {
+                            HStack(spacing: 10) {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundStyle(Zine.red)
+                                Text("搜索菜品")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(Zine.ink)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(Zine.muted)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
                     content
                 }
                 .padding(Zine.pagePadding)

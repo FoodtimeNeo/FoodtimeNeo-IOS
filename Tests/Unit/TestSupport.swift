@@ -335,6 +335,8 @@ final class FakeCatalogService: CatalogService {
     var halls: [DiningHall] = []
     var stallsByHall: [String: [Stall]] = [:]
     var dishesByStall: [String: [DishSummary]] = [:]
+    var searchResult = Page<DishSearchRow>(items: [], total: 0, page: 1, size: 20)
+    private(set) var lastSearchFilters: DishSearchFilters?
 
     func diningHalls() async throws -> [DiningHall] {
         halls
@@ -346,6 +348,11 @@ final class FakeCatalogService: CatalogService {
 
     func dishes(stallID: String) async throws -> [DishSummary] {
         dishesByStall[stallID] ?? []
+    }
+
+    func searchDishes(_ filters: DishSearchFilters) async throws -> Page<DishSearchRow> {
+        lastSearchFilters = filters
+        return searchResult
     }
 }
 

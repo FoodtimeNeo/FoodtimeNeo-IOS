@@ -32,4 +32,5 @@ protocol CatalogService: AnyObject {
     func diningHalls() async throws -> [DiningHall]
     func stalls(diningHallID: String) async throws -> [Stall]
     func dishes(stallID: String) async throws -> [DishSummary]
+    func searchDishes(_ filters: DishSearchFilters) async throws -> Page<DishSearchRow>
 }
