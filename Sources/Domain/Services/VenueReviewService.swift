@@ -18,4 +18,5 @@ protocol VenueReviewService: AnyObject {
         requestID: String
     ) async throws -> VenueReview
     func setLike(reviewID: String, liked: Bool) async throws -> ReviewLikeState
+    func myReviews(page: Int, size: Int, type: String?) async throws -> Page<VenueReview>
 }

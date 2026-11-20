@@ -71,6 +71,20 @@ final class RemoteVenueReviewService: VenueReviewService {
         return try await api.send(request, as: ReviewLikeState.self)
     }
 
+    func myReviews(page: Int, size: Int, type: String?) async throws -> Page<VenueReview> {
+        var query = [
+            URLQueryItem(name: "page", value: String(max(1, page))),
+            URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+        ]
+        if let type, !type.isEmpty {
+            query.append(URLQueryItem(name: "type", value: type))
+        }
+        return try await api.send(
+            .get("users/me/venue-reviews", query: query),
+            as: Page<VenueReview>.self
+        )
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

@@ -237,6 +237,19 @@ final class RemoteCommunityService: CommunityService {
         return try await api.send(request, as: CommunityPinSnapshot.self)
     }
 
+    func myPosts(page: Int, size: Int) async throws -> Page<CommunityPost> {
+        try await api.send(
+            .get(
+                "users/me/community-posts",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<CommunityPost>.self
+        )
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

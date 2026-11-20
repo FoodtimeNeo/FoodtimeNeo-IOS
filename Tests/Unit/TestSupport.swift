@@ -796,6 +796,9 @@ final class FakeSubmissionService: SubmissionService {
 }
 
 final class FakeVenueReviewService: VenueReviewService {
+    var myReviewsResult = Result<Page<VenueReview>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
     var targetResult = VenueRatingTarget(
         type: "hall",
         targetId: "h-1",
@@ -842,6 +845,10 @@ final class FakeVenueReviewService: VenueReviewService {
 
     func setLike(reviewID: String, liked: Bool) async throws -> ReviewLikeState {
         likeResult
+    }
+
+    func myReviews(page: Int, size: Int, type: String?) async throws -> Page<VenueReview> {
+        try myReviewsResult.get()
     }
 }
 

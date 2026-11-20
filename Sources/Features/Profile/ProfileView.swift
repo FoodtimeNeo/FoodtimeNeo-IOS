@@ -15,6 +15,8 @@ struct ProfileView: View {
         case history
         case myCorrections
         case reportReceipts
+        case myCommunityPosts
+        case myVenueReviews
         case inbox
         case notificationSettings
         case settings
@@ -82,6 +84,10 @@ struct ProfileView: View {
                             .buttonStyle(InkButtonStyle())
                         Button("举报与处理决定") { activeSheet = .reportReceipts }
                             .buttonStyle(InkButtonStyle())
+                        Button("我的食记") { activeSheet = .myCommunityPosts }
+                            .buttonStyle(InkButtonStyle())
+                        Button("我的食堂点评") { activeSheet = .myVenueReviews }
+                            .buttonStyle(InkButtonStyle())
                         Button("建议与反馈") { activeSheet = .feedback }
                             .buttonStyle(InkButtonStyle())
                         Button("修改密码") { activeSheet = .changePassword }
@@ -139,6 +145,10 @@ struct ProfileView: View {
                     submissions: session.submissions,
                     drafts: session.appealDrafts
                 )
+            case .myCommunityPosts:
+                MyCommunityPostsView(service: session.community)
+            case .myVenueReviews:
+                MyVenueReviewsView(service: session.venueReviews)
             case .inbox:
                 InboxView(inbox: session.inbox, messages: session.messages)
             case .notificationSettings:
