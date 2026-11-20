@@ -59,6 +59,28 @@ final class RemoteCatalogServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests.first?.url?.path, "/api/v1/dining-halls")
     }
 
+    func testPriceHistoryRequestsDaysAndDecodes() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"dishId":"d-1","dishName":"鸡腿饭","currentPrice":15.00,"priceUnit":"serving","revision":1,"windowStart":"2099-11-20T00:00:00Z","windowEnd":"2099-11-20T04:00:00Z","canManage":false,"totalRecords":1,"records":[{"id":"h-1","price":15.00,"priceUnit":"serving","recordedAt":"2099-11-20T01:00:00Z","origin":"user","revision":1,"carriedForward":false}]}
+            """))
+        ]
+        let service = RemoteCatalogService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar()),
+            baseURL: TestFixtures.baseURL
+        )
+
+        let history = try await service.priceHistory(dishID: "d-1", days: 30)
+
+        XCTAssertEqual(history.dishName, "鸡腿饭")
+        XCTAssertEqual(history.records.first?.priceUnit, "serving")
+        let url = try XCTUnwrap(transport.requests.first?.url)
+        let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        XCTAssertEqual(components.queryItems?.first(where: { $0.name == "days" })?.value, "30")
+        XCTAssertEqual(url.path, "/api/v1/dishes/d-1/price-history")
+    }
+
     func testDishDetailImagesAndRatingDecode() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

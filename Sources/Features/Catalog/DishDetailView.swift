@@ -2,11 +2,13 @@ import SwiftUI
 
 @MainActor
 struct DishDetailView: View {
+    private let catalog: CatalogService
     @StateObject private var model: DishDetailViewModel
     @State private var showGallery = false
     @State private var galleryStart = 0
 
     init(dishID: String, catalog: CatalogService) {
+        self.catalog = catalog
         _model = StateObject(
             wrappedValue: DishDetailViewModel(dishID: dishID, catalog: catalog)
         )
@@ -41,6 +43,24 @@ struct DishDetailView: View {
         } else if let detail = model.detail {
             hero(detail)
             infoCard(detail)
+            NavigationLink {
+                PriceHistoryView(dishID: detail.id, catalog: catalog)
+            } label: {
+                PaperCard {
+                    HStack {
+                        Image(systemName: "chart.line.uptrend.xyaxis")
+                            .foregroundStyle(Zine.red)
+                        Text("价格变化")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(Zine.ink)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Zine.muted)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
             if !model.imageURLs.isEmpty {
                 galleryStrip
             }

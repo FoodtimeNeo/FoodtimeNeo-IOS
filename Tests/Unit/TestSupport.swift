@@ -350,6 +350,18 @@ final class FakeCatalogService: CatalogService {
     )
     var imagesResult = Page<DishImage>(items: [], total: 0, page: 1, size: 20)
     var ratingResult = DishRatingSummary(averageScore: 4.5, reviewCount: 2)
+    var priceHistoryResult = DishPriceHistory(
+        dishId: "d-1",
+        dishName: "鸡腿饭",
+        currentPrice: Decimal(string: "15"),
+        priceUnit: "serving",
+        revision: 1,
+        windowStart: Date(),
+        windowEnd: Date(),
+        canManage: false,
+        totalRecords: 0,
+        records: []
+    )
     private(set) var lastSearchFilters: DishSearchFilters?
 
     func diningHalls() async throws -> [DiningHall] {
@@ -379,6 +391,10 @@ final class FakeCatalogService: CatalogService {
 
     func dishRating(id: String) async throws -> DishRatingSummary {
         ratingResult
+    }
+
+    func priceHistory(dishID: String, days: Int) async throws -> DishPriceHistory {
+        priceHistoryResult
     }
 }
 

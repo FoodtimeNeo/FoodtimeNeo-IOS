@@ -75,6 +75,17 @@ final class RemoteCatalogService: CatalogService {
         )
     }
 
+    func priceHistory(dishID: String, days: Int) async throws -> DishPriceHistory {
+        let window = [0, 30, 90].contains(days) ? days : 0
+        return try await api.send(
+            .get(
+                "dishes/\(percentEncoded(dishID))/price-history",
+                query: [URLQueryItem(name: "days", value: String(window))]
+            ),
+            as: DishPriceHistory.self
+        )
+    }
+
     private func decimalString(_ value: Decimal) -> String {
         NSDecimalNumber(decimal: value).stringValue
     }
