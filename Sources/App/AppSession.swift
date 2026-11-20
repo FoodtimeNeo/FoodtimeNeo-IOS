@@ -30,6 +30,7 @@ final class AppSession: ObservableObject {
     let messages: MessageService
     let notifications: NotificationService
     let corrections: CorrectionService
+    let admin: AdminService
 
     private let api: APIClient
     private let cookieJar: CookieJar
@@ -54,6 +55,7 @@ final class AppSession: ObservableObject {
         messages: MessageService,
         notifications: NotificationService,
         corrections: CorrectionService,
+        admin: AdminService,
         api: APIClient,
         cookieJar: CookieJar,
         archive: CookieArchiving,
@@ -74,6 +76,7 @@ final class AppSession: ObservableObject {
         self.messages = messages
         self.notifications = notifications
         self.corrections = corrections
+        self.admin = admin
         self.api = api
         self.cookieJar = cookieJar
         self.archive = archive
@@ -98,6 +101,7 @@ final class AppSession: ObservableObject {
             messages: environment.messages,
             notifications: environment.notifications,
             corrections: environment.corrections,
+            admin: environment.admin,
             api: environment.api,
             cookieJar: environment.cookieJar,
             archive: environment.archive,

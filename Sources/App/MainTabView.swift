@@ -17,6 +17,13 @@ struct MainTabView: View {
             }
             .tabItem { Label("社区", systemImage: "bubble.left.and.bubble.right") }
 
+            if session.canUseAdminArea {
+                NavigationStack {
+                    AdminHomeView(service: session.admin)
+                }
+                .tabItem { Label("管理", systemImage: "shield.lefthalf.filled") }
+            }
+
             ProfileView(user: user, session: session)
                 .tabItem { Label("我的", systemImage: "person.crop.circle") }
         }

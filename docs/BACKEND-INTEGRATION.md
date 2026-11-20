@@ -79,6 +79,7 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 社区 | `GET /community/feed/cursor`、`/community/posts/{id}`、评论 cursor、评论提交、点赞/收藏/浏览量、`POST /community/posts` |
 | 收藏分组 | `/users/me/favorite-groups`、memberships、dish/community favorites |
 | 浏览历史 | `/users/me/browsing-history`、`/settings`、记录/删除/清空 |
+| 管理看板/用户 | `GET /admin/dashboard`、`GET/PUT /admin/users` |
 
 ## 7. 验证要求
 

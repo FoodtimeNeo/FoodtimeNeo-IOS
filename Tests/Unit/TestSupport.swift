@@ -385,6 +385,42 @@ final class FakeReviewService: ReviewService {
     }
 }
 
+final class FakeAdminService: AdminService {
+    var dashboardResult = Result<AdminDashboard, Error>.success(
+        AdminDashboard(
+            totalUsers: 1,
+            registeredUsers: 1,
+            onlineUsers: 1,
+            reviews: 0,
+            replies: 0,
+            posts: 0,
+            halls: 1,
+            stalls: 1,
+            dishes: 1,
+            generatedAt: Date(),
+            trend: []
+        )
+    )
+    var usersResult = Result<Page<AdminUser>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var updateError: Error?
+    private(set) var updateCalls = 0
+
+    func dashboard(days: Int) async throws -> AdminDashboard {
+        try dashboardResult.get()
+    }
+
+    func users(query: String, page: Int, size: Int) async throws -> Page<AdminUser> {
+        try usersResult.get()
+    }
+
+    func updateUser(id: String, role: String, status: String) async throws {
+        updateCalls += 1
+        if let updateError { throw updateError }
+    }
+}
+
 final class FakeHistoryService: HistoryService {
     var settingsResult = Result<BrowsingHistorySettings, Error>.success(
         BrowsingHistorySettings(enabled: true, revision: 1, dishEpoch: 0, postEpoch: 0)

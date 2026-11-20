@@ -31,8 +31,9 @@
 - W4 社区发帖：多图选择/上传、标题/正文、每账号本机草稿、pending 审核；详见 [社区发帖](docs/COMMUNITY-COMPOSE.md)。
 - W4 收藏分组：菜品/帖子独立分组、全部/未分组筛选、增删改名、成员管理；详见 [收藏分组](docs/COLLECTIONS.md)。
 - W5 浏览历史：服务器两栏各 50 条、开关/epoch、删除/清空、详情成功记录；详见 [浏览历史](docs/HISTORY.md)。
+- W6 管理基础：数据看板、用户搜索与角色/状态调整；详见 [管理端基础](docs/ADMIN.md)。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：举报申诉/纠错（并行会话在做）、管理端、完整媒体/分享等。`docs/parity/coverage.json` 已标 57 项 in-progress、0 verified。
+- **尚未实现**：审核/社区管理、举报申诉（用户侧并行会话在做，管理侧待接）、目录管理、公告、反馈 CSV、完整媒体/分享等。`docs/parity/coverage.json` 已标 57 项 in-progress、0 verified。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
 - Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 
