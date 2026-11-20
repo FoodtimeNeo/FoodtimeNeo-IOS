@@ -47,6 +47,68 @@ final class RemoteAdminService: AdminService {
         try await api.sendVoid(request)
     }
 
+    func moderationQueue(
+        status: String,
+        type: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<ModerationItem> {
+        var query = [
+            URLQueryItem(name: "status", value: status),
+            URLQueryItem(name: "page", value: String(max(1, page))),
+            URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+        ]
+        if let type, !type.isEmpty {
+            query.append(URLQueryItem(name: "type", value: type))
+        }
+        return try await api.send(
+            .get("admin/moderation", query: query),
+            as: Page<ModerationItem>.self
+        )
+    }
+
+    func moderate(
+        type: String,
+        submissionID: String,
+        action: String,
+        reason: String?,
+        price: Decimal?,
+        contentRevision: Int?
+    ) async throws -> ModerationResult {
+        struct Body: Encodable {
+            let action: String
+            let reason: String?
+            let price: Decimal?
+            let contentRevision: Int?
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/moderation/\(encoded(type))/\(encoded(submissionID))",
+            body: Body(
+                action: action,
+                reason: reason,
+                price: price,
+                contentRevision: contentRevision
+            ),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: ModerationResult.self)
+    }
+
+    func moderationLogs(page: Int, size: Int) async throws -> Page<ModerationLog> {
+        try await api.send(
+            .get(
+                "admin/moderation/logs",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<ModerationLog>.self
+        )
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

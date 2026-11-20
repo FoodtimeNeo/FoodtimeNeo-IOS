@@ -3,8 +3,10 @@ import SwiftUI
 @MainActor
 struct AdminHomeView: View {
     @StateObject private var model: AdminHomeViewModel
+    private let service: AdminService
 
     init(service: AdminService) {
+        self.service = service
         _model = StateObject(wrappedValue: AdminHomeViewModel(service: service))
     }
 
@@ -19,6 +21,7 @@ struct AdminHomeView: View {
                         subtitle: "数据看板与用户角色/状态；所有写请求由服务器重新校验。"
                     )
                     dashboardCard
+                    moderationLinks
                     userSearch
                     userList
                 }
@@ -81,6 +84,45 @@ struct AdminHomeView: View {
         } else if model.isLoadingDashboard {
             LoadingStateView(message: "正在读取看板…")
         }
+    }
+
+    private var moderationLinks: some View {
+        PaperCard {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("内容审核")
+                    .font(.system(size: 19, weight: .bold, design: .serif))
+                    .foregroundStyle(Zine.ink)
+                NavigationLink {
+                    ModerationQueueView(service: service)
+                } label: {
+                    adminLinkRow("审核队列", detail: "待审提交、AI 风险与通过/驳回")
+                }
+                NavigationLink {
+                    ModerationLogsView(service: service)
+                } label: {
+                    adminLinkRow("审核日志", detail: "AI 与人工审核记录")
+                }
+            }
+        }
+    }
+
+    private func adminLinkRow(_ title: String, detail: String) -> some View {
+        HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Zine.ink)
+                Text(detail)
+                    .font(.caption)
+                    .foregroundStyle(Zine.muted)
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(Zine.muted)
+        }
+        .padding(.vertical, 4)
+        .contentShape(Rectangle())
     }
 
     private func metric(_ label: String, _ value: String) -> some View {

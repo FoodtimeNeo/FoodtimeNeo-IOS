@@ -405,7 +405,15 @@ final class FakeAdminService: AdminService {
         Page(items: [], total: 0, page: 1, size: 20)
     )
     var updateError: Error?
+    var moderationResult = ModerationResult(id: "m-1", status: "approved", approvedId: nil)
+    var queueResult = Result<Page<ModerationItem>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var logsResult = Result<Page<ModerationLog>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
     private(set) var updateCalls = 0
+    private(set) var moderationCalls = 0
 
     func dashboard(days: Int) async throws -> AdminDashboard {
         try dashboardResult.get()
@@ -418,6 +426,31 @@ final class FakeAdminService: AdminService {
     func updateUser(id: String, role: String, status: String) async throws {
         updateCalls += 1
         if let updateError { throw updateError }
+    }
+
+    func moderationQueue(
+        status: String,
+        type: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<ModerationItem> {
+        try queueResult.get()
+    }
+
+    func moderate(
+        type: String,
+        submissionID: String,
+        action: String,
+        reason: String?,
+        price: Decimal?,
+        contentRevision: Int?
+    ) async throws -> ModerationResult {
+        moderationCalls += 1
+        return moderationResult
+    }
+
+    func moderationLogs(page: Int, size: Int) async throws -> Page<ModerationLog> {
+        try logsResult.get()
     }
 }
 
