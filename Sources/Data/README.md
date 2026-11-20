@@ -1,5 +1,5 @@
 # Data
 
-放既有API的网络/DTO和缓存存储适配；不复制服务器规则。
+HTTP、Cookie/CSRF、DTO 映射与远端服务；不向页面泄露数据库实体。
 
-当前目录只定义职责，尚无Swift模块或功能实现；工程结构在选型后确认。
+当前：`APIClient`（包络/错误/204/CSRF/epoch）、`URLSessionTransport`（禁重定向、超时）、`SystemCookieJar`、`RemoteAuthService`、`RemoteCatalogService`。Cookie 的 Keychain 归档在 `Platform`，由 `App` 组装。
