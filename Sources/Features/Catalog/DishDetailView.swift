@@ -155,6 +155,14 @@ struct DishDetailView: View {
             }
         }
         .accessibilityLabel(detail.name)
+        .accessibilityAddTraits(model.imageURLs.isEmpty ? AccessibilityTraits() : .isButton)
+        .accessibilityHint(Text(model.imageURLs.isEmpty ? "" : "查看菜品图片"))
+        .accessibilityAction(named: "查看菜品图片") {
+            if !model.imageURLs.isEmpty {
+                galleryStart = 0
+                showGallery = true
+            }
+        }
     }
 
     private func infoCard(_ detail: DishDetail) -> some View {
@@ -239,6 +247,12 @@ struct DishDetailView: View {
                             .frame(width: 92, height: 92)
                             .clipShape(RoundedRectangle(cornerRadius: Zine.smallRadius))
                             .onTapGesture {
+                                galleryStart = index
+                                showGallery = true
+                            }
+                            .accessibilityLabel("第 \(index + 1) 张图片")
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityAction {
                                 galleryStart = index
                                 showGallery = true
                             }

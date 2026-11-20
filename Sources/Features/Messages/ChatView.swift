@@ -133,12 +133,12 @@ struct ChatView: View {
             }
             VStack(alignment: model.isMine(message) ? .trailing : .leading, spacing: 3) {
                 Text(message.content)
-                    .font(.system(size: 15))
+                    .font(.body)
                     .foregroundStyle(Zine.ink)
                     .multilineTextAlignment(model.isMine(message) ? .trailing : .leading)
                     .textSelection(.enabled)
                 Text(DisplayFormat.dateTime(message.createdAt))
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(Zine.muted)
             }
             .padding(.horizontal, 12)
@@ -192,12 +192,13 @@ struct ChatView: View {
                 } label: {
                     if model.isSending {
                         ProgressView().tint(Zine.onRed)
+                            .accessibilityLabel("正在发送")
                     } else {
                         Text("发送")
                     }
                 }
                 .buttonStyle(InkButtonStyle(primary: true))
-                .frame(width: 82)
+                .fixedSize(horizontal: true, vertical: false)
                 .disabled(model.isSending)
             }
             .padding(.horizontal, Zine.pagePadding)

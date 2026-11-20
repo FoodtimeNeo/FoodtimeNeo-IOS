@@ -85,10 +85,14 @@ struct CommunityPinsView: View {
                             Button("↑") {
                                 Task { await move(snapshot, from: index, offset: -1) }
                             }
+                            .accessibilityLabel("上移")
+                            .frame(minWidth: 44, minHeight: 44)
                             .disabled(index == 0 || isMutating)
                             Button("↓") {
                                 Task { await move(snapshot, from: index, offset: 1) }
                             }
+                            .accessibilityLabel("下移")
+                            .frame(minWidth: 44, minHeight: 44)
                             .disabled(index == snapshot.items.count - 1 || isMutating)
                             Button("取消") {
                                 Task { await unpin(entry, revision: snapshot.revision) }

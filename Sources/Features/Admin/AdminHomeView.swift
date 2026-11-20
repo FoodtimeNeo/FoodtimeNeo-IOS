@@ -54,11 +54,11 @@ struct AdminHomeView: View {
         if let dashboard = model.dashboard {
             PaperCard {
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack {
+                    VStack(alignment: .leading, spacing: 6) {
                         Text("数据看板")
-                            .font(.system(size: 19, weight: .bold, design: .serif))
+                            .font(Zine.sectionFont)
                             .foregroundStyle(Zine.ink)
-                        Spacer()
+                            .accessibilityAddTraits(.isHeader)
                         Picker("周期", selection: Binding(
                             get: { model.days },
                             set: { value in Task { await model.setDays(value) } }
@@ -166,7 +166,7 @@ struct AdminHomeView: View {
         HStack(spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.headline)
                     .foregroundStyle(Zine.ink)
                 Text(detail)
                     .font(.caption)
@@ -184,7 +184,7 @@ struct AdminHomeView: View {
     private func metric(_ label: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
-                .font(.system(size: 20, weight: .black, design: .serif))
+                .font(.system(.title3, design: .serif).weight(.black))
                 .foregroundStyle(Zine.ink)
             Text(label)
                 .font(.caption2)
@@ -234,7 +234,7 @@ struct AdminHomeView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack {
                             Text(user.displayName)
-                                .font(.system(size: 17, weight: .bold, design: .serif))
+                                .font(.system(.headline, design: .serif))
                                 .foregroundStyle(Zine.ink)
                             Text(user.role)
                                 .font(.caption2)
@@ -254,7 +254,7 @@ struct AdminHomeView: View {
                             .font(.caption)
                             .foregroundStyle(Zine.muted)
                         HStack(spacing: 14) {
-                            Menu("角色") {
+                            Menu("角色：\(user.role)") {
                                 ForEach(["user", "admin", "superadmin"], id: \.self) { role in
                                     Button(role) {
                                         Task { await model.updateUser(user, role: role, status: user.status) }
@@ -262,7 +262,8 @@ struct AdminHomeView: View {
                                 }
                             }
                             .font(.caption)
-                            Menu(user.status == "active" ? "停用" : "恢复") {
+                            .accessibilityValue(Text(user.role))
+                            Menu(user.status == "active" ? "账号：停用" : "账号：恢复") {
                                 Button(user.status == "active" ? "停用账号" : "恢复账号") {
                                     Task {
                                         await model.updateUser(
@@ -274,6 +275,7 @@ struct AdminHomeView: View {
                                 }
                             }
                             .font(.caption)
+                            .accessibilityValue(Text(user.status == "active" ? "启用" : "停用"))
                         }
                     }
                 }

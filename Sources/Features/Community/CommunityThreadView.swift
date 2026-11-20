@@ -172,12 +172,13 @@ struct CommunityThreadView: View {
                 } label: {
                     if model.isSubmitting {
                         ProgressView().tint(Zine.onRed)
+                            .accessibilityLabel("正在发送")
                     } else {
                         Text("发送")
                     }
                 }
                 .buttonStyle(InkButtonStyle(primary: true))
-                .frame(width: 82)
+                .fixedSize(horizontal: true, vertical: false)
                 .disabled(model.isSubmitting)
             }
         }

@@ -87,6 +87,7 @@ struct PasswordRecoveryView: View {
                 } label: {
                     if model.isVerifying {
                         ProgressView().tint(Zine.onRed)
+                            .accessibilityLabel("正在验证验证码")
                     } else {
                         Text("验证并继续")
                     }
@@ -132,6 +133,7 @@ struct PasswordRecoveryView: View {
                 } label: {
                     if model.isResetting {
                         ProgressView().tint(Zine.onRed)
+                            .accessibilityLabel("正在重置密码")
                     } else {
                         Text("确认重置密码")
                     }

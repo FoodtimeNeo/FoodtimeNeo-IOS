@@ -45,6 +45,7 @@ struct LoginView: View {
                                     .font(.footnote)
                                     .foregroundStyle(Zine.muted)
                                 TextField("QQ / 163 / Gmail / 学校邮箱", text: $model.email)
+                                    .accessibilityLabel("邮箱")
                                     .textContentType(.username)
                                     .keyboardType(.emailAddress)
                                     .textInputAutocapitalization(.never)
@@ -62,6 +63,7 @@ struct LoginView: View {
                                     .font(.footnote)
                                     .foregroundStyle(Zine.muted)
                                 SecureField("请输入密码", text: $model.password)
+                                    .accessibilityLabel("密码")
                                     .textContentType(.password)
                                     .padding(12)
                                     .background(RoundedRectangle(cornerRadius: Zine.smallRadius).fill(Zine.paper))
@@ -111,6 +113,7 @@ struct LoginView: View {
                             } label: {
                                 if model.isSubmitting {
                                     ProgressView().tint(Zine.onRed)
+                                        .accessibilityLabel("正在登录")
                                 } else {
                                     Text("登录")
                                 }

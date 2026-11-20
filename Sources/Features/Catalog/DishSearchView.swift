@@ -63,6 +63,7 @@ struct DishSearchView: View {
                             .foregroundStyle(Zine.muted)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("清除搜索")
                 }
             }
             .modifier(FormInputStyle())

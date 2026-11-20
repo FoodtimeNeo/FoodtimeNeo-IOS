@@ -92,6 +92,7 @@ struct RegistrationView: View {
             VStack(alignment: .leading, spacing: 14) {
                 fieldLabel("邮箱")
                 TextField("QQ / 163 / Gmail / 学校邮箱", text: $model.email)
+                    .accessibilityLabel("邮箱")
                     .textContentType(.username)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
@@ -101,8 +102,10 @@ struct RegistrationView: View {
                 fieldLabel("邮箱验证码")
                 HStack(spacing: 10) {
                     TextField("6 位数字", text: $model.emailCode)
+                        .accessibilityLabel("邮箱验证码")
                         .keyboardType(.numberPad)
                         .modifier(FormInputStyle())
+                        .layoutPriority(1)
                         .onChange(of: model.emailCode) { _, value in
                             let filtered = String(value.filter(\.isNumber).prefix(6))
                             if filtered != value { model.emailCode = filtered }
@@ -111,7 +114,7 @@ struct RegistrationView: View {
                         Task { await model.sendCode() }
                     }
                     .buttonStyle(InkButtonStyle())
-                    .frame(width: 128)
+                    .fixedSize(horizontal: true, vertical: false)
                     .disabled(!model.canSendCode)
                 }
                 if model.policy?.canSendEmailCode == false {
@@ -122,11 +125,13 @@ struct RegistrationView: View {
 
                 fieldLabel("密码")
                 SecureField("8–128 位，至少一个字母和一个数字", text: $model.password)
+                    .accessibilityLabel("密码")
                     .textContentType(.newPassword)
                     .modifier(FormInputStyle())
 
                 fieldLabel("确认密码")
                 SecureField("再次输入密码", text: $model.confirmPassword)
+                    .accessibilityLabel("确认密码")
                     .textContentType(.newPassword)
                     .modifier(FormInputStyle())
 
@@ -145,6 +150,7 @@ struct RegistrationView: View {
                 } label: {
                     if model.isSubmitting {
                         ProgressView().tint(Zine.onRed)
+                            .accessibilityLabel("正在注册")
                     } else {
                         Text("注册")
                     }

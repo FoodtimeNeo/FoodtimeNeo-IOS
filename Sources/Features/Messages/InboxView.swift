@@ -215,7 +215,7 @@ struct InboxView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 6) {
                         Text(message.title)
-                            .font(.system(size: 16, weight: .bold, design: .serif))
+                            .font(.system(.headline, design: .serif))
                             .foregroundStyle(message.isRead ? Zine.muted : Zine.ink)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         if !message.isRead {
@@ -255,6 +255,7 @@ struct InboxView: View {
         }
         .background(message.isRead ? Color.clear : Zine.alt.opacity(0.4))
         .accessibilityElement(children: .combine)
+        .accessibilityValue(Text(message.isRead ? "已读" : "未读"))
     }
 
     @ViewBuilder
@@ -296,7 +297,7 @@ struct InboxView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(conversation.other.displayName.isEmpty ? "同学" : conversation.other.displayName)
-                        .font(.system(size: 16, weight: .bold, design: .serif))
+                        .font(.system(.headline, design: .serif))
                         .foregroundStyle(Zine.ink)
                     Text(conversation.lastMessage?.isEmpty == false ? conversation.lastMessage! : "还没有消息")
                         .font(.caption)
@@ -317,6 +318,13 @@ struct InboxView: View {
         }
         .background(conversation.unreadCount > 0 ? Zine.alt.opacity(0.45) : Color.clear)
         .accessibilityElement(children: .combine)
+        .accessibilityValue(
+            Text(
+                conversation.unreadCount > 0
+                    ? "\(conversation.unreadCount) 条未读"
+                    : "已读"
+            )
+        )
     }
 
     private func markdownText(_ raw: String) -> Text {

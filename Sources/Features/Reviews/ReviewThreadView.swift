@@ -62,6 +62,7 @@ struct ReviewThreadView: View {
                          + String(repeating: "☆", count: max(0, 5 - review.rating)))
                         .font(.caption)
                         .foregroundStyle(Zine.gold)
+                        .accessibilityLabel("评分 \(review.rating) 星")
                     Spacer()
                     Text(DisplayFormat.dateTime(review.createdAt))
                         .font(.caption)
@@ -174,12 +175,13 @@ struct ReviewThreadView: View {
                 } label: {
                     if model.isSubmitting {
                         ProgressView().tint(Zine.onRed)
+                            .accessibilityLabel("正在发送")
                     } else {
                         Text("发送")
                     }
                 }
                 .buttonStyle(InkButtonStyle(primary: true))
-                .frame(width: 82)
+                .fixedSize(horizontal: true, vertical: false)
                 .disabled(model.isSubmitting)
             }
         }

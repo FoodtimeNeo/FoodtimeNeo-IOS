@@ -3,6 +3,7 @@ import SwiftUI
 @MainActor
 struct SocialView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @StateObject private var model: SocialViewModel
     @State private var blockTarget: SocialUser?
     @State private var startingChatID: String?
@@ -145,36 +146,56 @@ struct SocialView: View {
 
     private func userRow(_ user: SocialUser) -> some View {
         PaperCard {
-            HStack(spacing: 12) {
-                avatar(user.displayName)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(user.displayName)
-                        .font(.system(size: 18, weight: .bold, design: .serif))
-                        .foregroundStyle(Zine.ink)
-                    if model.blockedIDs.contains(user.id) {
-                        Text("已拉黑")
-                            .font(.caption)
-                            .foregroundStyle(Zine.red)
-                    }
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 10) {
+                    userIdentity(user)
+                    userActions(user)
                 }
-                Spacer(minLength: 8)
-                Button(user.followedByMe ? "已关注" : "关注") {
-                    Task { await model.toggleFollow(user) }
+            } else {
+                HStack(spacing: 12) {
+                    userIdentity(user)
+                    Spacer(minLength: 8)
+                    userActions(user)
                 }
-                .buttonStyle(InkButtonStyle(primary: !user.followedByMe))
-                .frame(width: 92)
-                .disabled(model.blockedIDs.contains(user.id))
+            }
+        }
+    }
 
-                if !model.blockedIDs.contains(user.id) {
-                    Button(startingChatID == user.id ? "…" : "私信") {
-                        startChat(user)
-                    }
+    private func userIdentity(_ user: SocialUser) -> some View {
+        HStack(spacing: 12) {
+            avatar(user.displayName)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(user.displayName)
+                    .font(.system(.title3, design: .serif).weight(.bold))
+                    .foregroundStyle(Zine.ink)
+                if model.blockedIDs.contains(user.id) {
+                    Text("已拉黑")
+                        .font(.caption)
+                        .foregroundStyle(Zine.red)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func userActions(_ user: SocialUser) -> some View {
+        HStack(spacing: 12) {
+            Button(user.followedByMe ? "已关注" : "关注") {
+                Task { await model.toggleFollow(user) }
+            }
+            .buttonStyle(InkButtonStyle(primary: !user.followedByMe))
+            .fixedSize(horizontal: true, vertical: false)
+            .disabled(model.blockedIDs.contains(user.id))
+
+            if !model.blockedIDs.contains(user.id) {
+                Button(startingChatID == user.id ? "…" : "私信") {
+                    startChat(user)
+                }
+                .buttonStyle(LinkButtonStyle())
+                .disabled(startingChatID != nil)
+
+                Button("拉黑") { blockTarget = user }
                     .buttonStyle(LinkButtonStyle())
-                    .disabled(startingChatID != nil)
-
-                    Button("拉黑") { blockTarget = user }
-                        .buttonStyle(LinkButtonStyle())
-                }
             }
         }
     }
@@ -185,7 +206,7 @@ struct SocialView: View {
                 avatar(user.displayName)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(user.displayName)
-                        .font(.system(size: 18, weight: .bold, design: .serif))
+                        .font(.system(.title3, design: .serif).weight(.bold))
                         .foregroundStyle(Zine.ink)
                     if let date = user.blockedAt {
                         Text("拉黑于 \(DisplayFormat.dateTime(date))")
@@ -198,7 +219,7 @@ struct SocialView: View {
                     Task { await model.unblock(user) }
                 }
                 .buttonStyle(InkButtonStyle())
-                .frame(width: 102)
+                .fixedSize(horizontal: true, vertical: false)
             }
         }
     }

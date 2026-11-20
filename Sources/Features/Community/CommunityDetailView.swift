@@ -214,6 +214,12 @@ struct CommunityDetailView: View {
                                     galleryStart = index
                                     showGallery = true
                                 }
+                                .accessibilityLabel("第 \(index + 1) 张图片")
+                                .accessibilityAddTraits(.isButton)
+                                .accessibilityAction {
+                                    galleryStart = index
+                                    showGallery = true
+                                }
                             }
                         }
                     }
@@ -230,6 +236,10 @@ struct CommunityDetailView: View {
                         .foregroundStyle(model.isLiked(post) ? Zine.red : Zine.muted)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("点赞")
+                    .accessibilityValue(
+                        "\(model.likeCount(post)) 个赞，\(model.isLiked(post) ? "已点赞" : "未点赞")"
+                    )
                     Button {
                         model.toggleFavorite()
                     } label: {
@@ -240,6 +250,10 @@ struct CommunityDetailView: View {
                         .foregroundStyle(model.isFavorited(post) ? Zine.gold : Zine.muted)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("收藏")
+                    .accessibilityValue(
+                        "\(model.favoriteCount(post)) 个收藏，\(model.isFavorited(post) ? "已收藏" : "未收藏")"
+                    )
                     Label("\(post.viewCount)", systemImage: "eye")
                         .foregroundStyle(Zine.muted)
                     Spacer()
@@ -304,6 +318,10 @@ struct CommunityDetailView: View {
                         .foregroundStyle(model.isCommentLiked(comment) ? Zine.red : Zine.muted)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("点赞")
+                    .accessibilityValue(
+                        "\(model.commentLikeCount(comment)) 个赞，\(model.isCommentLiked(comment) ? "已点赞" : "未点赞")"
+                    )
                     Button {
                         activeSheet = .thread(comment)
                     } label: {
@@ -312,10 +330,13 @@ struct CommunityDetailView: View {
                             .foregroundStyle(Zine.muted)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("回复")
+                    .accessibilityValue("\(comment.replyCount) 条回复")
                     Button("回复") { activeSheet = .thread(comment) }
                         .font(.caption)
                         .foregroundStyle(Zine.blue)
                         .buttonStyle(.plain)
+                        .accessibilityLabel("回复这条评论")
                 }
             }
         }
@@ -349,12 +370,12 @@ struct CommunityDetailView: View {
             } label: {
                 if model.isSubmittingComment {
                     ProgressView().tint(Zine.onRed)
+                        .accessibilityLabel("正在发送")
                 } else {
                     Text("发送")
                 }
             }
             .buttonStyle(InkButtonStyle(primary: true))
-            .frame(width: 82)
             .disabled(model.isSubmittingComment)
         }
         .padding(.horizontal, Zine.pagePadding)

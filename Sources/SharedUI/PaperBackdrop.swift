@@ -92,7 +92,7 @@ struct InkButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 16, weight: .bold))
+            .font(.system(.body, design: .default).weight(.bold))
             .foregroundStyle(primary ? Zine.onRed : Zine.ink)
             .frame(maxWidth: .infinity, minHeight: 48)
             .padding(.horizontal, 16)
@@ -117,9 +117,11 @@ struct InkButtonStyle: ButtonStyle {
 struct LinkButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 15, weight: .semibold))
+            .font(.system(.subheadline).weight(.semibold))
             .foregroundStyle(Zine.red)
             .underline()
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
             .opacity(configuration.isPressed ? 0.6 : 1)
     }
 }

@@ -147,6 +147,7 @@ struct VenueReviewsView: View {
                                  + String(repeating: "☆", count: max(0, 5 - review.rating)))
                                 .font(.caption)
                                 .foregroundStyle(Zine.gold)
+                                .accessibilityLabel("评分 \(review.rating) 星")
                             Spacer()
                             Text(DisplayFormat.dateTime(review.createdAt))
                                 .font(.caption)
@@ -252,13 +253,17 @@ struct VenueReviewComposerView: View {
                             model.rating = value
                         } label: {
                             Image(systemName: value <= model.rating ? "star.fill" : "star")
-                                .font(.system(size: 26))
+                                .font(.title2)
                                 .foregroundStyle(Zine.gold)
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel("\(value) 星")
+                        .accessibilityAddTraits(
+                            value == model.rating ? .isSelected : AccessibilityTraits()
+                        )
                     }
                 }
+                .accessibilityValue("\(model.rating) 星")
 
                 Text("正文")
                     .font(.footnote)

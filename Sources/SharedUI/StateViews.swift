@@ -8,7 +8,7 @@ struct LaunchStateView: View {
             PaperBackdrop()
             VStack(spacing: 18) {
                 Text("北交干饭吧")
-                    .font(.system(size: 34, weight: .black, design: .serif))
+                    .font(.system(.largeTitle, design: .serif).weight(.black))
                     .foregroundStyle(Zine.ink)
                 ProgressView()
                     .tint(Zine.red)
@@ -55,8 +55,9 @@ struct EmptyStateView: View {
         PaperCard {
             VStack(alignment: .leading, spacing: 10) {
                 Text(title)
-                    .font(.system(size: 22, weight: .bold, design: .serif))
+                    .font(Zine.sectionFont)
                     .foregroundStyle(Zine.ink)
+                    .accessibilityAddTraits(.isHeader)
                 if let message, !message.isEmpty {
                     Text(message)
                         .font(Zine.bodyFont)
@@ -80,8 +81,9 @@ struct ErrorStateView: View {
         PaperCard {
             VStack(alignment: .leading, spacing: 10) {
                 Text("加载失败")
-                    .font(.system(size: 22, weight: .bold, design: .serif))
+                    .font(Zine.sectionFont)
                     .foregroundStyle(Zine.ink)
+                    .accessibilityAddTraits(.isHeader)
                 Text(message)
                     .font(Zine.bodyFont)
                     .foregroundStyle(Zine.red)

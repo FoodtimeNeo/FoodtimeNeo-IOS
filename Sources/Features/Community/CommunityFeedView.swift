@@ -3,6 +3,8 @@ import SwiftUI
 @MainActor
 struct CommunityFeedView: View {
     @EnvironmentObject private var session: AppSession
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @StateObject private var model: CommunityFeedViewModel
     @State private var showCompose = false
     @State private var showPins = false
@@ -98,7 +100,7 @@ struct CommunityFeedView: View {
             )
         } else {
             pinnedSection
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 12) {
+            LazyVGrid(columns: feedColumns, spacing: 12) {
                 ForEach(model.posts) { post in
                     NavigationLink {
                         CommunityDetailView(postID: post.id, service: session.community)
@@ -151,6 +153,14 @@ struct CommunityFeedView: View {
         }
     }
 
+    private var feedColumns: [GridItem] {
+        if dynamicTypeSize.isAccessibilitySize {
+            return [GridItem(.flexible(), spacing: 10)]
+        }
+        let count = horizontalSizeClass == .regular ? 3 : 2
+        return Array(repeating: GridItem(.flexible(), spacing: 10), count: count)
+    }
+
     private func postCard(_ post: CommunityPost) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             if let raw = post.images.first?.url,
@@ -168,13 +178,11 @@ struct CommunityFeedView: View {
             }
             VStack(alignment: .leading, spacing: 5) {
                 Text(post.title)
-                    .font(.system(size: 17, weight: .bold, design: .serif))
+                    .font(.system(.headline, design: .serif))
                     .foregroundStyle(Zine.ink)
-                    .lineLimit(2)
                 Text(post.content)
                     .font(.caption)
                     .foregroundStyle(Zine.muted)
-                    .lineLimit(3)
                 HStack(spacing: 10) {
                     Button {
                         Task { await model.toggleLike(post) }
@@ -184,9 +192,14 @@ struct CommunityFeedView: View {
                             .foregroundStyle(model.isLiked(post) ? Zine.red : Zine.muted)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("点赞")
+                    .accessibilityValue(
+                        "\(model.likeCount(post)) 个赞，\(model.isLiked(post) ? "已点赞" : "未点赞")"
+                    )
                     Label("\(post.commentCount)", systemImage: "text.bubble")
                         .font(.caption)
                         .foregroundStyle(Zine.muted)
+                        .accessibilityLabel("\(post.commentCount) 条评论")
                 }
                 Text(post.userDisplayName)
                     .font(.caption2)
@@ -202,6 +215,9 @@ struct CommunityFeedView: View {
                 .stroke(Zine.border, lineWidth: 1)
         )
         .accessibilityElement(children: .combine)
+        .accessibilityAction(named: Text(model.isLiked(post) ? "取消点赞" : "点赞")) {
+            Task { await model.toggleLike(post) }
+        }
         .contextMenu {
             if model.canManagePins {
                 Button("置顶这篇食记") {

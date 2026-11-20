@@ -112,6 +112,7 @@ struct CommunityEditView: View {
                                     .foregroundStyle(.white, Zine.red)
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel("移除已有第 \(index + 1) 张图片")
                             .padding(3)
                         }
                     }
@@ -130,6 +131,7 @@ struct CommunityEditView: View {
                                     .foregroundStyle(.white, Zine.red)
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel("移除新选第 \(index + 1) 张图片")
                             .padding(3)
                         }
                     }

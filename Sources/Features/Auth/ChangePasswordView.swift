@@ -77,6 +77,7 @@ struct ChangePasswordView: View {
                     } label: {
                         if model.isSubmitting {
                             ProgressView().tint(Zine.onRed)
+                                .accessibilityLabel("正在修改密码")
                         } else {
                             Text("确认修改")
                         }

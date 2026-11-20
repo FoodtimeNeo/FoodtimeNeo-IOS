@@ -115,6 +115,7 @@ struct MyReviewsView: View {
                          + String(repeating: "☆", count: max(0, 5 - review.rating)))
                         .font(.caption)
                         .foregroundStyle(Zine.gold)
+                        .accessibilityLabel("评分 \(review.rating) 星")
                 }
                 Text("\(review.diningHallName) · \(review.stallName)")
                     .font(.caption)

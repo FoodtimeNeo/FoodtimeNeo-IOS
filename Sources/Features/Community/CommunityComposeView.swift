@@ -142,6 +142,7 @@ struct CommunityComposeView: View {
                                         .foregroundStyle(.white, Zine.red)
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityLabel("移除第 \(index + 1) 张图片")
                                 .padding(3)
                             }
                         }
