@@ -107,6 +107,10 @@ final class AppealComposeViewModel: ObservableObject {
     func submit() async {
         guard !isSubmitting, let decision else { return }
         errorMessage = nil
+        guard !alreadyAppealed else {
+            errorMessage = "同一决定只能提交一次申诉"
+            return
+        }
         let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
             errorMessage = "请填写申诉内容"

@@ -81,7 +81,6 @@ final class ReportReceiptsViewModel: ObservableObject {
     }
 
     func switchSegment(_ next: Segment) async {
-        guard next != segment else { return }
         segment = next
         await load(reset: true)
     }
