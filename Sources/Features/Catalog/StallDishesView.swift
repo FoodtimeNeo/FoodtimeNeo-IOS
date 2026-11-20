@@ -2,6 +2,7 @@ import SwiftUI
 
 @MainActor
 struct StallDishesView: View {
+    @EnvironmentObject private var session: AppSession
     let stall: Stall
     private let catalog: CatalogService
     @StateObject private var model: DishesViewModel
@@ -22,6 +23,29 @@ struct StallDishesView: View {
                         title: stall.name,
                         subtitle: stall.description
                     )
+                    NavigationLink {
+                        VenueReviewsView(
+                            type: .stall,
+                            targetID: stall.id,
+                            name: stall.name,
+                            service: session.venueReviews
+                        )
+                    } label: {
+                        PaperCard {
+                            HStack(spacing: 10) {
+                                Image(systemName: "star.bubble")
+                                    .foregroundStyle(Zine.red)
+                                Text("档口点评")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(Zine.ink)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(Zine.muted)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
                     content
                 }
                 .padding(Zine.pagePadding)

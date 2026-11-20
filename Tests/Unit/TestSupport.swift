@@ -378,6 +378,56 @@ final class FakeReviewService: ReviewService {
     }
 }
 
+final class FakeVenueReviewService: VenueReviewService {
+    var targetResult = VenueRatingTarget(
+        type: "hall",
+        targetId: "h-1",
+        name: "学苑食堂",
+        diningHallId: "h-1",
+        stallId: nil,
+        averageScore: 4.5,
+        reviewCount: 2
+    )
+    var reviewsResult = VenueReviewPage(items: [], total: 0, hasMore: false, nextCursor: nil)
+    var mineResult = VenueReviewMine(publicVersion: nil, privateSubmission: nil)
+    var submitResult = TestFixtures.venueReview
+    var likeResult = ReviewLikeState(likedByMe: true, likeCount: 1, counterVersion: 1)
+    private(set) var submitCalls = 0
+
+    func target(type: VenueTargetType, id: String) async throws -> VenueRatingTarget {
+        targetResult
+    }
+
+    func reviews(
+        type: VenueTargetType,
+        id: String,
+        rating: String,
+        cursor: String?,
+        size: Int
+    ) async throws -> VenueReviewPage {
+        reviewsResult
+    }
+
+    func mine(type: VenueTargetType, id: String) async throws -> VenueReviewMine {
+        mineResult
+    }
+
+    func submit(
+        type: VenueTargetType,
+        id: String,
+        rating: Int,
+        content: String,
+        requestID: String
+    ) async throws -> VenueReview {
+        submitCalls += 1
+        return submitResult
+    }
+
+    func setLike(reviewID: String, liked: Bool) async throws -> ReviewLikeState {
+        likeResult
+    }
+}
+
 final class FakeFeedbackService: FeedbackService {
     var createResult: Result<Feedback, Error> = .success(TestFixtures.feedback)
     var listResult: Result<Page<Feedback>, Error> = .success(
@@ -538,6 +588,28 @@ enum TestFixtures {
         content: "好吃",
         status: "pending",
         submittedAt: Date()
+    )
+
+    static let venueReview = VenueReview(
+        id: "vr-1",
+        reviewId: "vr-1",
+        submissionId: nil,
+        userId: user.id,
+        userDisplayName: user.displayName,
+        targetType: "hall",
+        targetId: "h-1",
+        name: "学苑食堂",
+        rating: 5,
+        content: "环境不错",
+        status: "approved",
+        reviewReason: nil,
+        createdAt: Date(),
+        updatedAt: Date(),
+        ownedByMe: false,
+        likedByMe: false,
+        likeCount: 0,
+        counterVersion: 1,
+        replyCount: 0
     )
 
     static let feedback = Feedback(

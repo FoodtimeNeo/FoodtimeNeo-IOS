@@ -9,6 +9,7 @@ struct AppEnvironment {
     let social: SocialService
     let feedback: FeedbackService
     let reviews: ReviewService
+    let venueReviews: VenueReviewService
     let cookieJar: SystemCookieJar
     let archive: KeychainCookieArchive
 
@@ -47,6 +48,7 @@ struct AppEnvironment {
             social: RemoteSocialService(api: api),
             feedback: RemoteFeedbackService(api: api),
             reviews: RemoteReviewService(api: api),
+            venueReviews: RemoteVenueReviewService(api: api),
             cookieJar: jar,
             archive: archive
         )
