@@ -76,7 +76,7 @@ struct PasswordRecoveryView: View {
                         Task { await model.sendCode() }
                     }
                     .buttonStyle(InkButtonStyle())
-                    .frame(width: 126)
+                    .fixedSize(horizontal: true, vertical: false)
                     .disabled(!model.canSendCode)
                 }
 

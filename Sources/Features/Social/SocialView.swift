@@ -179,15 +179,32 @@ struct SocialView: View {
 
     @ViewBuilder
     private func userActions(_ user: SocialUser) -> some View {
-        HStack(spacing: 12) {
-            Button(user.followedByMe ? "已关注" : "关注") {
-                Task { await model.toggleFollow(user) }
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 8) {
+                followButton(user)
+                linkActions(user)
             }
-            .buttonStyle(InkButtonStyle(primary: !user.followedByMe))
-            .fixedSize(horizontal: true, vertical: false)
-            .disabled(model.blockedIDs.contains(user.id))
+        } else {
+            HStack(spacing: 12) {
+                followButton(user)
+                linkActions(user)
+            }
+        }
+    }
 
-            if !model.blockedIDs.contains(user.id) {
+    private func followButton(_ user: SocialUser) -> some View {
+        Button(user.followedByMe ? "已关注" : "关注") {
+            Task { await model.toggleFollow(user) }
+        }
+        .buttonStyle(InkButtonStyle(primary: !user.followedByMe))
+        .fixedSize(horizontal: true, vertical: false)
+        .disabled(model.blockedIDs.contains(user.id))
+    }
+
+    @ViewBuilder
+    private func linkActions(_ user: SocialUser) -> some View {
+        if !model.blockedIDs.contains(user.id) {
+            HStack(spacing: 12) {
                 Button(startingChatID == user.id ? "…" : "私信") {
                     startChat(user)
                 }

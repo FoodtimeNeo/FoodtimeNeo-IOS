@@ -118,7 +118,13 @@ struct CampusMapView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .frame(minHeight: 36)
+                .frame(minHeight: 44)
+                .accessibilityValue(
+                    Text(model.selectedRegionID == region.id ? "已选择" : "未选择")
+                )
+                .accessibilityAddTraits(
+                    model.selectedRegionID == region.id ? .isSelected : AccessibilityTraits()
+                )
             }
         }
         .padding(14)
@@ -133,8 +139,9 @@ struct CampusMapView: View {
             PaperCard {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(region.name)
-                        .font(.system(size: 22, weight: .bold, design: .serif))
+                        .font(Zine.sectionFont)
                         .foregroundStyle(Zine.ink)
+                        .accessibilityAddTraits(.isHeader)
                     if let error = model.hallsError {
                         Text("食堂入口读取失败，地图仍可使用：\(error)")
                             .font(.subheadline)
@@ -165,7 +172,7 @@ struct CampusMapView: View {
                                     .contentShape(Rectangle())
                                 }
                                 .buttonStyle(.plain)
-                                .frame(minHeight: 38)
+                                .frame(minHeight: 44)
                             }
                         }
                     }

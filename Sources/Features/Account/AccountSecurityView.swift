@@ -159,7 +159,7 @@ struct AccountSecurityView: View {
                         Task { await model.sendBindCode() }
                     }
                     .buttonStyle(InkButtonStyle())
-                    .frame(width: 126)
+                    .fixedSize(horizontal: true, vertical: false)
                     .disabled(model.isSendingBind || model.bindResendRemaining > 0)
                 }
 
@@ -201,7 +201,7 @@ struct AccountSecurityView: View {
                         Task { await model.sendUnbindCode() }
                     }
                     .buttonStyle(InkButtonStyle())
-                    .frame(width: 126)
+                    .fixedSize(horizontal: true, vertical: false)
                     .disabled(!model.canUnbind || model.isSendingUnbind || model.unbindResendRemaining > 0)
                 }
 
