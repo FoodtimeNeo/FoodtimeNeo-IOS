@@ -4,7 +4,7 @@
 
 ## 范围
 
-- `GET /admin/moderation?status&type&page&size`：status 默认 `pending`，可取 `approved`/`rejected`；type 省略时返回全部食堂投稿，可选 `review`、`dish`、`stall`、`photo`、`dish-review-reply`。
+- `GET /admin/moderation?status&type&page&size`：status 默认 `pending`，可取 `approved`/`rejected`；type 省略时返回全部投稿，可选 `review`、`dish`、`stall`、`photo`、`dish-review-reply`、`hall-review`、`stall-review`、`hall-review-reply`、`stall-review-reply`。
 - `POST /admin/moderation/{type}/{submissionId}`：body `{action:"approve"|"reject", reason?, price?, contentRevision?}`；仅 `pending` 可处理，重复审核服务端返回 409，状态、正式数据与日志在同一事务完成。
 - `GET /admin/moderation/logs?page&size`：按时间倒序，`actor` 区分 `ai` 与人工。
 - 队列卡片展示类型、名称、提交人/邮箱、内容、评分、价格、AI 风险级别与置信度；`reason` 供已审条目回溯。
@@ -17,7 +17,7 @@
 - 409（`ALREADY_REVIEWED`）提示刷新队列，不本地伪造结果。
 - 无审核能力的账号不显示管理 Tab（既有 `canUseAdminArea` 判断），动作仍由服务端能力逐次校验。
 - 图片字段当前只保留在模型中，队列暂未渲染缩略图；图片加载与缓存统一在 W7 平台层处理。
-- 极简错误/空态与分页；没有做批量审核（后端未提供批量接口）。
+- 极简错误/空态与分页；审核日志同样分页，没有做批量审核（后端未提供批量接口）。
 
 ## 验证边界
 

@@ -31,11 +31,15 @@ struct ModerationQueueView: View {
                     }
                     Picker("类型", selection: $model.type) {
                         Text("全部").tag("")
-                        Text("评论").tag("review")
-                        Text("菜品").tag("dish")
-                        Text("档口").tag("stall")
-                        Text("图片").tag("photo")
-                        Text("点评回复").tag("dish-review-reply")
+                        Text("菜品点评").tag("review")
+                        Text("菜品投稿").tag("dish")
+                        Text("档口投稿").tag("stall")
+                        Text("菜品图片").tag("photo")
+                        Text("菜品点评回复").tag("dish-review-reply")
+                        Text("食堂点评").tag("hall-review")
+                        Text("档口点评").tag("stall-review")
+                        Text("食堂点评回复").tag("hall-review-reply")
+                        Text("档口点评回复").tag("stall-review-reply")
                     }
                     .pickerStyle(.menu)
                     .tint(Zine.ink)
@@ -307,7 +311,7 @@ struct ModerationLogsView: View {
                                 VStack(alignment: .leading, spacing: 3) {
                                     HStack {
                                         Text("\(log.type) · \(log.action)")
-                                            .font(.system(size: 16, weight: .bold, design: .serif))
+                                            .font(.system(.headline, design: .serif))
                                             .foregroundStyle(Zine.ink)
                                         Spacer()
                                         Text(log.actor)
@@ -321,6 +325,23 @@ struct ModerationLogsView: View {
                                     Text(DisplayFormat.dateTime(log.createdAt))
                                         .font(.caption2).foregroundStyle(Zine.muted)
                                 }
+                            }
+                        }
+                        if model.totalPages > 1 {
+                            HStack {
+                                Button("上一页") {
+                                    Task { await model.load(page: model.page - 1) }
+                                }
+                                .buttonStyle(InkButtonStyle())
+                                .disabled(model.page <= 1 || model.isLoading)
+                                Text("第 \(model.page)/\(model.totalPages) 页")
+                                    .font(.footnote)
+                                    .foregroundStyle(Zine.muted)
+                                Button("下一页") {
+                                    Task { await model.load(page: model.page + 1) }
+                                }
+                                .buttonStyle(InkButtonStyle())
+                                .disabled(model.page >= model.totalPages || model.isLoading)
                             }
                         }
                     }
