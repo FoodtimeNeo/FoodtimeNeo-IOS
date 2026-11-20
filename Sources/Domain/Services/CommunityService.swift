@@ -34,6 +34,12 @@ protocol CommunityService: AnyObject {
         requestID: String
     ) async throws -> CommunityPostReceipt
     func myPosts(page: Int, size: Int) async throws -> Page<CommunityPost>
+    func author(id: String) async throws -> CommunityAuthor
+    func authorPosts(
+        authorID: String,
+        size: Int,
+        cursor: String?
+    ) async throws -> CommunityFeedPage
     func editPost(
         id: String,
         expectedRevision: Int,

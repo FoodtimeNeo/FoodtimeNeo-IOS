@@ -630,6 +630,8 @@ final class FakeCommunityService: CommunityService {
     var myPostsResult = Result<Page<CommunityPost>, Error>.success(
         Page(items: [], total: 0, page: 1, size: 20)
     )
+    var authorResult = CommunityAuthor(id: "u-1", displayName: "饭搭子", avatarUrl: nil)
+    var authorPostsResult = CommunityFeedPage(items: [], total: 0, hasMore: false, nextCursor: nil)
     var editPostResult = CommunityEditReceipt(id: "post-1", revision: 2, changed: true)
     var pinsResult = CommunityPinSnapshot(revision: 1, items: [], canManage: false)
     private(set) var commentCalls = 0
@@ -704,6 +706,18 @@ final class FakeCommunityService: CommunityService {
 
     func myPosts(page: Int, size: Int) async throws -> Page<CommunityPost> {
         try myPostsResult.get()
+    }
+
+    func author(id: String) async throws -> CommunityAuthor {
+        authorResult
+    }
+
+    func authorPosts(
+        authorID: String,
+        size: Int,
+        cursor: String?
+    ) async throws -> CommunityFeedPage {
+        authorPostsResult
     }
 
     func editPost(
