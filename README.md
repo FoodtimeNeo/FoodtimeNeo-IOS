@@ -2,7 +2,19 @@
 
 目标是完整复刻 Android 客户端的功能、业务规则和手账风格，并持续跟进 Android 后续更新。普通用户、访客、管理员和超级管理员的能力都属于范围，不能只实现首页或普通用户流程。
 
-当前完成的是**仓库级初始化**：目录边界、功能对照记录、协作和同步流程、基础检查及交接提示词。尚无 Xcode 工程、可运行 iOS App、业务实现或安装包。界面框架、最低系统版本、Bundle ID、签名团队与分发方式留待接手负责人和用户确认。
+## 当前状态（2026-11-20，`feature/ios-foundation`）
+
+本分支建立**工程底座与首个只读纵切片**，不是全量对齐：
+
+- 已建立 XcodeGen 工程（`project.yml`）、SwiftUI 外壳、Tab/导航、手账色板与基础控件。
+- 已接入网络层：`/api/v1`、统一响应包络、错误映射、`X-Request-Id`、`X-Foodtime-Client: ios`、Cookie 会话、CSRF、204/205 空 body、超时与禁止重定向。
+- 已接入会话：Keychain Cookie 归档、首启清理、登录/验证码、冷启动恢复、`appeal_only` 受限会话、能力快照与 401 清理。
+- 已实现食堂 → 档口 → 菜品三级只读浏览，以及个人页的账号信息、能力展示和退出登录。
+- W1 注册：注册策略、邀请码、邮箱验证码、密码校验、注册成功返回登录；详见 [注册流程](docs/AUTH-REGISTRATION.md)。
+- 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
+- **尚未实现**：找回密码/改密、资料/头像/学校邮箱/注销、点评与回复、投稿、社区、收藏分组、历史、私信/通知、反馈、举报申诉、管理端、价格历史、地图、相册/HEIC/裁剪/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
+- **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
+- Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 
 ## 接手入口
 
@@ -10,37 +22,54 @@
 2. [Android 功能对照](docs/ANDROID-PARITY.md)：已发布能力和 dev 新增项，以及源码入口。
 3. [对齐记录](docs/parity/coverage.json)：每个路由和跨页面能力的状态、实现位置及验证证据。
 4. [持续同步流程](docs/SYNC-PROCESS.md)：如何发现 Android 更新、维护差异并判定完成。
-5. [架构边界](docs/ARCHITECTURE.md)及[iOS 选型与验证](docs/IOS-DECISIONS.md)。
+5. [架构边界](docs/ARCHITECTURE.md)、[iOS 选型与验证](docs/IOS-DECISIONS.md)、[后端接入](docs/BACKEND-INTEGRATION.md)、[本地开发](docs/DEVELOPMENT.md)。
 
 ## 目录
 
 ```text
 Sources/
-  App/          组装、会话生命周期与导航
-  Domain/       模型、用例与业务接口
-  Data/         HTTP、DTO 与存储适配
-  Platform/     相册、文件、通知与系统能力
-  Features/     各业务页面及其状态
-  SharedUI/     手账设计资源与共用控件
-Tests/          后续单元、接口与界面验证
-scripts/        仓库与对齐记录检查
+  App/          依赖组装、会话生命周期、导航
+  Domain/       模型、错误、格式化、业务接口
+  Data/         HTTP、Cookie/CSRF、DTO 与远端服务
+  Platform/     Keychain、Cookie 归档、系统能力适配
+  Features/     登录、食堂、个人页等页面及其状态
+  SharedUI/     手账设计令牌与共用控件
+Resources/      Asset Catalog、图标（字体/地图后续接入）
+Tests/Unit/     单元测试与网络桩
+scripts/       仓库与层边界检查
+project.yml    XcodeGen 工程定义（源文件）
 ```
 
-这些目录只定义职责，不代表已经建立 Swift 模块或选定框架。
+当前是单模块工程，层边界由 `scripts/check_ios_architecture.py` 做静态检查；后续需要时再拆 SPM 包或独立 framework，拆分层级以 `docs/ARCHITECTURE.md` 为准。
+
+## 本地构建
+
+需要 macOS、Xcode 26.6 或兼容版本、XcodeGen 2.48.0：
+
+```sh
+brew install xcodegen
+xcodegen generate
+python3 scripts/check_ios_architecture.py
+xcodebuild -project FoodtimeNeo.xcodeproj -scheme FoodtimeNeo \
+  -destination 'platform=iOS Simulator,name=iPhone 17' build test
+```
+
+默认请求 `https://bjtufoodtime.top/api/v1/`。Debug 可用 `FOODTIME_API_BASE_URL` 覆盖为本地服务；Release 仍必须使用 HTTPS。签名/Team 未配置，模拟器构建不需要签名，真机与 TestFlight 前再补。
 
 ## 检查
 
 ```sh
 python3 scripts/check_repository.py
 python3 scripts/check_repository.py --upstream
+python3 scripts/check_ios_architecture.py
 ```
 
-第二条命令只读检查 Android main/dev 是否变化，不会修改参照提交、同步业务代码或创建提醒。CI 在 PR、main/dev 推送及手动运行时执行；Android main 变化会要求重新审查，dev 变化会提示待跟进。
-
-**当前 CI 只检查仓库和对齐记录，不执行 iOS 编译、单元或模拟器测试。** 接手人建立真实工程后必须补充 macOS/Xcode 构建及测试门禁。
+- `repository-checks.yml`（Ubuntu）：校验仓库、文档、链接、coverage 记录、PR 规范和 Android 上游 SHA。
+- `ios-ci.yml`（macOS 26）：生成工程、检查层边界、编译并通过单元测试。
+- 两者都不能替代 Apple Simulator、真机、真实后端和业务验收；无环境的结果写未执行，不写通过。
 
 ## 协作
 
 `feature/<kebab-case>` → `dev`：准确提交检查通过且 PR 可合并后 squash。`dev` → `main`：检查通过后 merge commit，保留 `dev`。初始化同步不代表应用发布；版本、签名、分发另行确认。提交采用 Conventional Commits、中文摘要、标题不超过72字符。详细规则见 [AGENTS.md](AGENTS.md)。
 
-共用 [Backend](https://github.com/FoodtimeNeo/FoodtimeNeo-Backend)，以 [Android](https://github.com/FoodtimeNeo/FoodtimeNeo-Android) 为功能主参照，[Web](https://github.com/FoodtimeNeo/FoodtimeNeo-Web)作补充。当前线上部署版本需联调前核实，不因仓库已发版就假定服务器已升级。
+共用 [Backend](https://github.com/FoodtimeNeo/FoodtimeNeo-Backend)，以 [Android](https://github.com/FoodtimeNeo/FoodtimeNeo-Android) 为功能主参照，[Web](https://github.com/FoodtimeNeo/FoodtimeNeo-Web) 作补充。当前线上部署版本需联调前核实，不因仓库已发版就假定服务器已升级。
