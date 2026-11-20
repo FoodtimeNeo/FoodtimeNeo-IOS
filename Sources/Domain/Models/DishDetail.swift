@@ -10,6 +10,8 @@ struct DishDetail: Codable, Identifiable, Equatable, Sendable {
     let description: String?
     let price: Decimal?
     let revision: Int
+    /// `unspecified` 表示未注明；旧响应没有该字段时为 nil。
+    let priceUnit: String? = nil
 }
 
 struct DishImage: Codable, Identifiable, Equatable, Sendable {
