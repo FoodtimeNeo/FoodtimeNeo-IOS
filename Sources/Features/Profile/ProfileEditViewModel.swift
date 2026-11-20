@@ -5,6 +5,7 @@ import Foundation
 final class ProfileEditViewModel: ObservableObject {
     @Published var displayName = ""
     @Published private(set) var profile: UserProfile?
+    @Published private(set) var avatarUrl: String?
     @Published private(set) var isLoading = false
     @Published private(set) var isSaving = false
     @Published var errorMessage: String?
@@ -15,10 +16,6 @@ final class ProfileEditViewModel: ObservableObject {
 
     init(session: AppSession) {
         self.session = session
-    }
-
-    var avatarUrl: String? {
-        profile?.avatarUrl
     }
 
     func loadIfNeeded() async {
@@ -35,12 +32,17 @@ final class ProfileEditViewModel: ObservableObject {
             let profile = try await session.currentProfile()
             self.profile = profile
             displayName = profile.displayName
+            avatarUrl = profile.avatarUrl
             hasLoaded = true
         } catch let error as AppError {
             errorMessage = error.localizedDescription
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    func setAvatarUrl(_ url: String) {
+        avatarUrl = url
     }
 
     func save() async {
@@ -60,10 +62,11 @@ final class ProfileEditViewModel: ObservableObject {
         do {
             let updated = try await session.updateProfile(
                 displayName: ProfileValidation.normalizedDisplayName(displayName),
-                avatarUrl: profile.avatarUrl
+                avatarUrl: avatarUrl ?? profile.avatarUrl
             )
             self.profile = updated
             displayName = updated.displayName
+            avatarUrl = updated.avatarUrl
             didSave = true
         } catch let error as AppError {
             if case .validation(let fields) = error {

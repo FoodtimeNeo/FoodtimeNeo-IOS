@@ -1,12 +1,19 @@
 import SwiftUI
+import UIKit
 
 @MainActor
 struct ProfileEditView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var model: ProfileEditViewModel
+    @State private var showPicker = false
+    @State private var cropImage: CropImage?
+    private let avatar: AvatarService
+    private let mediaBaseURL: URL
 
     init(session: AppSession) {
         _model = StateObject(wrappedValue: ProfileEditViewModel(session: session))
+        avatar = session.avatar
+        mediaBaseURL = session.catalog.mediaBaseURL
     }
 
     var body: some View {
@@ -18,7 +25,7 @@ struct ProfileEditView: View {
                         SectionHeading(
                             index: "03.0",
                             title: "编辑资料",
-                            subtitle: "昵称修改后立即生效；头像上传在媒体波次接入。"
+                            subtitle: "头像先裁剪再上传；保存资料后才会更新。"
                         )
                         content
                     }
@@ -35,6 +42,18 @@ struct ProfileEditView: View {
             }
             .task {
                 await model.loadIfNeeded()
+            }
+            .sheet(isPresented: $showPicker) {
+                PhotoPicker { image in
+                    cropImage = CropImage(image: image)
+                }
+            }
+            .fullScreenCover(item: $cropImage) { item in
+                NavigationStack {
+                    AvatarCropView(image: item.image, avatar: avatar) { url in
+                        model.setAvatarUrl(url)
+                    }
+                }
             }
         }
     }
@@ -59,15 +78,7 @@ struct ProfileEditView: View {
             VStack(alignment: .leading, spacing: 14) {
                 if let profile = model.profile {
                     HStack(spacing: 12) {
-                        ZStack {
-                            Circle().fill(Zine.alt)
-                            Text(String(profile.displayName.prefix(1)))
-                                .font(.system(size: 26, weight: .black, design: .serif))
-                                .foregroundStyle(Zine.red)
-                        }
-                        .frame(width: 58, height: 58)
-                        .accessibilityHidden(true)
-
+                        avatarView(profile)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(profile.email)
                                 .font(.footnote)
@@ -76,6 +87,9 @@ struct ProfileEditView: View {
                                 .font(.caption)
                                 .foregroundStyle(Zine.muted)
                         }
+                        Spacer(minLength: 8)
+                        Button("更换头像") { showPicker = true }
+                            .buttonStyle(LinkButtonStyle())
                     }
                 }
 
@@ -103,11 +117,41 @@ struct ProfileEditView: View {
                 .buttonStyle(InkButtonStyle(primary: true))
                 .disabled(model.isSaving)
 
-                Text("当前只支持修改昵称；保存时会带上现有头像引用，不会清除头像。头像上传/裁剪将在媒体波次接入。")
+                Text("头像裁剪后先上传为本人私有暂存引用，保存资料才会更新；只改昵称时保留现有头像。")
                     .font(.caption)
                     .foregroundStyle(Zine.muted)
             }
         }
+    }
+
+    @ViewBuilder
+    private func avatarView(_ profile: UserProfile) -> some View {
+        ZStack {
+            Circle().fill(Zine.alt)
+            if let raw = model.avatarUrl,
+               let url = MediaURL.resolve(raw, baseURL: mediaBaseURL) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable().scaledToFill()
+                    default:
+                        initialAvatar(profile)
+                    }
+                }
+            } else {
+                initialAvatar(profile)
+            }
+        }
+        .frame(width: 58, height: 58)
+        .clipShape(Circle())
+        .accessibilityLabel("当前头像")
+    }
+
+    private func initialAvatar(_ profile: UserProfile) -> some View {
+        Text(String(profile.displayName.prefix(1)))
+            .font(.system(size: 26, weight: .black, design: .serif))
+            .foregroundStyle(Zine.red)
+            .accessibilityHidden(true)
     }
 
     private func savedCard(_ profile: UserProfile) -> some View {
@@ -124,4 +168,10 @@ struct ProfileEditView: View {
             }
         }
     }
+}
+
+
+private struct CropImage: Identifiable {
+    let id = UUID()
+    let image: UIImage
 }

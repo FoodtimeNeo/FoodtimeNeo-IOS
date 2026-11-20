@@ -1205,6 +1205,16 @@ final class FakeReportService: ReportService {
     }
 }
 
+final class FakeAvatarService: AvatarService {
+    var result = Result<UploadedImage, Error>.success(TestFixtures.uploadedImage)
+    private(set) var uploads: [Data] = []
+
+    func uploadAvatar(_ jpegData: Data) async throws -> UploadedImage {
+        uploads.append(jpegData)
+        return try result.get()
+    }
+}
+
 enum TestFixtures {
     static let baseURL = URL(string: "https://example.test/api/v1/")!
     static let user = User(

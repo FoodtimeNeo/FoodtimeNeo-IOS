@@ -32,6 +32,7 @@ final class AppSession: ObservableObject {
     let corrections: CorrectionService
     let admin: AdminService
     let reports: ReportService
+    let avatar: AvatarService
 
     private let api: APIClient
     private let cookieJar: CookieJar
@@ -58,6 +59,7 @@ final class AppSession: ObservableObject {
         corrections: CorrectionService,
         admin: AdminService,
         reports: ReportService,
+        avatar: AvatarService,
         api: APIClient,
         cookieJar: CookieJar,
         archive: CookieArchiving,
@@ -80,6 +82,7 @@ final class AppSession: ObservableObject {
         self.corrections = corrections
         self.admin = admin
         self.reports = reports
+        self.avatar = avatar
         self.api = api
         self.cookieJar = cookieJar
         self.archive = archive
@@ -106,6 +109,7 @@ final class AppSession: ObservableObject {
             corrections: environment.corrections,
             admin: environment.admin,
             reports: environment.reports,
+            avatar: environment.avatar,
             api: environment.api,
             cookieJar: environment.cookieJar,
             archive: environment.archive,

@@ -21,6 +21,7 @@ struct AppEnvironment {
     let corrections: CorrectionService
     let admin: AdminService
     let reports: ReportService
+    let avatar: AvatarService
     let cookieJar: SystemCookieJar
     let archive: KeychainCookieArchive
 
@@ -71,6 +72,7 @@ struct AppEnvironment {
             corrections: RemoteCorrectionService(api: api),
             admin: RemoteAdminService(api: api),
             reports: RemoteReportService(api: api),
+            avatar: RemoteAvatarService(api: api),
             cookieJar: jar,
             archive: archive
         )

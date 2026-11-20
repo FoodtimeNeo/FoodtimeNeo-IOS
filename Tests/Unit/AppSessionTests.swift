@@ -234,6 +234,7 @@ final class AppSessionTests: XCTestCase {
             corrections: FakeCorrectionService(),
             admin: FakeAdminService(),
             reports: FakeReportService(),
+            avatar: FakeAvatarService(),
             api: api,
             cookieJar: jar,
             archive: MemoryCookieArchive(),
