@@ -600,6 +600,70 @@ final class FakeAdminService: AdminService {
             submitterEmail: "user@example.com"
         )
     )
+    var noticesResult = Result<Page<AdminNotice>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var noticeDetailResult = Result<AdminNotice, Error>.success(
+        AdminNotice(
+            id: "notice-1",
+            title: "更新公告",
+            body: "正文",
+            publishedAt: Date(),
+            content: "# 更新公告\n\n正文",
+            createdTime: Date(),
+            displayStartsAt: nil,
+            displayEndsAt: nil,
+            expiresOn: nil,
+            isUpdate: true,
+            published: true,
+            enabled: true,
+            seq: 7,
+            status: "published"
+        )
+    )
+    var noticeSaveResult = Result<AdminNotice, Error>.success(
+        AdminNotice(
+            id: "notice-1",
+            title: "更新公告",
+            body: "正文",
+            publishedAt: Date(),
+            content: "# 更新公告\n\n正文",
+            createdTime: Date(),
+            displayStartsAt: nil,
+            displayEndsAt: nil,
+            expiresOn: nil,
+            isUpdate: true,
+            published: true,
+            enabled: true,
+            seq: 7,
+            status: "published"
+        )
+    )
+    var scheduleNoticeResult = Result<AdminNotice, Error>.success(
+        AdminNotice(
+            id: "notice-1",
+            title: "更新公告",
+            body: "正文",
+            publishedAt: Date(),
+            content: "# 更新公告\n\n正文",
+            createdTime: Date(),
+            displayStartsAt: nil,
+            displayEndsAt: nil,
+            expiresOn: nil,
+            isUpdate: true,
+            published: true,
+            enabled: true,
+            seq: 7,
+            status: "published"
+        )
+    )
+    var deleteNoticeError: Error?
+    var noticeSettingsResult = Result<AdminNoticeSettings, Error>.success(
+        AdminNoticeSettings(noticeId: nil)
+    )
+    var updateNoticeSettingsResult = Result<AdminNoticeSettings, Error>.success(
+        AdminNoticeSettings(noticeId: "notice-1")
+    )
     var decideCorrectionResult = Result<AdminCorrectionRow, Error>.success(
         AdminCorrectionRow(
             correction: AdminCorrection(
@@ -640,6 +704,10 @@ final class FakeAdminService: AdminService {
     private(set) var catalogDeleteCalls = 0
     private(set) var removeReviewCalls = 0
     private(set) var decideCorrectionCalls = 0
+    private(set) var saveNoticeCalls = 0
+    private(set) var scheduleNoticeCalls = 0
+    private(set) var deleteNoticeCalls = 0
+    private(set) var updateNoticeSettingsCalls = 0
 
     func dashboard(days: Int) async throws -> AdminDashboard {
         try dashboardResult.get()
@@ -863,6 +931,45 @@ final class FakeAdminService: AdminService {
     ) async throws -> AdminCorrectionRow {
         decideCorrectionCalls += 1
         return try decideCorrectionResult.get()
+    }
+
+    func notices(query: String, page: Int, size: Int) async throws -> Page<AdminNotice> {
+        try noticesResult.get()
+    }
+
+    func noticeDetail(id: String) async throws -> AdminNotice {
+        try noticeDetailResult.get()
+    }
+
+    func saveNotice(
+        id: String?,
+        content: String,
+        schedule: AdminNoticeScheduleRequest?
+    ) async throws -> AdminNotice {
+        saveNoticeCalls += 1
+        return try noticeSaveResult.get()
+    }
+
+    func scheduleNotice(
+        id: String,
+        schedule: AdminNoticeScheduleRequest
+    ) async throws -> AdminNotice {
+        scheduleNoticeCalls += 1
+        return try scheduleNoticeResult.get()
+    }
+
+    func deleteNotice(id: String) async throws {
+        deleteNoticeCalls += 1
+        if let deleteNoticeError { throw deleteNoticeError }
+    }
+
+    func noticeSettings() async throws -> AdminNoticeSettings {
+        try noticeSettingsResult.get()
+    }
+
+    func updateNoticeSettings(noticeID: String?) async throws -> AdminNoticeSettings {
+        updateNoticeSettingsCalls += 1
+        return try updateNoticeSettingsResult.get()
     }
 }
 

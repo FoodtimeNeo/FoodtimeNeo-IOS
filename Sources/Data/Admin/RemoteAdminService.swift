@@ -512,6 +512,103 @@ final class RemoteAdminService: AdminService {
         return try await api.send(request, as: AdminCorrectionRow.self)
     }
 
+    func notices(query: String, page: Int, size: Int) async throws -> Page<AdminNotice> {
+        var items = [
+            URLQueryItem(name: "page", value: String(max(1, page))),
+            URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+        ]
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        let path: String
+        if trimmed.isEmpty {
+            path = "admin/notices"
+        } else {
+            path = "admin/notices/search"
+            items.append(URLQueryItem(name: "q", value: trimmed))
+        }
+        return try await api.send(
+            .get(path, query: items),
+            as: Page<AdminNotice>.self
+        )
+    }
+
+    func noticeDetail(id: String) async throws -> AdminNotice {
+        try await api.send(
+            .get("admin/notices/\(encoded(id))"),
+            as: AdminNotice.self
+        )
+    }
+
+    func saveNotice(
+        id: String?,
+        content: String,
+        schedule: AdminNoticeScheduleRequest?
+    ) async throws -> AdminNotice {
+        struct Body: Encodable {
+            let content: String
+            let schedule: AdminNoticeScheduleRequest?
+        }
+        let request: APIRequest
+        if let id {
+            request = try APIRequest.json(
+                .put,
+                "admin/notices/\(encoded(id))/markdown",
+                body: Body(content: content, schedule: schedule),
+                requiresAuth: true,
+                requiresCSRF: true
+            )
+        } else {
+            request = try APIRequest.json(
+                .post,
+                "admin/notices/markdown",
+                body: Body(content: content, schedule: schedule),
+                requiresAuth: true,
+                requiresCSRF: true
+            )
+        }
+        return try await api.send(request, as: AdminNotice.self)
+    }
+
+    func scheduleNotice(
+        id: String,
+        schedule: AdminNoticeScheduleRequest
+    ) async throws -> AdminNotice {
+        let request = try APIRequest.json(
+            .put,
+            "admin/notices/\(encoded(id))/schedule",
+            body: schedule,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminNotice.self)
+    }
+
+    func deleteNotice(id: String) async throws {
+        try await api.sendVoid(
+            .delete("admin/notices/\(encoded(id))")
+        )
+    }
+
+    func noticeSettings() async throws -> AdminNoticeSettings {
+        try await api.send(
+            .get("admin/notices/settings"),
+            as: AdminNoticeSettings.self
+        )
+    }
+
+    func updateNoticeSettings(noticeID: String?) async throws -> AdminNoticeSettings {
+        struct Body: Encodable {
+            let noticeId: String?
+        }
+        let request = try APIRequest.json(
+            .put,
+            "admin/notices/settings",
+            body: Body(noticeId: noticeID),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminNoticeSettings.self)
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

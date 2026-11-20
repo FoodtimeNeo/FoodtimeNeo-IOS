@@ -119,4 +119,19 @@ protocol AdminService: AnyObject {
         reviewNote: String?,
         expectedRevision: Int
     ) async throws -> AdminCorrectionRow
+
+    func notices(query: String, page: Int, size: Int) async throws -> Page<AdminNotice>
+    func noticeDetail(id: String) async throws -> AdminNotice
+    func saveNotice(
+        id: String?,
+        content: String,
+        schedule: AdminNoticeScheduleRequest?
+    ) async throws -> AdminNotice
+    func scheduleNotice(
+        id: String,
+        schedule: AdminNoticeScheduleRequest
+    ) async throws -> AdminNotice
+    func deleteNotice(id: String) async throws
+    func noticeSettings() async throws -> AdminNoticeSettings
+    func updateNoticeSettings(noticeID: String?) async throws -> AdminNoticeSettings
 }

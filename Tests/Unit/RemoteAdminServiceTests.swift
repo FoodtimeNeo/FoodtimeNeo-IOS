@@ -527,6 +527,111 @@ final class RemoteAdminServiceTests: XCTestCase {
         XCTAssertEqual(json["expectedRevision"] as? Int, 1)
     }
 
+    func testNoticesListAndSearch() async throws {
+        let noticeJSON = """
+        {"id":"notice-1","title":"更新公告","body":"正文","publishedAt":"2099-11-20T04:00:00Z","content":"# 更新公告\\n\\n正文","createdTime":"2099-11-20T04:00:00Z","displayStartsAt":null,"displayEndsAt":null,"expiresOn":null,"isUpdate":true,"published":true,"enabled":true,"seq":7,"status":"published"}
+        """
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[\(noticeJSON)],"total":1,"page":1,"size":20}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[\(noticeJSON)],"total":1,"page":1,"size":20}
+            """))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let all = try await service.notices(query: "", page: 1, size: 20)
+        let searched = try await service.notices(query: "更新", page: 1, size: 20)
+
+        XCTAssertEqual(all.items.first?.seq, 7)
+        XCTAssertEqual(searched.items.first?.isUpdate, true)
+        XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/admin/notices")
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/admin/notices/search")
+        let query = URLComponents(
+            url: try XCTUnwrap(transport.requests[1].url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(query?.first(where: { $0.name == "q" })?.value, "更新")
+    }
+
+    func testNoticeSaveScheduleSettingsAndDelete() async throws {
+        let noticeJSON = """
+        {"id":"notice-1","title":"更新公告","body":"正文","publishedAt":"2099-11-20T04:00:00Z","content":"# 更新公告\\n\\n正文","createdTime":"2099-11-20T04:00:00Z","displayStartsAt":null,"displayEndsAt":null,"expiresOn":null,"isUpdate":true,"published":true,"enabled":true,"seq":7,"status":"published"}
+        """
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 201, body: TestFixtures.envelope(noticeJSON)),
+            .init(status: 200, body: TestFixtures.envelope(noticeJSON)),
+            .init(status: 200, body: TestFixtures.envelope(noticeJSON)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"noticeId":null}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"noticeId":"notice-1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("null"))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+        let schedule = AdminNoticeScheduleRequest(
+            publishedAt: "2099-11-20T04:00:00Z",
+            displayStartsAt: nil,
+            displayEndsAt: nil,
+            expiresOn: "2099-12-01",
+            isUpdate: true,
+            published: true,
+            enabled: true
+        )
+
+        _ = try await service.saveNotice(
+            id: nil,
+            content: "# 更新公告\n\n正文",
+            schedule: schedule
+        )
+        _ = try await service.saveNotice(
+            id: "notice-1",
+            content: "# 更新公告\n\n正文",
+            schedule: nil
+        )
+        _ = try await service.scheduleNotice(id: "notice-1", schedule: schedule)
+        _ = try await service.noticeSettings()
+        _ = try await service.updateNoticeSettings(noticeID: "notice-1")
+        try await service.deleteNotice(id: "notice-1")
+
+        XCTAssertEqual(transport.requests[1].httpMethod, "POST")
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/admin/notices/markdown")
+        let saveBody = try XCTUnwrap(transport.requests[1].httpBody)
+        let saveJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: saveBody) as? [String: Any]
+        )
+        let saveSchedule = try XCTUnwrap(saveJSON["schedule"] as? [String: Any])
+        XCTAssertEqual(saveSchedule["expiresOn"] as? String, "2099-12-01")
+        XCTAssertEqual(transport.requests[2].httpMethod, "PUT")
+        XCTAssertEqual(
+            transport.requests[2].url?.path,
+            "/api/v1/admin/notices/notice-1/markdown"
+        )
+        XCTAssertEqual(
+            transport.requests[3].url?.path,
+            "/api/v1/admin/notices/notice-1/schedule"
+        )
+        XCTAssertEqual(transport.requests[4].url?.path, "/api/v1/admin/notices/settings")
+        XCTAssertEqual(transport.requests[5].httpMethod, "PUT")
+        XCTAssertEqual(
+            transport.requests[5].url?.path,
+            "/api/v1/admin/notices/settings"
+        )
+        XCTAssertEqual(transport.requests[6].httpMethod, "DELETE")
+    }
+
     func testUpdateUserSendsRoleAndStatus() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

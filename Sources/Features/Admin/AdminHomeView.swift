@@ -118,6 +118,11 @@ struct AdminHomeView: View {
                     adminLinkRow("纠错审核", detail: "目录纠错提案通过与拒绝")
                 }
                 NavigationLink {
+                    AdminNoticesView(service: service)
+                } label: {
+                    adminLinkRow("公告管理", detail: "Markdown 编辑、排期与登录弹窗")
+                }
+                NavigationLink {
                     AdminReportsView(service: service)
                 } label: {
                     adminLinkRow("举报处理", detail: "待处理举报、决定、追问与动作")
