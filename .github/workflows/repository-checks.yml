@@ -1,0 +1,41 @@
+name: Repository checks
+
+on:
+  pull_request:
+    branches: [main, dev]
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+    inputs:
+      strict_dev:
+        description: Also fail when the Android dev reference changes
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  handoff:
+    name: Repository and parity records (not an iOS build)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check repository, records, links and upstream references
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          STRICT_DEV: ${{ inputs.strict_dev }}
+        run: |
+          args=(--upstream)
+          if [[ "$STRICT_DEV" == 'true' ]]; then args+=(--strict-dev); fi
+          python3 scripts/check_repository.py "${args[@]}"
