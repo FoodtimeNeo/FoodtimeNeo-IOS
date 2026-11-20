@@ -56,6 +56,24 @@ struct DiningHallsView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    NavigationLink {
+                        QuickReviewView(catalog: catalog)
+                    } label: {
+                        PaperCard {
+                            HStack(spacing: 10) {
+                                Image(systemName: "star.bubble")
+                                    .foregroundStyle(Zine.red)
+                                Text("一键点评")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(Zine.ink)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(Zine.muted)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
                     DailyRecommendationSection(
                         recommendations: model.recommendations,
                         isLoading: model.isLoadingRecommendations,
