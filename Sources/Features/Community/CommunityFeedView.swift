@@ -5,6 +5,7 @@ struct CommunityFeedView: View {
     @EnvironmentObject private var session: AppSession
     @StateObject private var model: CommunityFeedViewModel
     @State private var showCompose = false
+    @State private var showPins = false
 
     init(service: CommunityService) {
         _model = StateObject(wrappedValue: CommunityFeedViewModel(service: service))
@@ -52,8 +53,16 @@ struct CommunityFeedView: View {
         .navigationTitle("社区")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItemGroup(placement: .primaryAction) {
+                if model.canManagePins {
+                    Button("置顶") { showPins = true }
+                }
                 Button("写食记") { showCompose = true }
+            }
+        }
+        .sheet(isPresented: $showPins) {
+            CommunityPinsView(service: session.community) {
+                Task { await model.reloadPinsAfterManagement() }
             }
         }
         .sheet(isPresented: $showCompose) {
@@ -82,11 +91,13 @@ struct CommunityFeedView: View {
                 Task { await model.load(reset: true) }
             }
         } else if model.posts.isEmpty {
+            pinnedSection
             EmptyStateView(
                 title: model.segment == .following ? "关注的人还没有食记" : "还没有公开食记",
                 message: nil
             )
         } else {
+            pinnedSection
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 12) {
                 ForEach(model.posts) { post in
                     NavigationLink {
@@ -103,6 +114,39 @@ struct CommunityFeedView: View {
                 }
                 .buttonStyle(InkButtonStyle())
                 .disabled(model.isLoadingMore)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var pinnedSection: some View {
+        if let pins = model.pins, !pins.items.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("置顶")
+                    .font(.system(size: 18, weight: .bold, design: .serif))
+                    .foregroundStyle(Zine.ink)
+                ForEach(pins.items) { entry in
+                    NavigationLink {
+                        CommunityDetailView(postID: entry.id, service: session.community)
+                    } label: {
+                        PaperCard {
+                            HStack {
+                                Text("\(entry.position)")
+                                    .font(.caption.weight(.bold))
+                                    .foregroundStyle(Zine.red)
+                                Text(entry.title)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Zine.ink)
+                                    .lineLimit(1)
+                                Spacer()
+                                Text(entry.userDisplayName)
+                                    .font(.caption)
+                                    .foregroundStyle(Zine.muted)
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
             }
         }
     }
@@ -158,5 +202,12 @@ struct CommunityFeedView: View {
                 .stroke(Zine.border, lineWidth: 1)
         )
         .accessibilityElement(children: .combine)
+        .contextMenu {
+            if model.canManagePins {
+                Button("置顶这篇食记") {
+                    Task { await model.pin(post) }
+                }
+            }
+        }
     }
 }

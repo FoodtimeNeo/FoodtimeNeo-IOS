@@ -41,4 +41,8 @@ protocol CommunityService: AnyObject {
         imageURLs: [String],
         requestID: String
     ) async throws -> CommunityEditReceipt
+    func pins(manage: Bool) async throws -> CommunityPinSnapshot
+    func pin(postID: String, expectedRevision: Int) async throws -> CommunityPinSnapshot
+    func unpin(postID: String, expectedRevision: Int) async throws -> CommunityPinSnapshot
+    func reorderPins(postIDs: [String], expectedRevision: Int) async throws -> CommunityPinSnapshot
 }

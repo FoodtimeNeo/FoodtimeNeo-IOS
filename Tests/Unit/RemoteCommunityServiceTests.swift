@@ -66,6 +66,52 @@ final class RemoteCommunityServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests[3].url?.path, "/api/v1/community/comments/c-2/like")
     }
 
+    func testPinsSnapshotsAndMutations() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"revision":1,"items":[{"id":"post-1","title":"置顶","userDisplayName":"干饭人","status":"approved","position":1}],"canManage":true}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-c6"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"revision":2,"items":[],"canManage":true}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"revision":3,"items":[],"canManage":true}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"revision":4,"items":[],"canManage":true}
+            """))
+        ]
+        let service = RemoteCommunityService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let snapshot = try await service.pins(manage: true)
+        let pinned = try await service.pin(postID: "post-1", expectedRevision: 1)
+        let unpinned = try await service.unpin(postID: "post-1", expectedRevision: 2)
+        let ordered = try await service.reorderPins(postIDs: [], expectedRevision: 3)
+
+        XCTAssertEqual(snapshot.items.first?.title, "置顶")
+        XCTAssertEqual(pinned.revision, 2)
+        XCTAssertEqual(unpinned.revision, 3)
+        XCTAssertEqual(ordered.revision, 4)
+        XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/admin/community/pins")
+        XCTAssertEqual(transport.requests[1].httpMethod, "PUT")
+        XCTAssertEqual(transport.requests[2].httpMethod, "DELETE")
+        let deleteURL = try XCTUnwrap(transport.requests[2].url)
+        XCTAssertEqual(
+            URLComponents(url: deleteURL, resolvingAgainstBaseURL: false)?
+                .queryItems?.first(where: { $0.name == "expectedRevision" })?.value,
+            "2"
+        )
+        let orderBody = try XCTUnwrap(transport.requests[3].httpBody)
+        let orderJSON = try XCTUnwrap(JSONSerialization.jsonObject(with: orderBody) as? [String: Any])
+        XCTAssertEqual(orderJSON["expectedRevision"] as? Int, 3)
+    }
+
     func testEditPostSendsRevisionAndBody() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [
