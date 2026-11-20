@@ -378,6 +378,76 @@ final class FakeReviewService: ReviewService {
     }
 }
 
+final class FakeCommunityService: CommunityService {
+    var feedResult = CommunityFeedPage(items: [], total: 0, hasMore: false, nextCursor: nil)
+    var detailResult = TestFixtures.communityPost
+    var rootsResult = CommunityCommentPage(items: [], total: 0, hasMore: false, nextCursor: nil)
+    var repliesResult = CommunityCommentPage(items: [], total: 0, hasMore: false, nextCursor: nil)
+    var commentResult = TestFixtures.communityComment
+    var likeResult = CommunityLikeState(
+        liked: nil, likedByMe: true, likeCount: 1, favorited: nil,
+        favoritedByMe: nil, favoriteCount: nil, counterVersion: 1
+    )
+    var viewCount = 1
+    private(set) var commentCalls = 0
+    private(set) var likeCalls: [String] = []
+
+    func feed(
+        size: Int,
+        cursor: String?,
+        following: Bool,
+        query: String,
+        pinRevision: Int?
+    ) async throws -> CommunityFeedPage {
+        feedResult
+    }
+
+    func detail(id: String) async throws -> CommunityPost {
+        detailResult
+    }
+
+    func roots(postID: String, size: Int, cursor: String?) async throws -> CommunityCommentPage {
+        rootsResult
+    }
+
+    func replies(
+        postID: String,
+        rootID: String,
+        size: Int,
+        cursor: String?
+    ) async throws -> CommunityCommentPage {
+        repliesResult
+    }
+
+    func submitComment(
+        postID: String,
+        content: String,
+        rootID: String?,
+        replyToID: String?,
+        requestID: String
+    ) async throws -> CommunityComment {
+        commentCalls += 1
+        return commentResult
+    }
+
+    func likePost(id: String, liked: Bool) async throws -> CommunityLikeState {
+        likeCalls.append(id)
+        return likeResult
+    }
+
+    func favoritePost(id: String, favorited: Bool) async throws -> CommunityLikeState {
+        likeResult
+    }
+
+    func likeComment(id: String, liked: Bool) async throws -> CommunityLikeState {
+        likeResult
+    }
+
+    func recordView(postID: String, requestID: String) async throws -> Int {
+        viewCount
+    }
+}
+
 final class FakeSubmissionService: SubmissionService {
     var uploadResult = Result<UploadedImage, Error>.success(TestFixtures.uploadedImage)
     var submitResult = Result<ImageSubmission, Error>.success(TestFixtures.imageSubmission)
@@ -655,6 +725,51 @@ enum TestFixtures {
         content: "好吃",
         status: "pending",
         submittedAt: Date()
+    )
+
+    static let communityPost = CommunityPost(
+        id: "post-1",
+        userId: user.id,
+        userDisplayName: user.displayName,
+        title: "今天吃什么",
+        content: "食堂新菜",
+        imageUrls: [],
+        images: [],
+        likeCount: 1,
+        commentCount: 0,
+        repostCount: 0,
+        repostOfId: nil,
+        repost: nil,
+        likedByMe: false,
+        favoritedByMe: false,
+        favoriteCount: 0,
+        status: "approved",
+        reviewReason: nil,
+        createdAt: Date(),
+        editedAt: nil,
+        viewCount: 3,
+        contentRevision: 1,
+        userAvatarUrl: nil,
+        linkedDish: nil
+    )
+
+    static let communityComment = CommunityComment(
+        id: "comment-1",
+        postId: "post-1",
+        userId: user.id,
+        userDisplayName: user.displayName,
+        content: "看起来不错",
+        likeCount: 0,
+        status: "approved",
+        createdAt: Date(),
+        rootCommentId: nil,
+        replyToCommentId: nil,
+        replyToUserId: nil,
+        replyToDisplayName: nil,
+        replyCount: 0,
+        likedByMe: false,
+        deleted: false,
+        userAvatarUrl: nil
     )
 
     static let uploadedImage = UploadedImage(

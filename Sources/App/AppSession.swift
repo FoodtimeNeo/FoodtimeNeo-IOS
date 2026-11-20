@@ -22,6 +22,7 @@ final class AppSession: ObservableObject {
     let reviews: ReviewService
     let venueReviews: VenueReviewService
     let submissions: SubmissionService
+    let community: CommunityService
 
     private let api: APIClient
     private let cookieJar: CookieJar
@@ -38,6 +39,7 @@ final class AppSession: ObservableObject {
         reviews: ReviewService,
         venueReviews: VenueReviewService,
         submissions: SubmissionService,
+        community: CommunityService,
         api: APIClient,
         cookieJar: CookieJar,
         archive: CookieArchiving,
@@ -50,6 +52,7 @@ final class AppSession: ObservableObject {
         self.reviews = reviews
         self.venueReviews = venueReviews
         self.submissions = submissions
+        self.community = community
         self.api = api
         self.cookieJar = cookieJar
         self.archive = archive
@@ -66,6 +69,7 @@ final class AppSession: ObservableObject {
             reviews: environment.reviews,
             venueReviews: environment.venueReviews,
             submissions: environment.submissions,
+            community: environment.community,
             api: environment.api,
             cookieJar: environment.cookieJar,
             archive: environment.archive,

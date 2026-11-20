@@ -12,6 +12,11 @@ struct MainTabView: View {
             }
             .tabItem { Label("食堂", systemImage: "fork.knife") }
 
+            NavigationStack {
+                CommunityFeedView(service: session.community)
+            }
+            .tabItem { Label("社区", systemImage: "bubble.left.and.bubble.right") }
+
             ProfileView(user: user, session: session)
                 .tabItem { Label("我的", systemImage: "person.crop.circle") }
         }
