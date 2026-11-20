@@ -42,7 +42,7 @@ struct AppEnvironment {
             baseURL: baseURL,
             api: api,
             auth: RemoteAuthService(api: api),
-            catalog: RemoteCatalogService(api: api),
+            catalog: RemoteCatalogService(api: api, baseURL: baseURL),
             social: RemoteSocialService(api: api),
             feedback: RemoteFeedbackService(api: api),
             cookieJar: jar,

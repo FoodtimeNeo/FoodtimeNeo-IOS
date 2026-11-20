@@ -67,6 +67,7 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 能力 | `GET /users/me/capabilities` |
 | 食堂/档口/菜品 | `GET /dining-halls`、`GET /dining-halls/{id}/stalls`、`GET /stalls/{id}/dishes` |
 | 搜菜 | `GET /dishes/search`（关键词、食堂多选、价格、评分、排序、分页） |
+| 菜品详情/图册 | `GET /dishes/{id}`、`/images`、`/rating` |
 
 ## 7. 验证要求
 

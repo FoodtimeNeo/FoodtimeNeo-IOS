@@ -29,8 +29,13 @@ protocol AuthService: AnyObject {
 }
 
 protocol CatalogService: AnyObject {
+    var mediaBaseURL: URL { get }
+
     func diningHalls() async throws -> [DiningHall]
     func stalls(diningHallID: String) async throws -> [Stall]
     func dishes(stallID: String) async throws -> [DishSummary]
     func searchDishes(_ filters: DishSearchFilters) async throws -> Page<DishSearchRow>
+    func dishDetail(id: String) async throws -> DishDetail
+    func dishImages(id: String, page: Int, size: Int) async throws -> Page<DishImage>
+    func dishRating(id: String) async throws -> DishRatingSummary
 }

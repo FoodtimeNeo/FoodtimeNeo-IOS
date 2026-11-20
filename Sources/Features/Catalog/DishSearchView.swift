@@ -2,10 +2,12 @@ import SwiftUI
 
 @MainActor
 struct DishSearchView: View {
+    private let catalog: CatalogService
     @StateObject private var model: DishSearchViewModel
     @State private var showFilters = false
 
     init(catalog: CatalogService) {
+        self.catalog = catalog
         _model = StateObject(wrappedValue: DishSearchViewModel(catalog: catalog))
     }
 
@@ -106,26 +108,31 @@ struct DishSearchView: View {
             EmptyStateView(title: "没有匹配的菜品", message: "换个关键词或放宽筛选条件试试。")
         } else {
             ForEach(model.results) { dish in
-                PaperCard {
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack(alignment: .firstTextBaseline) {
-                            Text(dish.name)
-                                .font(.system(size: 19, weight: .bold, design: .serif))
-                                .foregroundStyle(Zine.ink)
-                            Spacer(minLength: 8)
-                            Text(DisplayFormat.price(dish.price))
-                                .font(.system(size: 16, weight: .heavy))
+                NavigationLink {
+                    DishDetailView(dishID: dish.id, catalog: catalog)
+                } label: {
+                    PaperCard {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text(dish.name)
+                                    .font(.system(size: 19, weight: .bold, design: .serif))
+                                    .foregroundStyle(Zine.ink)
+                                Spacer(minLength: 8)
+                                Text(DisplayFormat.price(dish.price))
+                                    .font(.system(size: 16, weight: .heavy))
+                                    .foregroundStyle(Zine.red)
+                            }
+                            Text("\(dish.diningHallName) · \(dish.stallName)")
+                                .font(.footnote)
+                                .foregroundStyle(Zine.muted)
+                            Text(DisplayFormat.score(dish.averageScore, reviewCount: dish.reviewCount))
+                                .font(.footnote)
                                 .foregroundStyle(Zine.red)
                         }
-                        Text("\(dish.diningHallName) · \(dish.stallName)")
-                            .font(.footnote)
-                            .foregroundStyle(Zine.muted)
-                        Text(DisplayFormat.score(dish.averageScore, reviewCount: dish.reviewCount))
-                            .font(.footnote)
-                            .foregroundStyle(Zine.red)
                     }
+                    .accessibilityElement(children: .combine)
                 }
-                .accessibilityElement(children: .combine)
+                .buttonStyle(.plain)
             }
         }
     }

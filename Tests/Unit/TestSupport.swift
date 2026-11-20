@@ -332,10 +332,24 @@ final class FakeFeedbackService: FeedbackService {
 }
 
 final class FakeCatalogService: CatalogService {
+    let mediaBaseURL = TestFixtures.baseURL
     var halls: [DiningHall] = []
     var stallsByHall: [String: [Stall]] = [:]
     var dishesByStall: [String: [DishSummary]] = [:]
     var searchResult = Page<DishSearchRow>(items: [], total: 0, page: 1, size: 20)
+    var detailResult = DishDetail(
+        id: "d-1",
+        stallId: "s-1",
+        stallName: "三号档口",
+        diningHallId: "h-1",
+        diningHallName: "学苑食堂",
+        name: "鸡腿饭",
+        description: "好吃",
+        price: Decimal(string: "15"),
+        revision: 1
+    )
+    var imagesResult = Page<DishImage>(items: [], total: 0, page: 1, size: 20)
+    var ratingResult = DishRatingSummary(averageScore: 4.5, reviewCount: 2)
     private(set) var lastSearchFilters: DishSearchFilters?
 
     func diningHalls() async throws -> [DiningHall] {
@@ -353,6 +367,18 @@ final class FakeCatalogService: CatalogService {
     func searchDishes(_ filters: DishSearchFilters) async throws -> Page<DishSearchRow> {
         lastSearchFilters = filters
         return searchResult
+    }
+
+    func dishDetail(id: String) async throws -> DishDetail {
+        detailResult
+    }
+
+    func dishImages(id: String, page: Int, size: Int) async throws -> Page<DishImage> {
+        imagesResult
+    }
+
+    func dishRating(id: String) async throws -> DishRatingSummary {
+        ratingResult
     }
 }
 

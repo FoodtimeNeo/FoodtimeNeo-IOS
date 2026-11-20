@@ -1,10 +1,12 @@
 import Foundation
 
 final class RemoteCatalogService: CatalogService {
+    let mediaBaseURL: URL
     private let api: APIClient
 
-    init(api: APIClient) {
+    init(api: APIClient, baseURL: URL) {
         self.api = api
+        self.mediaBaseURL = baseURL
     }
 
     func diningHalls() async throws -> [DiningHall] {
@@ -46,6 +48,30 @@ final class RemoteCatalogService: CatalogService {
         return try await api.send(
             .get("dishes/search", query: query),
             as: Page<DishSearchRow>.self
+        )
+    }
+
+    func dishDetail(id: String) async throws -> DishDetail {
+        try await api.send(.get("dishes/\(percentEncoded(id))"), as: DishDetail.self)
+    }
+
+    func dishImages(id: String, page: Int, size: Int) async throws -> Page<DishImage> {
+        try await api.send(
+            .get(
+                "dishes/\(percentEncoded(id))/images",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<DishImage>.self
+        )
+    }
+
+    func dishRating(id: String) async throws -> DishRatingSummary {
+        try await api.send(
+            .get("dishes/\(percentEncoded(id))/rating"),
+            as: DishRatingSummary.self
         )
     }
 

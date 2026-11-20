@@ -1,4 +1,4 @@
-import XCTest
+﻿import XCTest
 @testable import FoodtimeNeo
 
 final class RemoteCatalogServiceTests: XCTestCase {
@@ -10,7 +10,8 @@ final class RemoteCatalogServiceTests: XCTestCase {
             """))
         ]
         let service = RemoteCatalogService(
-            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar()),
+            baseURL: TestFixtures.baseURL
         )
         let filters = DishSearchFilters(
             query: " 鸡腿 ",
@@ -48,12 +49,45 @@ final class RemoteCatalogServiceTests: XCTestCase {
             """))
         ]
         let service = RemoteCatalogService(
-            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar()),
+            baseURL: TestFixtures.baseURL
         )
 
         let halls = try await service.diningHalls()
 
         XCTAssertEqual(halls.first?.name, "第一食堂")
         XCTAssertEqual(transport.requests.first?.url?.path, "/api/v1/dining-halls")
+    }
+
+    func testDishDetailImagesAndRatingDecode() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"d-1","stallId":"s-1","stallName":"三号档口","diningHallId":"h-1","diningHallName":"学苑食堂","name":"鸡腿饭","description":null,"price":15.00,"revision":1}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"i-1","dishId":"d-1","imageUrl":"/api/v1/media/i-1","createdAt":"2099-11-20T04:00:00Z"}],"total":1,"page":1,"size":20}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"averageScore":4.5,"reviewCount":2}
+            """))
+        ]
+        let service = RemoteCatalogService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar()),
+            baseURL: TestFixtures.baseURL
+        )
+
+        let detail = try await service.dishDetail(id: "d-1")
+        let images = try await service.dishImages(id: "d-1", page: 1, size: 20)
+        let rating = try await service.dishRating(id: "d-1")
+
+        XCTAssertEqual(detail.name, "鸡腿饭")
+        XCTAssertEqual(images.items.first?.imageUrl, "/api/v1/media/i-1")
+        XCTAssertEqual(rating.averageScore, 4.5)
+        XCTAssertEqual(transport.requests.map(\.url?.path), [
+            "/api/v1/dishes/d-1",
+            "/api/v1/dishes/d-1/images",
+            "/api/v1/dishes/d-1/rating"
+        ])
     }
 }

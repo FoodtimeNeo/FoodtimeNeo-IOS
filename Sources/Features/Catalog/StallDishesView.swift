@@ -3,10 +3,12 @@ import SwiftUI
 @MainActor
 struct StallDishesView: View {
     let stall: Stall
+    private let catalog: CatalogService
     @StateObject private var model: DishesViewModel
 
     init(stall: Stall, catalog: CatalogService) {
         self.stall = stall
+        self.catalog = catalog
         _model = StateObject(wrappedValue: DishesViewModel(stallID: stall.id, catalog: catalog))
     }
 
@@ -43,23 +45,28 @@ struct StallDishesView: View {
             EmptyStateView(title: "暂无菜品", message: "这个档口还没有启用的菜品。")
         } else {
             ForEach(model.dishes) { dish in
-                PaperCard {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(alignment: .firstTextBaseline) {
-                            Text(dish.name)
-                                .font(.system(size: 19, weight: .bold, design: .serif))
-                                .foregroundStyle(Zine.ink)
-                            Spacer(minLength: 8)
-                            Text(DisplayFormat.price(dish.price))
-                                .font(.system(size: 17, weight: .heavy))
-                                .foregroundStyle(Zine.red)
+                NavigationLink {
+                    DishDetailView(dishID: dish.id, catalog: catalog)
+                } label: {
+                    PaperCard {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text(dish.name)
+                                    .font(.system(size: 19, weight: .bold, design: .serif))
+                                    .foregroundStyle(Zine.ink)
+                                Spacer(minLength: 8)
+                                Text(DisplayFormat.price(dish.price))
+                                    .font(.system(size: 17, weight: .heavy))
+                                    .foregroundStyle(Zine.red)
+                            }
+                            Text(DisplayFormat.score(dish.averageScore, reviewCount: dish.reviewCount))
+                                .font(.subheadline)
+                                .foregroundStyle(Zine.muted)
                         }
-                        Text(DisplayFormat.score(dish.averageScore, reviewCount: dish.reviewCount))
-                            .font(.subheadline)
-                            .foregroundStyle(Zine.muted)
                     }
+                    .accessibilityElement(children: .combine)
                 }
-                .accessibilityElement(children: .combine)
+                .buttonStyle(.plain)
             }
         }
     }

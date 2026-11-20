@@ -17,8 +17,9 @@
 - W1 社交：关注/粉丝、用户搜索、黑名单与拉黑/解除；详见 [关注与黑名单](docs/SOCIAL.md)。
 - W1 反馈：提交建议/反馈、未完成/已完成列表、详情与回复历史；详见 [建议与反馈](docs/FEEDBACK.md)。
 - W2 搜菜：关键词、食堂多选、价格区间、最低评分、排序与分页；详见 [搜菜筛选](docs/DISH-SEARCH.md)。
+- W2 详情/图册：菜品详情、评分、缩略图与全屏缩放图册；详见 [菜品详情与图册](docs/DISH-DETAIL.md)。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：菜品详情/图册/缩放、价格历史、地图、食堂/档口点评、菜品点评/回复/投稿、社区、收藏分组、历史、私信/通知、举报申诉、管理端、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
+- **尚未实现**：价格历史、地图、食堂/档口点评、菜品点评/回复/投稿、社区、收藏分组、历史、私信/通知、举报申诉、管理端、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
 - Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 
