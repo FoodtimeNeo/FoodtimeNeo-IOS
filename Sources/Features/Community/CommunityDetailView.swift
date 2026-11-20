@@ -2,11 +2,23 @@ import SwiftUI
 
 @MainActor
 struct CommunityDetailView: View {
+    private enum DetailSheet: Identifiable {
+        case thread(CommunityComment)
+        case edit
+
+        var id: String {
+            switch self {
+            case .thread(let comment): return "thread-\(comment.id)"
+            case .edit: return "edit"
+            }
+        }
+    }
+
     @EnvironmentObject private var session: AppSession
     @StateObject private var model: CommunityDetailViewModel
     @State private var showGallery = false
     @State private var galleryStart = 0
-    @State private var threadRoot: CommunityComment?
+    @State private var activeSheet: DetailSheet?
 
     init(postID: String, service: CommunityService) {
         _model = StateObject(
@@ -49,12 +61,26 @@ struct CommunityDetailView: View {
                 startIndex: galleryStart
             )
         }
-        .sheet(item: $threadRoot) { root in
-            CommunityThreadView(
-                root: root,
-                postID: model.post?.id ?? "",
-                service: session.community
-            )
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .thread(let root):
+                CommunityThreadView(
+                    root: root,
+                    postID: model.post?.id ?? "",
+                    service: session.community
+                )
+            case .edit:
+                if let post = model.post {
+                    CommunityEditView(
+                        post: post,
+                        community: session.community,
+                        submissions: session.submissions,
+                        mediaBaseURL: session.catalog.mediaBaseURL
+                    ) {
+                        Task { await model.load() }
+                    }
+                }
+            }
         }
     }
 
@@ -157,6 +183,11 @@ struct CommunityDetailView: View {
                     .buttonStyle(.plain)
                     Label("\(post.viewCount)", systemImage: "eye")
                         .foregroundStyle(Zine.muted)
+                    Spacer()
+                    if post.userId == session.user?.id {
+                        Button("编辑") { activeSheet = .edit }
+                            .buttonStyle(LinkButtonStyle())
+                    }
                 }
                 .font(.subheadline)
             }
@@ -215,14 +246,14 @@ struct CommunityDetailView: View {
                     }
                     .buttonStyle(.plain)
                     Button {
-                        threadRoot = comment
+                        activeSheet = .thread(comment)
                     } label: {
                         Label("\(comment.replyCount)", systemImage: "text.bubble")
                             .font(.caption)
                             .foregroundStyle(Zine.muted)
                     }
                     .buttonStyle(.plain)
-                    Button("回复") { threadRoot = comment }
+                    Button("回复") { activeSheet = .thread(comment) }
                         .font(.caption)
                         .foregroundStyle(Zine.blue)
                         .buttonStyle(.plain)

@@ -66,6 +66,42 @@ final class RemoteCommunityServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests[3].url?.path, "/api/v1/community/comments/c-2/like")
     }
 
+    func testEditPostSendsRevisionAndBody() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-c5"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"id":"post-1","revision":2,"changed":true}
+            """))
+        ]
+        let service = RemoteCommunityService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let receipt = try await service.editPost(
+            id: "post-1",
+            expectedRevision: 1,
+            title: "新标题",
+            content: "新正文",
+            imageURLs: ["/api/v1/media/media-1"],
+            requestID: "edit-request-1"
+        )
+
+        XCTAssertTrue(receipt.changed)
+        XCTAssertEqual(receipt.revision, 2)
+        XCTAssertEqual(transport.requests[1].httpMethod, "PUT")
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/community/posts/post-1")
+        let body = try XCTUnwrap(transport.requests[1].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["expectedRevision"] as? Int, 1)
+        XCTAssertEqual(json["title"] as? String, "新标题")
+        XCTAssertEqual(json["content"] as? String, "新正文")
+        XCTAssertEqual(json["imageUrls"] as? [String], ["/api/v1/media/media-1"])
+        XCTAssertEqual(json["clientRequestId"] as? String, "edit-request-1")
+    }
+
     func testRepliesAndNestedCommentBody() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

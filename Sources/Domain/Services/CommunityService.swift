@@ -33,4 +33,12 @@ protocol CommunityService: AnyObject {
         imageURLs: [String],
         requestID: String
     ) async throws -> CommunityPostReceipt
+    func editPost(
+        id: String,
+        expectedRevision: Int,
+        title: String,
+        content: String,
+        imageURLs: [String],
+        requestID: String
+    ) async throws -> CommunityEditReceipt
 }

@@ -156,6 +156,39 @@ final class RemoteCommunityService: CommunityService {
         return try await api.send(request, as: CommunityPostReceipt.self)
     }
 
+    func editPost(
+        id: String,
+        expectedRevision: Int,
+        title: String,
+        content: String,
+        imageURLs: [String],
+        requestID: String
+    ) async throws -> CommunityEditReceipt {
+        struct Body: Encodable {
+            let expectedRevision: Int
+            let clientRequestId: String
+            let title: String
+            let content: String
+            let imageUrls: [String]
+            let dishId: String?
+        }
+        let request = try APIRequest.json(
+            .put,
+            "community/posts/\(encoded(id))",
+            body: Body(
+                expectedRevision: expectedRevision,
+                clientRequestId: requestID,
+                title: title,
+                content: content,
+                imageUrls: imageURLs,
+                dishId: nil
+            ),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: CommunityEditReceipt.self)
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }
