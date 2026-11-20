@@ -57,11 +57,26 @@ struct CommunityEditReceipt: Codable, Equatable, Sendable {
     let changed: Bool
 }
 
+struct CommunityPinEntry: Codable, Identifiable, Equatable, Sendable {
+    let id: String
+    let title: String
+    let userDisplayName: String
+    let status: String
+    let position: Int
+}
+
+struct CommunityPinSnapshot: Codable, Equatable, Sendable {
+    let revision: Int
+    let items: [CommunityPinEntry]
+    let canManage: Bool
+}
+
 struct CommunityFeedPage: Codable, Equatable, Sendable {
     let items: [CommunityPost]
     let total: Int
     let hasMore: Bool
     let nextCursor: String?
+    let pins: CommunityPinSnapshot?
 }
 
 struct CommunityComment: Codable, Identifiable, Equatable, Sendable {

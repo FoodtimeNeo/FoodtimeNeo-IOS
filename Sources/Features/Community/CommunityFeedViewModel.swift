@@ -18,6 +18,7 @@ final class CommunityFeedViewModel: ObservableObject {
     @Published private(set) var isLoadingMore = false
     @Published private(set) var hasMore = false
     @Published var errorMessage: String?
+    @Published private(set) var pins: CommunityPinSnapshot?
     @Published private(set) var likeStates: [String: CommunityLikeState] = [:]
 
     private let service: CommunityService
@@ -44,12 +45,18 @@ final class CommunityFeedViewModel: ObservableObject {
                 cursor: reset ? nil : cursor,
                 following: segment == .following,
                 query: query,
-                pinRevision: nil
+                pinRevision: reset ? nil : pins?.revision
             )
             posts = reset ? page.items : posts + page.items
             cursor = page.nextCursor
             hasMore = page.hasMore
+            pins = page.pins
         } catch let error as AppError {
+            if error.code == "PIN_SET_CHANGED" {
+                isLoading = false
+                await load(reset: true)
+                return
+            }
             errorMessage = error.localizedDescription
         } catch {
             errorMessage = error.localizedDescription
@@ -66,12 +73,20 @@ final class CommunityFeedViewModel: ObservableObject {
                 cursor: cursor,
                 following: segment == .following,
                 query: query,
-                pinRevision: nil
+                pinRevision: pins?.revision
             )
             posts.append(contentsOf: page.items)
             cursor = page.nextCursor
             hasMore = page.hasMore
+            if let nextPins = page.pins {
+                pins = nextPins
+            }
         } catch let error as AppError {
+            if error.code == "PIN_SET_CHANGED" {
+                isLoadingMore = false
+                await load(reset: true)
+                return
+            }
             errorMessage = error.localizedDescription
         } catch {
             errorMessage = error.localizedDescription
@@ -110,5 +125,25 @@ final class CommunityFeedViewModel: ObservableObject {
 
     func isLiked(_ post: CommunityPost) -> Bool {
         likeStates[post.id]?.likedByMe ?? post.likedByMe
+    }
+
+    var canManagePins: Bool {
+        pins?.canManage == true
+    }
+
+    func pin(_ post: CommunityPost) async {
+        guard let revision = pins?.revision else { return }
+        errorMessage = nil
+        do {
+            pins = try await service.pin(postID: post.id, expectedRevision: revision)
+        } catch let error as AppError {
+            errorMessage = error.localizedDescription
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func reloadPinsAfterManagement() async {
+        await load(reset: true)
     }
 }

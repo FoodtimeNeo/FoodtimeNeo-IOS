@@ -189,6 +189,54 @@ final class RemoteCommunityService: CommunityService {
         return try await api.send(request, as: CommunityEditReceipt.self)
     }
 
+    func pins(manage: Bool) async throws -> CommunityPinSnapshot {
+        try await api.send(
+            .get(manage ? "admin/community/pins" : "community/pins"),
+            as: CommunityPinSnapshot.self
+        )
+    }
+
+    func pin(postID: String, expectedRevision: Int) async throws -> CommunityPinSnapshot {
+        struct Body: Encodable {
+            let expectedRevision: Int
+        }
+        let request = try APIRequest.json(
+            .put,
+            "admin/community/pins/\(encoded(postID))",
+            body: Body(expectedRevision: expectedRevision),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: CommunityPinSnapshot.self)
+    }
+
+    func unpin(postID: String, expectedRevision: Int) async throws -> CommunityPinSnapshot {
+        let request = APIRequest(
+            method: .delete,
+            path: "admin/community/pins/\(encoded(postID))",
+            query: [URLQueryItem(name: "expectedRevision", value: String(expectedRevision))],
+            requiresAuth: true,
+            requiresCSRF: true,
+            contentType: nil
+        )
+        return try await api.send(request, as: CommunityPinSnapshot.self)
+    }
+
+    func reorderPins(postIDs: [String], expectedRevision: Int) async throws -> CommunityPinSnapshot {
+        struct Body: Encodable {
+            let expectedRevision: Int
+            let postIds: [String]
+        }
+        let request = try APIRequest.json(
+            .put,
+            "admin/community/pins/order",
+            body: Body(expectedRevision: expectedRevision, postIds: postIDs),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: CommunityPinSnapshot.self)
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

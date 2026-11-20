@@ -407,7 +407,13 @@ final class MemoryDraftStore: CommunityDraftStore {
 }
 
 final class FakeCommunityService: CommunityService {
-    var feedResult = CommunityFeedPage(items: [], total: 0, hasMore: false, nextCursor: nil)
+    var feedResult = CommunityFeedPage(
+        items: [],
+        total: 0,
+        hasMore: false,
+        nextCursor: nil,
+        pins: nil
+    )
     var detailResult = TestFixtures.communityPost
     var rootsResult = CommunityCommentPage(items: [], total: 0, hasMore: false, nextCursor: nil)
     var repliesResult = CommunityCommentPage(items: [], total: 0, hasMore: false, nextCursor: nil)
@@ -419,6 +425,7 @@ final class FakeCommunityService: CommunityService {
     var viewCount = 1
     var createPostResult = CommunityPostReceipt(id: "post-2")
     var editPostResult = CommunityEditReceipt(id: "post-1", revision: 2, changed: true)
+    var pinsResult = CommunityPinSnapshot(revision: 1, items: [], canManage: false)
     private(set) var commentCalls = 0
     private(set) var createPostCalls = 0
     private(set) var editPostCalls = 0
@@ -499,6 +506,22 @@ final class FakeCommunityService: CommunityService {
     ) async throws -> CommunityEditReceipt {
         editPostCalls += 1
         return editPostResult
+    }
+
+    func pins(manage: Bool) async throws -> CommunityPinSnapshot {
+        pinsResult
+    }
+
+    func pin(postID: String, expectedRevision: Int) async throws -> CommunityPinSnapshot {
+        pinsResult
+    }
+
+    func unpin(postID: String, expectedRevision: Int) async throws -> CommunityPinSnapshot {
+        pinsResult
+    }
+
+    func reorderPins(postIDs: [String], expectedRevision: Int) async throws -> CommunityPinSnapshot {
+        pinsResult
     }
 }
 
