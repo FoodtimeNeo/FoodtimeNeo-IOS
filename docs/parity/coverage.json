@@ -67,10 +67,14 @@
         "symbol": "AdminScreen.home"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminHomeView.swift",
+        "Sources/Features/Admin/AdminHomeViewModel.swift",
+        "Sources/App/MainTabView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -88,10 +92,14 @@
         "symbol": "AdminAppealsScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminReportsView.swift",
+        "Sources/Features/Admin/AdminAppealsView.swift",
+        "Sources/Features/Admin/AdminGovernanceViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -109,10 +117,13 @@
         "symbol": "AdminScreen.audit"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/ModerationQueueView.swift",
+        "Sources/Features/Admin/ModerationQueueViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -130,10 +141,13 @@
         "symbol": "CommunityAdminScreen.queue"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/CommunityModerationView.swift",
+        "Sources/Features/Admin/CommunityModerationViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -151,10 +165,13 @@
         "symbol": "CommunityAdminScreen.detail"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/CommunityModerationView.swift",
+        "Sources/Features/Admin/CommunityModerationViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -172,10 +189,13 @@
         "symbol": "CorrectionScreen.admin"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminCorrectionsView.swift",
+        "Sources/Features/Admin/AdminCorrectionViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -193,10 +213,14 @@
         "symbol": "AdminDashboardScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminHomeView.swift",
+        "Sources/Features/Admin/AdminHomeViewModel.swift",
+        "Sources/App/MainTabView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -214,10 +238,15 @@
         "symbol": "AdminScreen.data"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminCatalogView.swift",
+        "Sources/Features/Admin/AdminCatalogViewModel.swift",
+        "Sources/Features/Admin/AdminReviewsView.swift",
+        "Sources/Features/Admin/AdminCatalogImagesView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -235,10 +264,15 @@
         "symbol": "AdminScreen.edit"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminCatalogView.swift",
+        "Sources/Features/Admin/AdminCatalogViewModel.swift",
+        "Sources/Features/Admin/AdminReviewsView.swift",
+        "Sources/Features/Admin/AdminCatalogImagesView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -256,10 +290,13 @@
         "symbol": "FeedbackScreen.list"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminFeedbackView.swift",
+        "Sources/Features/Admin/AdminFeedbackViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -277,10 +314,13 @@
         "symbol": "FeedbackScreen.detail"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminFeedbackView.swift",
+        "Sources/Features/Admin/AdminFeedbackViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -298,10 +338,13 @@
         "symbol": "AdminScreen.logs"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/ModerationQueueView.swift",
+        "Sources/Features/Admin/ModerationQueueViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -319,10 +362,15 @@
         "symbol": "AdminScreen.edit"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminCatalogView.swift",
+        "Sources/Features/Admin/AdminCatalogViewModel.swift",
+        "Sources/Features/Admin/AdminReviewsView.swift",
+        "Sources/Features/Admin/AdminCatalogImagesView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -340,10 +388,13 @@
         "symbol": "AdminNoticesScreen.create"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminNoticesView.swift",
+        "Sources/Features/Admin/AdminNoticeViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -361,10 +412,13 @@
         "symbol": "AdminNoticesScreen.settings"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminNoticesView.swift",
+        "Sources/Features/Admin/AdminNoticeViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -382,10 +436,14 @@
         "symbol": "AdminReportThreadScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminReportsView.swift",
+        "Sources/Features/Admin/AdminAppealsView.swift",
+        "Sources/Features/Admin/AdminGovernanceViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -403,10 +461,14 @@
         "symbol": "ReportsScreen.show"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminReportsView.swift",
+        "Sources/Features/Admin/AdminAppealsView.swift",
+        "Sources/Features/Admin/AdminGovernanceViewModel.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -424,10 +486,15 @@
         "symbol": "AdminScreen.reviews"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminCatalogView.swift",
+        "Sources/Features/Admin/AdminCatalogViewModel.swift",
+        "Sources/Features/Admin/AdminReviewsView.swift",
+        "Sources/Features/Admin/AdminCatalogImagesView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -445,10 +512,14 @@
         "symbol": "AdminScreen.users"
       },
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminHomeView.swift",
+        "Sources/Features/Admin/AdminHomeViewModel.swift",
+        "Sources/App/MainTabView.swift"
+      ],
       "evidence": [],
-      "notes": "",
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。",
       "androidBranches": [
         "main",
         "dev"
@@ -2123,10 +2194,11 @@
       "availability": "released",
       "status": "in-progress",
       "iosPaths": [
-        "Sources/Features/Feedback/FeedbackView.swift"
+        "Sources/Features/Admin/AdminFeedbackView.swift",
+        "Sources/Features/Admin/AdminFeedbackViewModel.swift"
       ],
       "evidence": [],
-      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。"
+      "notes": "客户端已实现，尚未完成 Apple Simulator/真机/真实测试后端验收。 iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。"
     },
     {
       "id": "capability:corrections",
@@ -2172,10 +2244,14 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminReportsView.swift",
+        "Sources/Features/Admin/AdminAppealsView.swift",
+        "Sources/Features/Admin/AdminGovernanceViewModel.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。"
     },
     {
       "id": "capability:admin-moderation",
@@ -2204,10 +2280,15 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/ModerationQueueView.swift",
+        "Sources/Features/Admin/ModerationQueueViewModel.swift",
+        "Sources/Features/Admin/CommunityModerationView.swift",
+        "Sources/Features/Admin/CommunityModerationViewModel.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。"
     },
     {
       "id": "capability:admin-catalog",
@@ -2231,10 +2312,17 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminCatalogView.swift",
+        "Sources/Features/Admin/AdminCatalogViewModel.swift",
+        "Sources/Features/Admin/AdminReviewsView.swift",
+        "Sources/Features/Admin/AdminCatalogImagesView.swift",
+        "Sources/Features/Admin/AdminCorrectionsView.swift",
+        "Sources/Features/Admin/AdminCorrectionViewModel.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。"
     },
     {
       "id": "capability:admin-notices",
@@ -2248,10 +2336,13 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminNoticesView.swift",
+        "Sources/Features/Admin/AdminNoticeViewModel.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。"
     },
     {
       "id": "capability:admin-users-data",
@@ -2270,10 +2361,14 @@
         }
       ],
       "availability": "released",
-      "status": "not-started",
-      "iosPaths": [],
+      "status": "in-progress",
+      "iosPaths": [
+        "Sources/Features/Admin/AdminHomeView.swift",
+        "Sources/Features/Admin/AdminHomeViewModel.swift",
+        "Sources/App/MainTabView.swift"
+      ],
       "evidence": [],
-      "notes": ""
+      "notes": "iOS 管理端已实现并接入 CI 模拟器构建/单测；未执行真实 admin/superadmin 权限矩阵、Apple Simulator、VoiceOver 与生产后端回归，不标 verified。"
     },
     {
       "id": "capability:prices",
