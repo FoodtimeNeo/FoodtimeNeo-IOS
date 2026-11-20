@@ -13,26 +13,95 @@ final class CommunityComposeViewModel: ObservableObject {
     @Published private(set) var images: [UIImage] = []
     @Published private(set) var requestID = UUID().uuidString
     @Published private(set) var isSubmitting = false
+    @Published private(set) var restoredDraft = false
     @Published var errorMessage: String?
     @Published private(set) var receipt: CommunityPostReceipt?
 
     private let community: CommunityService
     private let submissions: SubmissionService
+    private let draftStore: CommunityDraftStore
+    private let accountID: String
+    private var imageFiles: [String] = []
+    private var draftSaveTask: Task<Void, Never>?
+    private var hasLoadedDraft = false
 
-    init(community: CommunityService, submissions: SubmissionService) {
+    init(
+        community: CommunityService,
+        submissions: SubmissionService,
+        draftStore: CommunityDraftStore,
+        accountID: String
+    ) {
         self.community = community
         self.submissions = submissions
+        self.draftStore = draftStore
+        self.accountID = accountID
+    }
+
+    func loadDraft() {
+        guard !hasLoadedDraft else { return }
+        hasLoadedDraft = true
+        guard let draft = draftStore.load(accountID: accountID), !draft.isEmpty else { return }
+        title = draft.title
+        content = draft.content
+        imageFiles = draft.imageFiles
+        images = imageFiles.compactMap { name in
+            guard let data = draftStore.imageData(named: name, accountID: accountID) else { return nil }
+            return UIImage(data: data)
+        }
+        restoredDraft = true
     }
 
     func setImages(_ next: [UIImage]) {
         images = Array(next.prefix(9))
+        imageFiles = images.compactMap { image in
+            guard let data = ImageProcessor.jpegData(from: image) else { return nil }
+            return draftStore.saveImage(data, accountID: accountID)
+        }
         requestID = UUID().uuidString
+        scheduleSave()
     }
 
     func removeImage(at index: Int) {
         guard images.indices.contains(index) else { return }
         images.remove(at: index)
+        if imageFiles.indices.contains(index) {
+            imageFiles.remove(at: index)
+        }
         requestID = UUID().uuidString
+        scheduleSave()
+    }
+
+    func discardDraft() {
+        title = ""
+        content = ""
+        images = []
+        imageFiles = []
+        restoredDraft = false
+        draftStore.clear(accountID: accountID)
+        requestID = UUID().uuidString
+    }
+
+    func scheduleSave() {
+        draftSaveTask?.cancel()
+        draftSaveTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            guard let self, !Task.isCancelled else { return }
+            self.saveDraftNow()
+        }
+    }
+
+    func saveDraftNow() {
+        let draft = CommunityDraft(
+            title: title,
+            content: content,
+            imageFiles: imageFiles,
+            updatedAt: Date()
+        )
+        if draft.isEmpty {
+            draftStore.clear(accountID: accountID)
+        } else {
+            draftStore.save(draft, accountID: accountID)
+        }
     }
 
     func submit() async {
@@ -62,6 +131,8 @@ final class CommunityComposeViewModel: ObservableObject {
                 imageURLs: imageURLs,
                 requestID: requestID
             )
+            draftStore.clear(accountID: accountID)
+            imageFiles = []
         } catch let error as AppError {
             errorMessage = error.localizedDescription
         } catch {

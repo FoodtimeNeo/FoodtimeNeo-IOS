@@ -59,7 +59,9 @@ struct CommunityFeedView: View {
         .sheet(isPresented: $showCompose) {
             CommunityComposeView(
                 community: session.community,
-                submissions: session.submissions
+                submissions: session.submissions,
+                drafts: session.drafts,
+                accountID: session.user?.id ?? ""
             ) {
                 Task { await model.load(reset: true) }
             }

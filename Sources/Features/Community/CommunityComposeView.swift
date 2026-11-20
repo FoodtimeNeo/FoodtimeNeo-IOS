@@ -3,17 +3,24 @@ import UIKit
 
 @MainActor
 struct CommunityComposeView: View {
-    @EnvironmentObject private var session: AppSession
     @Environment(\.dismiss) private var dismiss
     @StateObject private var model: CommunityComposeViewModel
     @State private var showPicker = false
     private let onSubmitted: () -> Void
 
-    init(community: CommunityService, submissions: SubmissionService, onSubmitted: @escaping () -> Void) {
+    init(
+        community: CommunityService,
+        submissions: SubmissionService,
+        drafts: CommunityDraftStore,
+        accountID: String,
+        onSubmitted: @escaping () -> Void
+    ) {
         _model = StateObject(
             wrappedValue: CommunityComposeViewModel(
                 community: community,
-                submissions: submissions
+                submissions: submissions,
+                draftStore: drafts,
+                accountID: accountID
             )
         )
         self.onSubmitted = onSubmitted
@@ -30,6 +37,23 @@ struct CommunityComposeView: View {
                             title: "写食记",
                             subtitle: "标题 1–50、正文 1–2000、最多 9 张本人图片；提交后进入审核。"
                         )
+                        if model.restoredDraft {
+                            PaperCard {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("已恢复本机草稿")
+                                            .font(.subheadline.weight(.semibold))
+                                            .foregroundStyle(Zine.ink)
+                                        Text("草稿按账号保存在本机；发布成功后自动清除。")
+                                            .font(.caption)
+                                            .foregroundStyle(Zine.muted)
+                                    }
+                                    Spacer()
+                                    Button("删除草稿") { model.discardDraft() }
+                                        .buttonStyle(LinkButtonStyle())
+                                }
+                            }
+                        }
                         if let receipt = model.receipt {
                             successCard(receipt)
                         } else {
@@ -52,6 +76,12 @@ struct CommunityComposeView: View {
                     model.setImages(images)
                 }
             }
+            .task {
+                model.loadDraft()
+            }
+            .onDisappear {
+                model.saveDraftNow()
+            }
         }
     }
 
@@ -63,6 +93,12 @@ struct CommunityComposeView: View {
                     .foregroundStyle(Zine.muted)
                 TextField("1–50 字", text: $model.title)
                     .modifier(FormInputStyle())
+                    .onChange(of: model.title) { _, value in
+                        if value.count > 50 {
+                            model.title = String(value.prefix(50))
+                        }
+                        model.scheduleSave()
+                    }
 
                 Text("正文")
                     .font(.footnote)
@@ -80,6 +116,7 @@ struct CommunityComposeView: View {
                         if value.count > 2000 {
                             model.content = String(value.prefix(2000))
                         }
+                        model.scheduleSave()
                     }
                 Text("\(model.content.count)/2000")
                     .font(.caption)

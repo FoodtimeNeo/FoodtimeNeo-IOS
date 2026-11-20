@@ -12,6 +12,7 @@ struct AppEnvironment {
     let venueReviews: VenueReviewService
     let submissions: SubmissionService
     let community: CommunityService
+    let drafts: CommunityDraftStore
     let cookieJar: SystemCookieJar
     let archive: KeychainCookieArchive
 
@@ -53,6 +54,7 @@ struct AppEnvironment {
             venueReviews: RemoteVenueReviewService(api: api),
             submissions: RemoteSubmissionService(api: api),
             community: RemoteCommunityService(api: api),
+            drafts: FileCommunityDraftStore(),
             cookieJar: jar,
             archive: archive
         )

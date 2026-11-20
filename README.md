@@ -28,7 +28,7 @@
 - W3 图片投稿：相册选择、方向归一/压缩、multipart 上传、菜品图片投稿；详见 [图片上传与投稿](docs/IMAGE-SUBMISSIONS.md)。
 - W3 目录投稿：菜品/档口投稿与我的菜品/档口/图片投稿；详见 [目录投稿](docs/CATALOG-SUBMISSIONS.md)。
 - W4 社区：信息流（发现/关注/搜索）、详情、评论、点赞/收藏/浏览量；详见 [社区](docs/COMMUNITY.md)。
-- W4 社区发帖：多图选择/上传、标题/正文、pending 审核；详见 [社区发帖](docs/COMMUNITY-COMPOSE.md)。
+- W4 社区发帖：多图选择/上传、标题/正文、每账号本机草稿、pending 审核；详见 [社区发帖](docs/COMMUNITY-COMPOSE.md)。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
 - **尚未实现**：社区本机草稿、修改/置顶、回复楼中楼、收藏分组、历史、私信/通知、举报申诉、管理端、完整媒体/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。

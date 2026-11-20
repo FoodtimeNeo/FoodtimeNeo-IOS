@@ -23,6 +23,7 @@ final class AppSession: ObservableObject {
     let venueReviews: VenueReviewService
     let submissions: SubmissionService
     let community: CommunityService
+    let drafts: CommunityDraftStore
 
     private let api: APIClient
     private let cookieJar: CookieJar
@@ -40,6 +41,7 @@ final class AppSession: ObservableObject {
         venueReviews: VenueReviewService,
         submissions: SubmissionService,
         community: CommunityService,
+        drafts: CommunityDraftStore,
         api: APIClient,
         cookieJar: CookieJar,
         archive: CookieArchiving,
@@ -53,6 +55,7 @@ final class AppSession: ObservableObject {
         self.venueReviews = venueReviews
         self.submissions = submissions
         self.community = community
+        self.drafts = drafts
         self.api = api
         self.cookieJar = cookieJar
         self.archive = archive
@@ -70,6 +73,7 @@ final class AppSession: ObservableObject {
             venueReviews: environment.venueReviews,
             submissions: environment.submissions,
             community: environment.community,
+            drafts: environment.drafts,
             api: environment.api,
             cookieJar: environment.cookieJar,
             archive: environment.archive,
@@ -222,7 +226,11 @@ final class AppSession: ObservableObject {
     }
 
     func deleteAccount(verificationCode: String) async throws -> AccountDeletionResult {
+        let deletingUserID = user?.id
         let result = try await auth.deleteAccount(verificationCode: verificationCode)
+        if let deletingUserID {
+            drafts.clear(accountID: deletingUserID)
+        }
         await clearLocalSession()
         capabilities = .empty
         if let reusableAt = result.emailsReusableAt {

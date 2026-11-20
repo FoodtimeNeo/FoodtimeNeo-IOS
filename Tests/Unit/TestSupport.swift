@@ -378,6 +378,34 @@ final class FakeReviewService: ReviewService {
     }
 }
 
+final class MemoryDraftStore: CommunityDraftStore {
+    private var drafts: [String: CommunityDraft] = [:]
+    private var images: [String: Data] = [:]
+
+    func load(accountID: String) -> CommunityDraft? {
+        drafts[accountID]
+    }
+
+    func save(_ draft: CommunityDraft, accountID: String) {
+        drafts[accountID] = draft
+    }
+
+    func saveImage(_ data: Data, accountID: String) -> String? {
+        let name = UUID().uuidString
+        images["\(accountID):\(name)"] = data
+        return name
+    }
+
+    func imageData(named: String, accountID: String) -> Data? {
+        images["\(accountID):\(named)"]
+    }
+
+    func clear(accountID: String) {
+        drafts[accountID] = nil
+        images = images.filter { !$0.key.hasPrefix("\(accountID):") }
+    }
+}
+
 final class FakeCommunityService: CommunityService {
     var feedResult = CommunityFeedPage(items: [], total: 0, hasMore: false, nextCursor: nil)
     var detailResult = TestFixtures.communityPost
