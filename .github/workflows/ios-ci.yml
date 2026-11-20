@@ -1,0 +1,76 @@
+name: iOS build and tests
+
+on:
+  pull_request:
+    branches: [main, dev]
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Xcode build and unit tests
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+          xcrun simctl list runtimes
+
+      - name: Install XcodeGen
+        run: |
+          brew install xcodegen
+          xcodegen --version
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Check layer boundaries
+        run: python3 scripts/check_ios_architecture.py
+
+      - name: Build for simulator
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project FoodtimeNeo.xcodeproj \
+            -scheme FoodtimeNeo \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcbeautify
+
+      - name: Run unit tests
+        run: |
+          set -o pipefail
+          UDID=$(python3 - <<'PY'
+          import json, subprocess, sys
+          data = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))
+          for runtime in sorted(data.get("devices", {}), reverse=True):
+              if "SimRuntime.iOS" not in runtime:
+                  continue
+              for device in data["devices"][runtime]:
+                  if device.get("name", "").startswith("iPhone 17"):
+                      print(device["udid"])
+                      sys.exit(0)
+          sys.exit("No available iPhone 17 simulator")
+          PY
+          )
+          xcodebuild \
+            -project FoodtimeNeo.xcodeproj \
+            -scheme FoodtimeNeo \
+            -destination "platform=iOS Simulator,id=$UDID" \
+            CODE_SIGNING_ALLOWED=NO \
+            test | xcbeautify
