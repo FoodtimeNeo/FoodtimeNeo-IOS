@@ -6,13 +6,16 @@ struct ChatView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var model: ChatViewModel
     @State private var confirmHide = false
+    @State private var reportTarget: ReportTarget?
     private let onRead: (() -> Void)?
+    private let reports: ReportService?
 
     init(
         conversationID: String,
         messages: MessageService,
         social: SocialService,
         currentUserID: String,
+        reports: ReportService? = nil,
         onRead: (() -> Void)? = nil
     ) {
         _model = StateObject(
@@ -23,6 +26,7 @@ struct ChatView: View {
                 currentUserID: currentUserID
             )
         )
+        self.reports = reports
         self.onRead = onRead
     }
 
@@ -75,6 +79,15 @@ struct ChatView: View {
             await model.load()
             if model.conversation != nil {
                 onRead?()
+            }
+        }
+        .sheet(item: $reportTarget) { target in
+            if let reports {
+                ReportReasonView(
+                    targetType: target.type,
+                    targetID: target.targetID,
+                    service: reports
+                )
             }
         }
         .alert("删除会话？", isPresented: $confirmHide) {
@@ -154,6 +167,11 @@ struct ChatView: View {
             .contextMenu {
                 Button("复制") {
                     UIPasteboard.general.string = message.content
+                }
+                if !model.isMine(message), reports != nil {
+                    Button("举报") {
+                        reportTarget = ReportTarget(type: "message", targetID: message.id)
+                    }
                 }
             }
             if !model.isMine(message) {

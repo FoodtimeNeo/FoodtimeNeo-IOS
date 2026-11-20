@@ -1080,6 +1080,98 @@ final class FakeNotificationAuthorizer: NotificationAuthorizing {
     }
 }
 
+final class FakeReportService: ReportService {
+    var submitError: Error?
+    var myReportsResult = Result<Page<UserReport>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var myReportResult = Result<UserReport, Error>.failure(
+        AppError.unknown(message: "myReport not stubbed")
+    )
+    var myDecisionsResult = Result<Page<ModerationDecision>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var myDecisionResult = Result<ModerationDecision, Error>.failure(
+        AppError.unknown(message: "myDecision not stubbed")
+    )
+    var actionsResult = Result<[ReportAction], Error>.success([])
+    var followUpsResult = Result<Page<ReportFollowUp>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var addFollowUpResult = Result<ReportFollowUp, Error>.failure(
+        AppError.unknown(message: "addFollowUp not stubbed")
+    )
+    var submitAppealResult = Result<ReportAppeal, Error>.failure(
+        AppError.unknown(message: "submitAppeal not stubbed")
+    )
+    var myAppealsResult = Result<Page<ReportAppeal>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var myAppealResult = Result<ReportAppeal, Error>.failure(
+        AppError.unknown(message: "myAppeal not stubbed")
+    )
+    private(set) var submittedReports: [(targetType: String, targetID: String, reason: String)] = []
+    private(set) var followUpCalls: [(reportID: String, content: String, requestID: String)] = []
+    private(set) var appealCalls: [(decisionID: String, content: String, requestID: String)] = []
+
+    func submitReport(targetType: String, targetID: String, reason: String) async throws {
+        submittedReports.append((targetType, targetID, reason))
+        if let submitError { throw submitError }
+    }
+
+    func myReports(page: Int, size: Int) async throws -> Page<UserReport> {
+        try myReportsResult.get()
+    }
+
+    func myReport(id: String) async throws -> UserReport {
+        try myReportResult.get()
+    }
+
+    func myDecisions(page: Int, size: Int) async throws -> Page<ModerationDecision> {
+        try myDecisionsResult.get()
+    }
+
+    func myDecision(id: String) async throws -> ModerationDecision {
+        try myDecisionResult.get()
+    }
+
+    func decisionActions(decisionID: String) async throws -> [ReportAction] {
+        try actionsResult.get()
+    }
+
+    func followUps(reportID: String, page: Int, size: Int) async throws -> Page<ReportFollowUp> {
+        try followUpsResult.get()
+    }
+
+    func addFollowUp(
+        reportID: String,
+        content: String,
+        evidenceURLs: [String],
+        requestID: String
+    ) async throws -> ReportFollowUp {
+        followUpCalls.append((reportID, content, requestID))
+        return try addFollowUpResult.get()
+    }
+
+    func submitAppeal(
+        decisionID: String,
+        content: String,
+        evidenceURLs: [String],
+        requestID: String
+    ) async throws -> ReportAppeal {
+        appealCalls.append((decisionID, content, requestID))
+        return try submitAppealResult.get()
+    }
+
+    func myAppeals(page: Int, size: Int) async throws -> Page<ReportAppeal> {
+        try myAppealsResult.get()
+    }
+
+    func myAppeal(id: String) async throws -> ReportAppeal {
+        try myAppealResult.get()
+    }
+}
+
 enum TestFixtures {
     static let baseURL = URL(string: "https://example.test/api/v1/")!
     static let user = User(

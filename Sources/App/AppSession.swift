@@ -31,6 +31,7 @@ final class AppSession: ObservableObject {
     let notifications: NotificationService
     let corrections: CorrectionService
     let admin: AdminService
+    let reports: ReportService
 
     private let api: APIClient
     private let cookieJar: CookieJar
@@ -56,6 +57,7 @@ final class AppSession: ObservableObject {
         notifications: NotificationService,
         corrections: CorrectionService,
         admin: AdminService,
+        reports: ReportService,
         api: APIClient,
         cookieJar: CookieJar,
         archive: CookieArchiving,
@@ -77,6 +79,7 @@ final class AppSession: ObservableObject {
         self.notifications = notifications
         self.corrections = corrections
         self.admin = admin
+        self.reports = reports
         self.api = api
         self.cookieJar = cookieJar
         self.archive = archive
@@ -102,6 +105,7 @@ final class AppSession: ObservableObject {
             notifications: environment.notifications,
             corrections: environment.corrections,
             admin: environment.admin,
+            reports: environment.reports,
             api: environment.api,
             cookieJar: environment.cookieJar,
             archive: environment.archive,
@@ -129,6 +133,12 @@ final class AppSession: ObservableObject {
 
     var canUseAdminArea: Bool {
         capabilities.canUseAdminArea
+    }
+
+    /// 申诉草稿按服务来源与账号隔离；受限会话同样可用。
+    var appealDrafts: AppealDraftStoring? {
+        guard let user else { return nil }
+        return FileAppealDraftStore(origin: baseURL, accountID: user.id)
     }
 
     func start() async {
