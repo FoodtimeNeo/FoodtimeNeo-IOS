@@ -51,6 +51,12 @@ struct CommunityPostReceipt: Codable, Equatable, Sendable {
     let id: String
 }
 
+struct CommunityEditReceipt: Codable, Equatable, Sendable {
+    let id: String
+    let revision: Int
+    let changed: Bool
+}
+
 struct CommunityFeedPage: Codable, Equatable, Sendable {
     let items: [CommunityPost]
     let total: Int

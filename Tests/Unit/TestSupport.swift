@@ -418,8 +418,10 @@ final class FakeCommunityService: CommunityService {
     )
     var viewCount = 1
     var createPostResult = CommunityPostReceipt(id: "post-2")
+    var editPostResult = CommunityEditReceipt(id: "post-1", revision: 2, changed: true)
     private(set) var commentCalls = 0
     private(set) var createPostCalls = 0
+    private(set) var editPostCalls = 0
     private(set) var likeCalls: [String] = []
 
     func feed(
@@ -485,6 +487,18 @@ final class FakeCommunityService: CommunityService {
     ) async throws -> CommunityPostReceipt {
         createPostCalls += 1
         return createPostResult
+    }
+
+    func editPost(
+        id: String,
+        expectedRevision: Int,
+        title: String,
+        content: String,
+        imageURLs: [String],
+        requestID: String
+    ) async throws -> CommunityEditReceipt {
+        editPostCalls += 1
+        return editPostResult
     }
 }
 
