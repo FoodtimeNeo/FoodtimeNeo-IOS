@@ -6,9 +6,13 @@ final class DiningHallsViewModel: ObservableObject {
     @Published private(set) var halls: [DiningHall] = []
     @Published private(set) var isLoading = false
     @Published var errorMessage: String?
+    @Published private(set) var recommendations: DailyRecommendations?
+    @Published private(set) var isLoadingRecommendations = false
+    @Published var recommendationError: String?
 
     private let catalog: CatalogService
     private var hasLoaded = false
+    private var hasLoadedRecommendations = false
 
     init(catalog: CatalogService) {
         self.catalog = catalog
@@ -30,6 +34,26 @@ final class DiningHallsViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    func loadRecommendationsIfNeeded() async {
+        guard !hasLoadedRecommendations else { return }
+        await loadRecommendations()
+    }
+
+    func loadRecommendations() async {
+        guard !isLoadingRecommendations else { return }
+        isLoadingRecommendations = true
+        recommendationError = nil
+        defer { isLoadingRecommendations = false }
+        do {
+            recommendations = try await catalog.dailyRecommendations()
+            hasLoadedRecommendations = true
+        } catch let error as AppError {
+            recommendationError = error.localizedDescription
+        } catch {
+            recommendationError = error.localizedDescription
         }
     }
 }

@@ -69,6 +69,7 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 搜菜 | `GET /dishes/search`（关键词、食堂多选、价格、评分、排序、分页） |
 | 菜品详情/图册 | `GET /dishes/{id}`、`/images`、`/rating` |
 | 价格历史 | `GET /dishes/{id}/price-history?days=0|30|90` |
+| 每日推荐 | `GET /recommendations/daily` |
 
 ## 7. 验证要求
 

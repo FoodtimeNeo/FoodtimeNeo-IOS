@@ -56,15 +56,29 @@ struct DiningHallsView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    DailyRecommendationSection(
+                        recommendations: model.recommendations,
+                        isLoading: model.isLoadingRecommendations,
+                        error: model.recommendationError,
+                        catalog: catalog
+                    ) {
+                        Task { await model.loadRecommendations() }
+                    }
                     content
                 }
                 .padding(Zine.pagePadding)
             }
-            .refreshable { await model.load() }
+            .refreshable {
+                await model.load()
+                await model.loadRecommendations()
+            }
         }
         .navigationTitle("食堂")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await model.loadIfNeeded() }
+        .task {
+            await model.loadIfNeeded()
+            await model.loadRecommendationsIfNeeded()
+        }
     }
 
     @ViewBuilder

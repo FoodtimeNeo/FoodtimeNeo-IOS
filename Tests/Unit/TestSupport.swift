@@ -362,6 +362,12 @@ final class FakeCatalogService: CatalogService {
         totalRecords: 0,
         records: []
     )
+    var recommendationsResult = DailyRecommendations(
+        date: "2026-11-21",
+        algorithmVersion: "FT-HybridRec-v2",
+        total: 0,
+        items: []
+    )
     private(set) var lastSearchFilters: DishSearchFilters?
 
     func diningHalls() async throws -> [DiningHall] {
@@ -395,6 +401,10 @@ final class FakeCatalogService: CatalogService {
 
     func priceHistory(dishID: String, days: Int) async throws -> DishPriceHistory {
         priceHistoryResult
+    }
+
+    func dailyRecommendations() async throws -> DailyRecommendations {
+        recommendationsResult
     }
 }
 

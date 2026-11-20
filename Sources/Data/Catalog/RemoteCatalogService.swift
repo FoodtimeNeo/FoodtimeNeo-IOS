@@ -86,6 +86,13 @@ final class RemoteCatalogService: CatalogService {
         )
     }
 
+    func dailyRecommendations() async throws -> DailyRecommendations {
+        try await api.send(
+            .get("recommendations/daily"),
+            as: DailyRecommendations.self
+        )
+    }
+
     private func decimalString(_ value: Decimal) -> String {
         NSDecimalNumber(decimal: value).stringValue
     }

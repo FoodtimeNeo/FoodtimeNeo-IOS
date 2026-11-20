@@ -39,4 +39,5 @@ protocol CatalogService: AnyObject {
     func dishImages(id: String, page: Int, size: Int) async throws -> Page<DishImage>
     func dishRating(id: String) async throws -> DishRatingSummary
     func priceHistory(dishID: String, days: Int) async throws -> DishPriceHistory
+    func dailyRecommendations() async throws -> DailyRecommendations
 }

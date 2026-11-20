@@ -59,6 +59,25 @@ final class RemoteCatalogServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests.first?.url?.path, "/api/v1/dining-halls")
     }
 
+    func testDailyRecommendationsDecode() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"date":"2026-11-21","algorithmVersion":"FT-HybridRec-v2","total":1,"items":[{"dishId":"d-1","dishName":"鸡腿饭","diningHallId":"h-1","diningHallName":"学苑食堂","stallId":"s-1","stallName":"三号档口","averageRating":null,"reviewCount":0,"imageUrl":null,"recommendationType":"EXPLORE","recommendationScore":0.81,"reasonCode":"LESS_EXPOSED","reason":"发现更多菜品"}]}
+            """))
+        ]
+        let service = RemoteCatalogService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar()),
+            baseURL: TestFixtures.baseURL
+        )
+
+        let recommendations = try await service.dailyRecommendations()
+
+        XCTAssertEqual(recommendations.total, 1)
+        XCTAssertEqual(recommendations.items.first?.reason, "发现更多菜品")
+        XCTAssertEqual(transport.requests.first?.url?.path, "/api/v1/recommendations/daily")
+    }
+
     func testPriceHistoryRequestsDaysAndDecodes() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [
