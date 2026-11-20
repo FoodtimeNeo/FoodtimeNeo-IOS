@@ -315,51 +315,72 @@ private struct ZoomableRemoteImage: View {
     @State private var lastOffset: CGSize = .zero
 
     var body: some View {
-        AsyncImage(url: url, transaction: Transaction(animation: .easeInOut)) { phase in
-            switch phase {
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .scaleEffect(scale)
-                    .offset(offset)
-                    .gesture(magnification)
-                    .simultaneousGesture(pan)
-                    .onTapGesture(count: 2) { toggleZoom() }
-            case .failure:
-                VStack(spacing: 8) {
-                    Image(systemName: "photo")
-                        .font(.system(size: 34))
-                    Text("图片加载失败")
-                        .font(.footnote)
+        GeometryReader { geo in
+            let container = geo.size
+            AsyncImage(url: url, transaction: Transaction(animation: .easeInOut)) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .scaleEffect(scale)
+                        .offset(offset)
+                        .gesture(magnification(container: container))
+                        .simultaneousGesture(pan(container: container))
+                        .simultaneousGesture(doubleTap(container: container))
+                case .failure:
+                    VStack(spacing: 8) {
+                        Image(systemName: "photo")
+                            .font(.system(size: 34))
+                        Text("图片加载失败")
+                            .font(.footnote)
+                    }
+                    .foregroundStyle(.white.opacity(0.8))
+                default:
+                    ProgressView().tint(.white)
                 }
-                .foregroundStyle(.white.opacity(0.8))
-            default:
-                ProgressView().tint(.white)
             }
+            .frame(width: container.width, height: container.height)
         }
     }
 
-    private var magnification: some Gesture {
+    private func magnification(container: CGSize) -> some Gesture {
         MagnifyGesture()
             .onChanged { value in
-                scale = min(5, max(1, lastScale * value.magnification))
+                let next = min(5, max(1, lastScale * value.magnification))
+                scale = next
+                offset = GalleryZoomGeometry.clampedOffset(
+                    offset,
+                    scale: next,
+                    container: container
+                )
             }
             .onEnded { _ in
-                lastScale = scale
                 if scale <= 1.01 {
                     resetZoom()
+                } else {
+                    lastScale = scale
+                    offset = GalleryZoomGeometry.clampedOffset(
+                        offset,
+                        scale: scale,
+                        container: container
+                    )
+                    lastOffset = offset
                 }
             }
     }
 
-    private var pan: some Gesture {
+    private func pan(container: CGSize) -> some Gesture {
         DragGesture()
             .onChanged { value in
                 guard scale > 1 else { return }
-                offset = CGSize(
-                    width: lastOffset.width + value.translation.width,
-                    height: lastOffset.height + value.translation.height
+                offset = GalleryZoomGeometry.clampedOffset(
+                    CGSize(
+                        width: lastOffset.width + value.translation.width,
+                        height: lastOffset.height + value.translation.height
+                    ),
+                    scale: scale,
+                    container: container
                 )
             }
             .onEnded { _ in
@@ -371,17 +392,28 @@ private struct ZoomableRemoteImage: View {
             }
     }
 
-    private func toggleZoom() {
-        withAnimation(.easeInOut(duration: 0.2)) {
-            if scale > 1 {
-                resetZoom()
-            } else {
-                scale = 2.5
-                lastScale = 2.5
-                offset = .zero
-                lastOffset = .zero
+    private func doubleTap(container: CGSize) -> some Gesture {
+        SpatialTapGesture(count: 2)
+            .onEnded { value in
+                if scale > 1 {
+                    withAnimation(.easeInOut(duration: 0.28)) {
+                        resetZoom()
+                    }
+                } else {
+                    let target: CGFloat = 2.5
+                    let anchored = GalleryZoomGeometry.anchoredOffset(
+                        tap: value.location,
+                        container: container,
+                        scale: target
+                    )
+                    withAnimation(.easeInOut(duration: 0.28)) {
+                        scale = target
+                        lastScale = target
+                        offset = anchored
+                        lastOffset = anchored
+                    }
+                }
             }
-        }
     }
 
     private func resetZoom() {
