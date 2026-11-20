@@ -5,7 +5,7 @@ struct KeychainStore {
     let service: String
 
     func data(for account: String) -> Data? {
-        var query: [String: Any] = [
+        let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: account,
