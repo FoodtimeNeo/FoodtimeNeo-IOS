@@ -66,6 +66,42 @@ final class RemoteCommunityServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests[3].url?.path, "/api/v1/community/comments/c-2/like")
     }
 
+    func testRepliesAndNestedCommentBody() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"c-2","postId":"post-1","userId":"u-1","userDisplayName":"干饭人","content":"楼内回复","likeCount":0,"status":"approved","createdAt":"2099-11-21T04:00:00Z","rootCommentId":"c-1","replyToCommentId":null,"replyToUserId":null,"replyToDisplayName":null,"replyCount":0,"likedByMe":false,"deleted":false,"userAvatarUrl":null}],"total":1,"hasMore":false,"nextCursor":null}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-c4"}
+            """)),
+            .init(status: 202, body: TestFixtures.envelope("""
+            {"id":"c-3","postId":"post-1","userId":"u-1","userDisplayName":"干饭人","content":"回复","likeCount":0,"status":"pending","createdAt":"2099-11-21T04:00:00Z","rootCommentId":"c-1","replyToCommentId":"c-2","replyToUserId":"u-2","replyToDisplayName":"另一位","replyCount":0,"likedByMe":false,"deleted":false,"userAvatarUrl":null}
+            """))
+        ]
+        let service = RemoteCommunityService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.replies(postID: "post-1", rootID: "c-1", size: 20, cursor: nil)
+        let created = try await service.submitComment(
+            postID: "post-1",
+            content: "回复",
+            rootID: "c-1",
+            replyToID: "c-2",
+            requestID: "request-c2"
+        )
+
+        XCTAssertEqual(page.items.first?.content, "楼内回复")
+        XCTAssertEqual(created.status, "pending")
+        XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/community/posts/post-1/comments/c-1/replies")
+        let body = try XCTUnwrap(transport.requests[2].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["rootCommentId"] as? String, "c-1")
+        XCTAssertEqual(json["replyToCommentId"] as? String, "c-2")
+        XCTAssertEqual(json["clientRequestId"] as? String, "request-c2")
+    }
+
     func testCreatePostSendsImagesAndRequestID() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [
