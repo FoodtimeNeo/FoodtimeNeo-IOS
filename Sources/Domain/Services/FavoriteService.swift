@@ -26,5 +26,6 @@ protocol FavoriteService: AnyObject {
         page: Int,
         size: Int
     ) async throws -> Page<CommunityPost>
+    func dishFavoriteState(dishID: String) async throws -> Bool
     func setDishFavorite(dishID: String, favorited: Bool) async throws -> Bool
 }

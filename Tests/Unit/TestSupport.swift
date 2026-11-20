@@ -385,6 +385,87 @@ final class FakeReviewService: ReviewService {
     }
 }
 
+final class FakeFavoriteService: FavoriteService {
+    var groupsResult: Result<[FavoriteGroup], Error> = .success([])
+    var createResult = Result<FavoriteGroup, Error>.success(
+        FavoriteGroup(id: "g-1", kind: "dish", name: "默认分组", sortOrder: 0, revision: 1, itemCount: 0)
+    )
+    var updateResult = Result<FavoriteGroup, Error>.success(
+        FavoriteGroup(id: "g-1", kind: "dish", name: "默认分组", sortOrder: 0, revision: 2, itemCount: 0)
+    )
+    var deleteError: Error?
+    var membership: [String] = []
+    var dishFavoritesResult = Result<Page<DishSearchRow>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var communityFavoritesResult = Result<Page<CommunityPost>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var savedState = true
+
+    func groups(kind: FavoriteKind) async throws -> [FavoriteGroup] {
+        try groupsResult.get()
+    }
+
+    func createGroup(kind: FavoriteKind, name: String, sortOrder: Int?) async throws -> FavoriteGroup {
+        try createResult.get()
+    }
+
+    func updateGroup(
+        id: String,
+        name: String?,
+        sortOrder: Int?,
+        expectedRevision: Int?
+    ) async throws -> FavoriteGroup {
+        try updateResult.get()
+    }
+
+    func deleteGroup(id: String) async throws {
+        if let deleteError { throw deleteError }
+    }
+
+    func memberships(kind: FavoriteKind, targetID: String) async throws -> [String] {
+        membership
+    }
+
+    func addMember(groupID: String, targetID: String) async throws -> [String] {
+        membership.append(groupID)
+        return membership
+    }
+
+    func removeMember(groupID: String, targetID: String) async throws -> [String] {
+        membership.removeAll { $0 == groupID }
+        return membership
+    }
+
+    func dishFavorites(
+        groupID: String?,
+        unfiled: Bool,
+        page: Int,
+        size: Int
+    ) async throws -> Page<DishSearchRow> {
+        try dishFavoritesResult.get()
+    }
+
+    func communityFavorites(
+        groupID: String?,
+        unfiled: Bool,
+        page: Int,
+        size: Int
+    ) async throws -> Page<CommunityPost> {
+        try communityFavoritesResult.get()
+    }
+
+    func dishFavoriteState(dishID: String) async throws -> Bool {
+        savedState
+    }
+
+    func setDishFavorite(dishID: String, favorited: Bool) async throws -> Bool {
+        savedState = favorited
+        return savedState
+    }
+}
+
 final class MemoryDraftStore: CommunityDraftStore {
     private var drafts: [String: CommunityDraft] = [:]
     private var images: [String: Data] = [:]

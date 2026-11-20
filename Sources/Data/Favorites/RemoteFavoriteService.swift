@@ -121,6 +121,14 @@ final class RemoteFavoriteService: FavoriteService {
         )
     }
 
+    func dishFavoriteState(dishID: String) async throws -> Bool {
+        let state: FavoriteSaveState = try await api.send(
+            .get("users/me/dish-favorites/\(encoded(dishID))"),
+            as: FavoriteSaveState.self
+        )
+        return state.saved
+    }
+
     func setDishFavorite(dishID: String, favorited: Bool) async throws -> Bool {
         let request = favorited
             ? APIRequest.put("users/me/dish-favorites/\(encoded(dishID))")

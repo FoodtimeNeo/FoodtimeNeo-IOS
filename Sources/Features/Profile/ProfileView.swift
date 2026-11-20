@@ -11,6 +11,7 @@ struct ProfileView: View {
         case myReviews
         case myReplies
         case mySubmissions
+        case collections
         case inbox
         case notificationSettings
 
@@ -69,6 +70,8 @@ struct ProfileView: View {
                             .buttonStyle(InkButtonStyle())
                         Button("我的投稿") { activeSheet = .mySubmissions }
                             .buttonStyle(InkButtonStyle())
+                        Button("收藏分组") { activeSheet = .collections }
+                            .buttonStyle(InkButtonStyle())
                         Button("建议与反馈") { activeSheet = .feedback }
                             .buttonStyle(InkButtonStyle())
                         Button("修改密码") { activeSheet = .changePassword }
@@ -112,6 +115,8 @@ struct ProfileView: View {
                 MyRepliesView(session: session)
             case .mySubmissions:
                 MySubmissionsView(session: session)
+            case .collections:
+                CollectionsView(session: session)
             case .inbox:
                 InboxView(inbox: session.inbox, messages: session.messages)
             case .notificationSettings:

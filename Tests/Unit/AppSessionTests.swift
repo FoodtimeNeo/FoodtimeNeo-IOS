@@ -202,6 +202,7 @@ final class AppSessionTests: XCTestCase {
             submissions: FakeSubmissionService(),
             community: FakeCommunityService(),
             drafts: MemoryDraftStore(),
+            favorites: FakeFavoriteService(),
             inbox: FakeInboxService(),
             messages: FakeMessageService(),
             notifications: FakeNotificationService(),

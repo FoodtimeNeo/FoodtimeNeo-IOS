@@ -24,6 +24,7 @@ final class AppSession: ObservableObject {
     let submissions: SubmissionService
     let community: CommunityService
     let drafts: CommunityDraftStore
+    let favorites: FavoriteService
     let inbox: InboxService
     let messages: MessageService
     let notifications: NotificationService
@@ -45,6 +46,7 @@ final class AppSession: ObservableObject {
         submissions: SubmissionService,
         community: CommunityService,
         drafts: CommunityDraftStore,
+        favorites: FavoriteService,
         inbox: InboxService,
         messages: MessageService,
         notifications: NotificationService,
@@ -62,6 +64,7 @@ final class AppSession: ObservableObject {
         self.submissions = submissions
         self.community = community
         self.drafts = drafts
+        self.favorites = favorites
         self.inbox = inbox
         self.messages = messages
         self.notifications = notifications
@@ -83,6 +86,7 @@ final class AppSession: ObservableObject {
             submissions: environment.submissions,
             community: environment.community,
             drafts: environment.drafts,
+            favorites: environment.favorites,
             inbox: environment.inbox,
             messages: environment.messages,
             notifications: environment.notifications,

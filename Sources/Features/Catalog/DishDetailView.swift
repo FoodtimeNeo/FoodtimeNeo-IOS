@@ -4,11 +4,14 @@ import SwiftUI
 struct DishDetailView: View {
     @EnvironmentObject private var session: AppSession
     private let catalog: CatalogService
+    private let dishID: String
     @StateObject private var model: DishDetailViewModel
     @State private var showGallery = false
     @State private var galleryStart = 0
+    @State private var isFavorited = false
 
     init(dishID: String, catalog: CatalogService) {
+        self.dishID = dishID
         self.catalog = catalog
         _model = StateObject(
             wrappedValue: DishDetailViewModel(dishID: dishID, catalog: catalog)
@@ -27,7 +30,10 @@ struct DishDetailView: View {
         }
         .navigationTitle(model.detail?.name ?? "菜品详情")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await model.load() }
+        .task {
+            await model.load()
+            isFavorited = (try? await session.favorites.dishFavoriteState(dishID: dishID)) ?? false
+        }
         .fullScreenCover(isPresented: $showGallery) {
             DishGalleryView(urls: model.imageURLs, startIndex: galleryStart)
         }
@@ -141,14 +147,36 @@ struct DishDetailView: View {
                 Text("\(detail.diningHallName) · \(detail.stallName)")
                     .font(.subheadline)
                     .foregroundStyle(Zine.muted)
-                if let rating = model.rating {
-                    Text(DisplayFormat.score(rating.averageScore, reviewCount: rating.reviewCount))
-                        .font(.subheadline)
-                        .foregroundStyle(Zine.red)
-                } else {
-                    Text("暂无评分")
-                        .font(.subheadline)
-                        .foregroundStyle(Zine.muted)
+                HStack {
+                    if let rating = model.rating {
+                        Text(DisplayFormat.score(rating.averageScore, reviewCount: rating.reviewCount))
+                            .font(.subheadline)
+                            .foregroundStyle(Zine.red)
+                    } else {
+                        Text("暂无评分")
+                            .font(.subheadline)
+                            .foregroundStyle(Zine.muted)
+                    }
+                    Spacer()
+                    Button {
+                        Task {
+                            let next = !isFavorited
+                            if let saved = try? await session.favorites.setDishFavorite(
+                                dishID: detail.id,
+                                favorited: next
+                            ) {
+                                isFavorited = saved
+                            }
+                        }
+                    } label: {
+                        Label(
+                            isFavorited ? "已收藏" : "收藏",
+                            systemImage: isFavorited ? "star.fill" : "star"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(isFavorited ? Zine.gold : Zine.muted)
+                    }
+                    .buttonStyle(.plain)
                 }
                 if let description = detail.description, !description.isEmpty {
                     Divider().overlay(Zine.border)
