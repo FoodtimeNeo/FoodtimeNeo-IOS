@@ -255,15 +255,15 @@ final class FakeSocialService: SocialService {
     private(set) var unblockCalls: [String] = []
 
     func searchUsers(query: String, page: Int, size: Int) async throws -> Page<SocialUser> {
-        page(searchUsersResult, number: page, size: size)
+        makePage(searchUsersResult, number: page, size: size)
     }
 
     func following(userID: String, page: Int, size: Int) async throws -> Page<SocialUser> {
-        self.page(followingResult, number: page, size: size)
+        makePage(followingResult, number: page, size: size)
     }
 
     func followers(userID: String, page: Int, size: Int) async throws -> Page<SocialUser> {
-        self.page(followersResult, number: page, size: size)
+        makePage(followersResult, number: page, size: size)
     }
 
     func follow(userID: String) async throws -> FollowState {
@@ -295,7 +295,7 @@ final class FakeSocialService: SocialService {
         return unblockResult
     }
 
-    private func page(_ items: [SocialUser], number: Int, size: Int) -> Page<SocialUser> {
+    private func makePage(_ items: [SocialUser], number: Int, size: Int) -> Page<SocialUser> {
         Page(items: items, total: items.count, page: number, size: size)
     }
 }
