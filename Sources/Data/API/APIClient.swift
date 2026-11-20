@@ -61,6 +61,10 @@ final class APIClient {
         await epoch.rotate()
         await csrfProvider.invalidate()
         cookieJar.clearSessionCookies(for: baseURL)
+        // Images and API responses cached under the previous account must not
+        // survive sign-out, 401 or account deletion. Clearing the shared cache
+        // is intentional; per-account media is re-fetched after the next login.
+        URLCache.shared.removeAllCachedResponses()
         onCookiesChanged?(cookieJar.cookies(for: baseURL))
     }
 
