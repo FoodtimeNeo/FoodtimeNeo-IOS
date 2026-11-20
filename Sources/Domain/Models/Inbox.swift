@@ -31,6 +31,14 @@ struct Notice: Codable, Identifiable, Equatable, Sendable {
             ?? container.decodeIfPresent(Date.self, forKey: .createdTime)
         isUpdate = try container.decodeIfPresent(Bool.self, forKey: .isUpdate) ?? false
     }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(content, forKey: .content)
+        try container.encodeIfPresent(publishedAt, forKey: .publishedAt)
+        try container.encode(isUpdate, forKey: .isUpdate)
+    }
 }
 
 /// 系统消息。`body` 允许为空；社区互动消息通过 `refType/refId` 指回原帖。

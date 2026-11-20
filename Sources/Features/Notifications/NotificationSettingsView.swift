@@ -7,10 +7,14 @@ struct NotificationSettingsView: View {
 
     init(
         service: NotificationService,
-        authorizer: NotificationAuthorizing = SystemNotificationAuthorizer()
+        authorizer: NotificationAuthorizing? = nil
     ) {
+        let resolvedAuthorizer = authorizer ?? SystemNotificationAuthorizer()
         _model = StateObject(
-            wrappedValue: NotificationSettingsViewModel(service: service, authorizer: authorizer)
+            wrappedValue: NotificationSettingsViewModel(
+                service: service,
+                authorizer: resolvedAuthorizer
+            )
         )
     }
 
