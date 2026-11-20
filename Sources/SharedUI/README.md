@@ -1,5 +1,5 @@
 # SharedUI
 
-保留手账风格的设计令牌与共用控件，不负责业务写操作。
+手账色彩/字体/图标、空错状态、图片与可访问控件；不执行领域写操作或隐藏服务端错误。
 
-当前目录只定义职责，尚无Swift模块或功能实现；工程结构在选型后确认。
+当前：`Zine` 令牌（色板/字号/间距/圆角）、`PaperBackdrop`、`PaperCard`、`SectionHeading`、`InkButtonStyle`、`LinkButtonStyle`、加载/空/错状态。字体、地图、插画与平面 Emoji 待按许可接入。
