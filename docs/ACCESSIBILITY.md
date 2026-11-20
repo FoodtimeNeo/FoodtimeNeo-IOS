@@ -21,8 +21,8 @@
 ## 仍待办（未在本分支完成）
 
 - VoiceOver 实机全流程走查与朗读顺序；未执行 Apple Simulator/真机。
-- 价格历史 `Canvas` 坐标轴字号与图表 `accessibilityValue`；本轮未改绘图层。
-- 社区图册、地图筛选、收藏分组、搜索多选等自定义 chip 的 `.isSelected` 语义仍可补齐。
+- 价格历史图表已补 `accessibilityValue` 摘要与 `@ScaledMetric` 坐标轴字号；更细的单点朗读仍未做。
+- 搜索食堂与收藏分组 chip 已补选中语义；地图筛选等其余自定义 chip 仍可补齐。
 - `SocialView` 辅助功能字号下三个操作仍在同一 HStack，极端字号可能截断。
 - 部分管理端详情标题/看板数值仍用固定字号（装饰性标题优先）。
 - iPad 导航结构（`NavigationSplitView`/侧栏）仍未决，属 D18；本轮只做列数与宽度自适应，不改导航。

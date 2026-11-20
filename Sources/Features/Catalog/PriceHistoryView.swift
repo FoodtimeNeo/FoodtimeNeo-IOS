@@ -103,8 +103,9 @@ struct PriceHistoryView: View {
         PaperCard {
             VStack(alignment: .leading, spacing: 10) {
                 Text("记录")
-                    .font(.system(size: 18, weight: .bold, design: .serif))
+                    .font(.system(.headline, design: .serif))
                     .foregroundStyle(Zine.ink)
+                    .accessibilityAddTraits(.isHeader)
                 ForEach(history.records.reversed()) { entry in
                     VStack(alignment: .leading, spacing: 3) {
                         HStack {
@@ -147,8 +148,18 @@ struct PriceHistoryView: View {
 }
 
 private struct PriceHistoryChartView: View {
+    @ScaledMetric(relativeTo: .caption2) private var axisFontSize: CGFloat = 9
     let history: DishPriceHistory
     let runs: [PriceHistoryRun]
+
+    private var accessibilitySummary: String {
+        let prices = runs.flatMap(\.points).compactMap(\.entry.price)
+        guard let minPrice = prices.min(), let maxPrice = prices.max() else {
+            return "暂无价格记录"
+        }
+        let latest = prices.last ?? maxPrice
+        return "共 \(prices.count) 个价格点，最低 \(DisplayFormat.price(minPrice))，最高 \(DisplayFormat.price(maxPrice))，最新 \(DisplayFormat.price(latest))"
+    }
 
     var body: some View {
         Canvas { context, size in
@@ -188,7 +199,7 @@ private struct PriceHistoryChartView: View {
                 grid.addLine(to: CGPoint(x: left + chartWidth, y: yValue))
                 context.stroke(grid, with: .color(Zine.border.opacity(0.7)), lineWidth: 1)
                 let label = Text(String(format: "¥%.1f", price))
-                    .font(.system(size: 9))
+                    .font(.system(size: axisFontSize))
                     .foregroundColor(Zine.muted)
                 context.draw(label, at: CGPoint(x: left - 6, y: yValue), anchor: .trailing)
             }
@@ -228,11 +239,16 @@ private struct PriceHistoryChartView: View {
             formatter.locale = Locale(identifier: "zh_CN")
             formatter.timeZone = TimeZone(identifier: "Asia/Shanghai")
             formatter.dateFormat = "MM-dd"
-            let startLabel = Text(formatter.string(from: windowStart)).font(.system(size: 9)).foregroundColor(Zine.muted)
-            let endLabel = Text(formatter.string(from: windowEnd)).font(.system(size: 9)).foregroundColor(Zine.muted)
+            let startLabel = Text(formatter.string(from: windowStart))
+                .font(.system(size: axisFontSize))
+                .foregroundColor(Zine.muted)
+            let endLabel = Text(formatter.string(from: windowEnd))
+                .font(.system(size: axisFontSize))
+                .foregroundColor(Zine.muted)
             context.draw(startLabel, at: CGPoint(x: left, y: size.height - 4), anchor: .topLeading)
             context.draw(endLabel, at: CGPoint(x: left + chartWidth, y: size.height - 4), anchor: .topTrailing)
         }
         .accessibilityLabel("价格变化阶梯图")
+        .accessibilityValue(Text(accessibilitySummary))
     }
 }
