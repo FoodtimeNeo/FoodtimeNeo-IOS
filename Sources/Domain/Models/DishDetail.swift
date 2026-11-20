@@ -1,0 +1,25 @@
+import Foundation
+
+struct DishDetail: Codable, Identifiable, Equatable, Sendable {
+    let id: String
+    let stallId: String
+    let stallName: String
+    let diningHallId: String
+    let diningHallName: String
+    let name: String
+    let description: String?
+    let price: Decimal?
+    let revision: Int
+}
+
+struct DishImage: Codable, Identifiable, Equatable, Sendable {
+    let id: String
+    let dishId: String
+    let imageUrl: String
+    let createdAt: Date?
+}
+
+struct DishRatingSummary: Codable, Equatable, Sendable {
+    let averageScore: Double?
+    let reviewCount: Int
+}
