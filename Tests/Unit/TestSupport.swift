@@ -1094,8 +1094,12 @@ final class FakeNotificationService: NotificationService {
     var updateHandler: (String, Bool, Int) throws -> NotificationPreference = { category, enabled, revision in
         NotificationPreference(category: category, enabled: enabled, revision: revision + 1)
     }
+    var eventsResult = Result<NotificationEventPage, Error>.success(
+        NotificationEventPage(items: [], nextSeq: 0)
+    )
     private(set) var updates: [(category: String, enabled: Bool, revision: Int)] = []
     private(set) var preferenceCalls = 0
+    private(set) var deliveredEventIDs: [String] = []
 
     func preferences() async throws -> NotificationPreferences {
         preferenceCalls += 1
@@ -1112,6 +1116,14 @@ final class FakeNotificationService: NotificationService {
             return try updateResult.get()
         }
         return try updateHandler(category, enabled, expectedRevision)
+    }
+
+    func events(afterSeq: Int64, limit: Int) async throws -> NotificationEventPage {
+        try eventsResult.get()
+    }
+
+    func markDelivered(eventID: String) async throws {
+        deliveredEventIDs.append(eventID)
     }
 }
 

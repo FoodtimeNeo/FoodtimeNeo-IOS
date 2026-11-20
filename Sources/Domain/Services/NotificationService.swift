@@ -8,4 +8,6 @@ protocol NotificationService: AnyObject {
         enabled: Bool,
         expectedRevision: Int
     ) async throws -> NotificationPreference
+    func events(afterSeq: Int64, limit: Int) async throws -> NotificationEventPage
+    func markDelivered(eventID: String) async throws
 }

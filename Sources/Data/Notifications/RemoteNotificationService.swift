@@ -35,6 +35,25 @@ final class RemoteNotificationService: NotificationService {
         return saved
     }
 
+    func events(afterSeq: Int64, limit: Int) async throws -> NotificationEventPage {
+        try await api.send(
+            .get(
+                "users/me/notification-events",
+                query: [
+                    URLQueryItem(name: "afterSeq", value: String(max(0, afterSeq))),
+                    URLQueryItem(name: "limit", value: String(min(100, max(1, limit))))
+                ]
+            ),
+            as: NotificationEventPage.self
+        )
+    }
+
+    func markDelivered(eventID: String) async throws {
+        try await api.sendVoid(
+            .post("users/me/notification-events/\(encoded(eventID))/delivered")
+        )
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }
