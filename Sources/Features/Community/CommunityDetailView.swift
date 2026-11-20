@@ -6,6 +6,7 @@ struct CommunityDetailView: View {
     @StateObject private var model: CommunityDetailViewModel
     @State private var showGallery = false
     @State private var galleryStart = 0
+    @State private var threadRoot: CommunityComment?
 
     init(postID: String, service: CommunityService) {
         _model = StateObject(
@@ -46,6 +47,13 @@ struct CommunityDetailView: View {
             DishGalleryView(
                 urls: galleryURLs,
                 startIndex: galleryStart
+            )
+        }
+        .sheet(item: $threadRoot) { root in
+            CommunityThreadView(
+                root: root,
+                postID: model.post?.id ?? "",
+                service: session.community
             )
         }
     }
@@ -206,11 +214,18 @@ struct CommunityDetailView: View {
                         .foregroundStyle(model.isCommentLiked(comment) ? Zine.red : Zine.muted)
                     }
                     .buttonStyle(.plain)
-                    if comment.replyCount > 0 {
+                    Button {
+                        threadRoot = comment
+                    } label: {
                         Label("\(comment.replyCount)", systemImage: "text.bubble")
                             .font(.caption)
                             .foregroundStyle(Zine.muted)
                     }
+                    .buttonStyle(.plain)
+                    Button("回复") { threadRoot = comment }
+                        .font(.caption)
+                        .foregroundStyle(Zine.blue)
+                        .buttonStyle(.plain)
                 }
             }
         }
