@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DailyRecommendationSection: View {
+    @ScaledMetric(relativeTo: .body) private var cardWidth: CGFloat = 230
     let recommendations: DailyRecommendations?
     let isLoading: Bool
     let error: String?
@@ -115,18 +116,17 @@ struct DailyRecommendationSection: View {
                         .foregroundStyle(Zine.muted)
                 }
             }
-            .frame(width: 230, height: 132)
+            .frame(width: cardWidth, height: 132)
             .clipped()
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(dish.dishName)
-                    .font(.system(size: 18, weight: .bold, design: .serif))
+                    .font(.system(.headline, design: .serif))
                     .foregroundStyle(Zine.ink)
                     .lineLimit(2)
                 Text("\(dish.diningHallName) · \(dish.stallName)")
                     .font(.caption)
                     .foregroundStyle(Zine.muted)
-                    .lineLimit(1)
                 if let rating = dish.averageRating {
                     Text(DisplayFormat.score(rating, reviewCount: dish.reviewCount))
                         .font(.caption)
@@ -135,13 +135,12 @@ struct DailyRecommendationSection: View {
                 Text(dish.reason)
                     .font(.caption)
                     .foregroundStyle(Zine.green)
-                    .lineLimit(2)
             }
             .padding(12)
-            .frame(width: 230, alignment: .leading)
+            .frame(width: cardWidth, alignment: .leading)
             .background(Zine.paper)
         }
-        .frame(width: 230)
+        .frame(width: cardWidth)
         .clipShape(RoundedRectangle(cornerRadius: Zine.cardRadius))
         .overlay(
             RoundedRectangle(cornerRadius: Zine.cardRadius)

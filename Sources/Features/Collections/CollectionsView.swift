@@ -137,6 +137,9 @@ struct CollectionsView: View {
                 .overlay(Capsule().stroke(Zine.border, lineWidth: 1))
         }
         .buttonStyle(.plain)
+        .frame(minHeight: 44)
+        .accessibilityValue(Text(selected ? "已选择" : "未选择"))
+        .accessibilityAddTraits(selected ? .isSelected : AccessibilityTraits())
     }
 
     @ViewBuilder

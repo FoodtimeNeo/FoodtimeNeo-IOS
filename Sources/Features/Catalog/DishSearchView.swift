@@ -278,7 +278,15 @@ private struct DishFilterSheet: View {
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
-                        .frame(minHeight: 40)
+                        .frame(minHeight: 44)
+                        .accessibilityValue(
+                            Text(model.selectedHallIDs.contains(hall.id) ? "已选择" : "未选择")
+                        )
+                        .accessibilityAddTraits(
+                            model.selectedHallIDs.contains(hall.id)
+                                ? .isSelected
+                                : AccessibilityTraits()
+                        )
                     }
                 }
             }
