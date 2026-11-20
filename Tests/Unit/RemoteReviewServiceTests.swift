@@ -71,6 +71,68 @@ final class RemoteReviewServiceTests: XCTestCase {
         XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/reviews/rv-1/like")
     }
 
+    func testRepliesDecodeAndSubmitSendsRequestID() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"rr-1","reviewId":"rv-1","replyToId":null,"userId":"u-1","userDisplayName":"干饭人","content":"同感","status":"approved","reviewReason":null,"reviewedAt":null,"createdAt":"2099-11-21T04:00:00Z","updatedAt":"2099-11-21T04:00:00Z","replyToUserId":null,"replyToUserDisplayName":null,"replyToDeleted":false,"ownedByMe":false,"dishId":"d-1","stallId":"s-1","diningHallId":"h-1","dishName":"鸡腿饭","reviewDeleted":false,"likeCount":1,"likedByMe":false,"counterVersion":2}],"total":1,"hasMore":false,"nextCursor":null}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-r3"}
+            """)),
+            .init(status: 202, body: TestFixtures.envelope("""
+            {"id":"rr-2","status":"pending","createdAt":"2099-11-21T04:00:00Z"}
+            """))
+        ]
+        let service = RemoteReviewService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.replies(reviewID: "rv-1", size: 20, cursor: nil)
+        let receipt = try await service.submitReply(
+            reviewID: "rv-1",
+            content: "同感",
+            replyToID: "rr-1",
+            requestID: "request-r1"
+        )
+
+        XCTAssertEqual(page.items.first?.content, "同感")
+        XCTAssertEqual(receipt.status, "pending")
+        XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/reviews/rv-1/replies")
+        let body = try XCTUnwrap(transport.requests[2].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["content"] as? String, "同感")
+        XCTAssertEqual(json["replyToId"] as? String, "rr-1")
+        XCTAssertEqual(json["clientRequestId"] as? String, "request-r1")
+    }
+
+    func testReplyLikeAndMyReplies() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-r4"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"likedByMe":true,"likeCount":2,"counterVersion":3}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[],"total":0,"page":1,"size":20}
+            """))
+        ]
+        let service = RemoteReviewService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let like = try await service.setReplyLike(id: "rr-1", liked: true)
+        let page = try await service.myReplies(page: 1, size: 20)
+
+        XCTAssertTrue(like.likedByMe)
+        XCTAssertEqual(page.total, 0)
+        XCTAssertEqual(transport.requests[1].httpMethod, "PUT")
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/review-replies/rr-1/like")
+        XCTAssertEqual(transport.requests[2].url?.path, "/api/v1/users/me/review-replies")
+    }
+
     func testMySubmissionsDecode() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

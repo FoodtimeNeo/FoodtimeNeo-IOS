@@ -22,8 +22,9 @@
 - W2 校园地图：六区域底图、缩放/拖动/点选、食堂入口；详见 [校园地图](docs/CAMPUS-MAP.md)（底图再分发许可待确认）。
 - W2 每日推荐：独立加载的今日推荐横向卡片；详见 [每日推荐](docs/RECOMMENDATIONS.md)。
 - W3 菜品点评：已发布点评、提交审核、点赞、我的点评/审核记录；详见 [菜品点评](docs/DISH-REVIEWS.md)。
+- W3 点评回复：楼中楼、回复点赞、我的回复/审核状态；详见 [点评回复](docs/REVIEW-REPLIES.md)。
 - 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：点评回复/楼中楼、食堂/档口点评、投稿、社区、收藏分组、历史、私信/通知、举报申诉、管理端、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
+- **尚未实现**：食堂/档口点评、投稿、社区、收藏分组、历史、私信/通知、举报申诉、管理端、相册/HEIC/分享等。`docs/parity/coverage.json` 的 102 项目标仍全部 `not-started`。
 - **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
 - Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
 

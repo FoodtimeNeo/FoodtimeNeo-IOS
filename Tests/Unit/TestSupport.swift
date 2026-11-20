@@ -313,8 +313,17 @@ final class FakeReviewService: ReviewService {
     )
     var deleteError: Error?
     var likeResult = ReviewLikeState(likedByMe: true, likeCount: 1, counterVersion: 1)
+    var repliesResult = ReviewReplyPage(items: [], total: 0, hasMore: false, nextCursor: nil)
+    var submitReplyResult: Result<ReviewReplyCreatedReceipt, Error> = .success(
+        ReviewReplyCreatedReceipt(id: "rr-1", status: "pending", createdAt: Date())
+    )
+    var myRepliesResult: Result<Page<ReviewReply>, Error> = .success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var deleteReplyError: Error?
     private(set) var submitCalls = 0
     private(set) var likeCalls: [String] = []
+    private(set) var replyLikeCalls: [String] = []
 
     func reviews(dishID: String, page: Int, size: Int) async throws -> Page<Review> {
         try reviewsResult.get()
@@ -339,6 +348,32 @@ final class FakeReviewService: ReviewService {
 
     func setReviewLike(id: String, liked: Bool) async throws -> ReviewLikeState {
         likeCalls.append(id)
+        return likeResult
+    }
+
+    func replies(reviewID: String, size: Int, cursor: String?) async throws -> ReviewReplyPage {
+        repliesResult
+    }
+
+    func submitReply(
+        reviewID: String,
+        content: String,
+        replyToID: String?,
+        requestID: String
+    ) async throws -> ReviewReplyCreatedReceipt {
+        try submitReplyResult.get()
+    }
+
+    func myReplies(page: Int, size: Int) async throws -> Page<ReviewReply> {
+        try myRepliesResult.get()
+    }
+
+    func deleteReply(id: String) async throws {
+        if let deleteReplyError { throw deleteReplyError }
+    }
+
+    func setReplyLike(id: String, liked: Bool) async throws -> ReviewLikeState {
+        replyLikeCalls.append(id)
         return likeResult
     }
 }

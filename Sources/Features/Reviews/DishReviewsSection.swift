@@ -2,8 +2,20 @@ import SwiftUI
 
 @MainActor
 struct DishReviewsSection: View {
+    private enum Sheet: Identifiable {
+        case composer
+        case thread(Review)
+
+        var id: String {
+            switch self {
+            case .composer: return "composer"
+            case .thread(let review): return "thread-\(review.id)"
+            }
+        }
+    }
+
     @StateObject private var model: DishReviewsViewModel
-    @State private var showComposer = false
+    @State private var activeSheet: Sheet?
     private let dishID: String
     private let service: ReviewService
 
@@ -26,7 +38,7 @@ struct DishReviewsSection: View {
                         .font(.caption)
                         .foregroundStyle(Zine.muted)
                     Spacer()
-                    Button("写点评") { showComposer = true }
+                    Button("写点评") { activeSheet = .composer }
                         .buttonStyle(LinkButtonStyle())
                 }
 
@@ -60,9 +72,14 @@ struct DishReviewsSection: View {
             }
         }
         .task { await model.load() }
-        .sheet(isPresented: $showComposer) {
-            ReviewComposerView(dishID: dishID, service: service) {
-                Task { await model.load() }
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .composer:
+                ReviewComposerView(dishID: dishID, service: service) {
+                    Task { await model.load() }
+                }
+            case .thread(let review):
+                ReviewThreadView(review: review, service: service)
             }
         }
     }
@@ -94,11 +111,14 @@ struct DishReviewsSection: View {
                         .foregroundStyle(review.likedByMe ? Zine.red : Zine.muted)
                 }
                 .buttonStyle(.plain)
-                if review.replyCount > 0 {
+                Button {
+                    activeSheet = .thread(review)
+                } label: {
                     Label("\(review.replyCount)", systemImage: "text.bubble")
                         .font(.caption)
                         .foregroundStyle(Zine.muted)
                 }
+                .buttonStyle(.plain)
             }
         }
         .padding(.vertical, 4)
