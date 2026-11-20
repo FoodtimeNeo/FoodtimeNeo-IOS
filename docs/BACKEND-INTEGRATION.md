@@ -61,6 +61,8 @@ Backend `CLIENT_HEADER_ALLOWED` 默认只有 `web,android`，`CLIENT_HEADER_MODE
 | 个人资料 | `GET/PUT /users/me/profile`（PUT 整体替换昵称与头像引用） |
 | 账号生命周期 | `GET /users/me/account-lifecycle`、`/deletion-code`、`/unbind-code`、`/delete`、`/unbind` |
 | 学校邮箱 | `POST /auth/bind-email/email-code`、`POST /users/me/bind-email` |
+| 社交 | `GET /users/search`、`/users/{id}/following|followers`、`PUT/DELETE /users/{id}/follow` |
+| 黑名单 | `GET /users/me/blocks`、`PUT/DELETE /users/{id}/block` |
 | 能力 | `GET /users/me/capabilities` |
 | 食堂/档口/菜品 | `GET /dining-halls`、`GET /dining-halls/{id}/stalls`、`GET /stalls/{id}/dishes` |
 

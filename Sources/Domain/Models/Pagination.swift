@@ -1,7 +1,7 @@
 import Foundation
 
 /// Ordinary page protocol: `items / total / page / size`.
-struct Page<Item: Sendable>: Sendable {
+struct Page<Item: Codable & Sendable>: Codable, Sendable {
     let items: [Item]
     let total: Int
     let page: Int

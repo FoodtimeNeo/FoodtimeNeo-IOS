@@ -17,6 +17,7 @@ final class AppSession: ObservableObject {
 
     let auth: AuthService
     let catalog: CatalogService
+    let social: SocialService
 
     private let api: APIClient
     private let cookieJar: CookieJar
@@ -28,6 +29,7 @@ final class AppSession: ObservableObject {
     init(
         auth: AuthService,
         catalog: CatalogService,
+        social: SocialService,
         api: APIClient,
         cookieJar: CookieJar,
         archive: CookieArchiving,
@@ -35,6 +37,7 @@ final class AppSession: ObservableObject {
     ) {
         self.auth = auth
         self.catalog = catalog
+        self.social = social
         self.api = api
         self.cookieJar = cookieJar
         self.archive = archive
@@ -46,6 +49,7 @@ final class AppSession: ObservableObject {
         let session = AppSession(
             auth: environment.auth,
             catalog: environment.catalog,
+            social: environment.social,
             api: environment.api,
             cookieJar: environment.cookieJar,
             archive: environment.archive,

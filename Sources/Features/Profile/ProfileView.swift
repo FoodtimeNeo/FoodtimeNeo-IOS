@@ -6,6 +6,7 @@ struct ProfileView: View {
         case editProfile
         case changePassword
         case accountSecurity
+        case social
 
         var id: String { rawValue }
     }
@@ -31,6 +32,8 @@ struct ProfileView: View {
                         roadmapCard
                         Button("编辑资料") { activeSheet = .editProfile }
                             .buttonStyle(InkButtonStyle())
+                        Button("关注与黑名单") { activeSheet = .social }
+                            .buttonStyle(InkButtonStyle())
                         Button("修改密码") { activeSheet = .changePassword }
                             .buttonStyle(InkButtonStyle())
                         if !user.isAdmin {
@@ -54,6 +57,8 @@ struct ProfileView: View {
                 ChangePasswordView(session: session)
             case .accountSecurity:
                 AccountSecurityView(session: session)
+            case .social:
+                SocialView(session: session, currentUserID: user.id)
             }
         }
         .alert("退出登录？", isPresented: $confirmLogout) {
@@ -128,7 +133,7 @@ struct ProfileView: View {
                 Text("开发状态")
                     .font(.system(size: 18, weight: .bold, design: .serif))
                     .foregroundStyle(Zine.ink)
-                Text("当前已接入登录、注册、找回/修改密码、资料昵称编辑、学校邮箱绑定/解绑、账号注销入口、会话恢复、能力读取和食堂三级只读浏览。头像、点评、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
+                Text("当前已接入登录、注册、找回/修改密码、资料昵称编辑、关注/粉丝/用户搜索/黑名单、学校邮箱绑定/解绑、账号注销入口、会话恢复、能力读取和食堂三级只读浏览。头像、点评、社区、通知与管理端按审计报告的波次继续接入；占位页和未接入入口不会当作已完成。")
                     .font(.subheadline)
                     .foregroundStyle(Zine.muted)
             }

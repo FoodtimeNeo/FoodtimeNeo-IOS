@@ -240,6 +240,66 @@ final class FakeAuthService: AuthService {
     }
 }
 
+final class FakeSocialService: SocialService {
+    var searchUsersResult: [SocialUser] = []
+    var followingResult: [SocialUser] = []
+    var followersResult: [SocialUser] = []
+    var blockedUsersResult: [BlockedUser] = []
+    var followResult = FollowState(followed: true, followerCount: 1)
+    var unfollowResult = FollowState(followed: false, followerCount: 0)
+    var blockResult = BlockState(blocked: true)
+    var unblockResult = BlockState(blocked: false)
+    private(set) var followCalls: [String] = []
+    private(set) var unfollowCalls: [String] = []
+    private(set) var blockCalls: [String] = []
+    private(set) var unblockCalls: [String] = []
+
+    func searchUsers(query: String, page: Int, size: Int) async throws -> Page<SocialUser> {
+        page(searchUsersResult, number: page, size: size)
+    }
+
+    func following(userID: String, page: Int, size: Int) async throws -> Page<SocialUser> {
+        self.page(followingResult, number: page, size: size)
+    }
+
+    func followers(userID: String, page: Int, size: Int) async throws -> Page<SocialUser> {
+        self.page(followersResult, number: page, size: size)
+    }
+
+    func follow(userID: String) async throws -> FollowState {
+        followCalls.append(userID)
+        return followResult
+    }
+
+    func unfollow(userID: String) async throws -> FollowState {
+        unfollowCalls.append(userID)
+        return unfollowResult
+    }
+
+    func blockedUsers(page: Int, size: Int) async throws -> Page<BlockedUser> {
+        Page(
+            items: blockedUsersResult,
+            total: blockedUsersResult.count,
+            page: page,
+            size: size
+        )
+    }
+
+    func block(userID: String) async throws -> BlockState {
+        blockCalls.append(userID)
+        return blockResult
+    }
+
+    func unblock(userID: String) async throws -> BlockState {
+        unblockCalls.append(userID)
+        return unblockResult
+    }
+
+    private func page(_ items: [SocialUser], number: Int, size: Int) -> Page<SocialUser> {
+        Page(items: items, total: items.count, page: number, size: size)
+    }
+}
+
 final class FakeCatalogService: CatalogService {
     var halls: [DiningHall] = []
     var stallsByHall: [String: [Stall]] = [:]

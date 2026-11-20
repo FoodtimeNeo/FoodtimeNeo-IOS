@@ -61,6 +61,36 @@ struct APIRequest {
         )
     }
 
+    static func put(
+        _ path: String,
+        body: Data? = nil,
+        requiresAuth: Bool = true,
+        requiresCSRF: Bool = true
+    ) -> APIRequest {
+        APIRequest(
+            method: .put,
+            path: path,
+            body: body,
+            requiresAuth: requiresAuth,
+            requiresCSRF: requiresCSRF,
+            contentType: body == nil ? nil : "application/json"
+        )
+    }
+
+    static func delete(
+        _ path: String,
+        requiresAuth: Bool = true,
+        requiresCSRF: Bool = true
+    ) -> APIRequest {
+        APIRequest(
+            method: .delete,
+            path: path,
+            requiresAuth: requiresAuth,
+            requiresCSRF: requiresCSRF,
+            contentType: nil
+        )
+    }
+
     static func json<T: Encodable>(
         _ method: Method,
         _ path: String,
