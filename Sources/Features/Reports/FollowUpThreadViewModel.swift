@@ -45,7 +45,7 @@ final class FollowUpThreadViewModel: ObservableObject {
         defer { isLoading = false }
         do {
             let result = try await service.followUps(reportID: reportID, page: max(1, target), size: pageSize)
-            items = target <= 1 ? result.items.reversed() : result.items.reversed() + items
+            items = target <= 1 ? Array(result.items.reversed()) : Array(result.items.reversed()) + items
             total = result.total
             page = max(1, target)
         } catch let error as AppError {
