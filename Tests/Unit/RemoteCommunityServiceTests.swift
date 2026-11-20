@@ -99,15 +99,16 @@ final class RemoteCommunityServiceTests: XCTestCase {
         XCTAssertEqual(unpinned.revision, 3)
         XCTAssertEqual(ordered.revision, 4)
         XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/admin/community/pins")
-        XCTAssertEqual(transport.requests[1].httpMethod, "PUT")
-        XCTAssertEqual(transport.requests[2].httpMethod, "DELETE")
-        let deleteURL = try XCTUnwrap(transport.requests[2].url)
+        XCTAssertEqual(transport.requests[1].url?.path, "/api/v1/auth/csrf")
+        XCTAssertEqual(transport.requests[2].httpMethod, "PUT")
+        XCTAssertEqual(transport.requests[3].httpMethod, "DELETE")
+        let deleteURL = try XCTUnwrap(transport.requests[3].url)
         XCTAssertEqual(
             URLComponents(url: deleteURL, resolvingAgainstBaseURL: false)?
                 .queryItems?.first(where: { $0.name == "expectedRevision" })?.value,
             "2"
         )
-        let orderBody = try XCTUnwrap(transport.requests[3].httpBody)
+        let orderBody = try XCTUnwrap(transport.requests[4].httpBody)
         let orderJSON = try XCTUnwrap(JSONSerialization.jsonObject(with: orderBody) as? [String: Any])
         XCTAssertEqual(orderJSON["expectedRevision"] as? Int, 3)
     }
