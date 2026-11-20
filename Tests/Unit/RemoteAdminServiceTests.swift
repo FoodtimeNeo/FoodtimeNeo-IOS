@@ -374,6 +374,103 @@ final class RemoteAdminServiceTests: XCTestCase {
         XCTAssertEqual(json["expectedRevision"] as? Int, 2)
     }
 
+    func testCatalogListCreateUpdateDelete() async throws {
+        let itemJSON = """
+        {"id":"dish-1","parentId":"stall-1","name":"红烧肉","description":null,"price":12.5,"coverImageUrl":null,"status":"active","sortOrder":1,"revision":3,"priceUnit":"份"}
+        """
+        let catalogPageJSON = """
+        {"items":[\(itemJSON)],"total":1,"page":1,"size":20}
+        """
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope(catalogPageJSON)),
+            .init(status: 200, body: TestFixtures.envelope(itemJSON)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 201, body: TestFixtures.envelope(itemJSON)),
+            .init(status: 200, body: TestFixtures.envelope(itemJSON)),
+            .init(status: 200, body: TestFixtures.envelope("null"))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+        let edit = AdminCatalogEdit(
+            parentId: "stall-1",
+            name: "红烧肉",
+            description: "招牌",
+            price: Decimal(string: "12.5"),
+            coverImageUrl: nil,
+            status: "active",
+            sortOrder: 1,
+            priceUnit: "份"
+        )
+
+        let page = try await service.catalogList(
+            type: "dishes",
+            parentID: "stall-1",
+            page: 1,
+            size: 20
+        )
+        _ = try await service.catalogItem(type: "dishes", id: "dish-1")
+        _ = try await service.createCatalogItem(type: "dishes", edit: edit)
+        _ = try await service.updateCatalogItem(type: "dishes", id: "dish-1", edit: edit)
+        try await service.deleteCatalogItem(type: "dishes", id: "dish-1")
+
+        XCTAssertEqual(page.items.first?.priceUnit, "份")
+        XCTAssertEqual(transport.requests[0].url?.path, "/api/v1/admin/catalog/dishes")
+        let listQuery = URLComponents(
+            url: try XCTUnwrap(transport.requests[0].url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(listQuery?.first(where: { $0.name == "parentId" })?.value, "stall-1")
+        XCTAssertEqual(transport.requests[3].httpMethod, "POST")
+        let createBody = try XCTUnwrap(transport.requests[3].httpBody)
+        let createJSON = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: createBody) as? [String: Any]
+        )
+        XCTAssertEqual(createJSON["name"] as? String, "红烧肉")
+        XCTAssertEqual(createJSON["parentId"] as? String, "stall-1")
+        XCTAssertEqual(createJSON["price"] as? Double, 12.5)
+        XCTAssertEqual(transport.requests[4].httpMethod, "PUT")
+        XCTAssertEqual(
+            transport.requests[4].url?.path,
+            "/api/v1/admin/catalog/dishes/dish-1"
+        )
+        XCTAssertEqual(transport.requests[5].httpMethod, "DELETE")
+    }
+
+    func testAdminReviewsAndRemove() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"review-1","dishId":"dish-1","userId":"u-1","userDisplayName":"干饭人","rating":5,"content":"好吃","createdAt":"2099-11-20T04:00:00Z","updatedAt":null,"dishName":"红烧肉","stallId":"stall-1","stallName":"一档","diningHallId":"hall-1","diningHallName":"一食堂","aiRiskLevel":null,"aiConfidence":null,"aiLabels":null,"aiReason":null,"aiCheckedAt":null,"userEmail":"user@example.com"}],"total":1,"page":1,"size":20}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("null"))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.adminReviews(query: "好吃", page: 1, size: 20)
+        try await service.removeReview(id: "review-1", reason: "包含广告")
+
+        XCTAssertEqual(page.items.first?.userEmail, "user@example.com")
+        let query = URLComponents(
+            url: try XCTUnwrap(transport.requests[0].url),
+            resolvingAgainstBaseURL: false
+        )?.queryItems
+        XCTAssertEqual(query?.first(where: { $0.name == "q" })?.value, "好吃")
+        XCTAssertEqual(transport.requests[2].httpMethod, "DELETE")
+        XCTAssertEqual(transport.requests[2].url?.path, "/api/v1/admin/reviews/review-1")
+        let body = try XCTUnwrap(transport.requests[2].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["reason"] as? String, "包含广告")
+    }
+
     func testUpdateUserSendsRoleAndStatus() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

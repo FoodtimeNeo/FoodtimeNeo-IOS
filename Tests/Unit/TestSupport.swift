@@ -531,11 +531,51 @@ final class FakeAdminService: AdminService {
     private(set) var moderationCalls = 0
     private(set) var communityModerationCalls = 0
     private(set) var communityDeleteCalls = 0
+    var catalogListResult = Result<Page<AdminCatalogItem>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var catalogItemResult = Result<AdminCatalogItem, Error>.success(
+        AdminCatalogItem(
+            id: "dish-1",
+            parentId: "stall-1",
+            name: "红烧肉",
+            description: nil,
+            price: Decimal(string: "12.5"),
+            coverImageUrl: nil,
+            status: "active",
+            sortOrder: 1,
+            revision: 3,
+            priceUnit: "份"
+        )
+    )
+    var catalogSaveResult = Result<AdminCatalogItem, Error>.success(
+        AdminCatalogItem(
+            id: "dish-1",
+            parentId: "stall-1",
+            name: "红烧肉",
+            description: nil,
+            price: Decimal(string: "12.5"),
+            coverImageUrl: nil,
+            status: "active",
+            sortOrder: 1,
+            revision: 4,
+            priceUnit: "份"
+        )
+    )
+    var deleteCatalogError: Error?
+    var adminReviewsResult = Result<Page<AdminReviewItem>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    var removeReviewError: Error?
     private(set) var reportDecisionCalls = 0
     private(set) var reportActionCalls = 0
     private(set) var reportFollowUpCalls = 0
     private(set) var startAppealCalls = 0
     private(set) var resolveAppealCalls = 0
+    private(set) var catalogCreateCalls = 0
+    private(set) var catalogUpdateCalls = 0
+    private(set) var catalogDeleteCalls = 0
+    private(set) var removeReviewCalls = 0
 
     func dashboard(days: Int) async throws -> AdminDashboard {
         try dashboardResult.get()
@@ -688,6 +728,54 @@ final class FakeAdminService: AdminService {
     ) async throws -> AdminAppeal {
         resolveAppealCalls += 1
         return try resolveAppealResult.get()
+    }
+
+    func catalogList(
+        type: String,
+        parentID: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCatalogItem> {
+        try catalogListResult.get()
+    }
+
+    func catalogItem(type: String, id: String) async throws -> AdminCatalogItem {
+        try catalogItemResult.get()
+    }
+
+    func createCatalogItem(
+        type: String,
+        edit: AdminCatalogEdit
+    ) async throws -> AdminCatalogItem {
+        catalogCreateCalls += 1
+        return try catalogSaveResult.get()
+    }
+
+    func updateCatalogItem(
+        type: String,
+        id: String,
+        edit: AdminCatalogEdit
+    ) async throws -> AdminCatalogItem {
+        catalogUpdateCalls += 1
+        return try catalogSaveResult.get()
+    }
+
+    func deleteCatalogItem(type: String, id: String) async throws {
+        catalogDeleteCalls += 1
+        if let deleteCatalogError { throw deleteCatalogError }
+    }
+
+    func adminReviews(
+        query: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminReviewItem> {
+        try adminReviewsResult.get()
+    }
+
+    func removeReview(id: String, reason: String) async throws {
+        removeReviewCalls += 1
+        if let removeReviewError { throw removeReviewError }
     }
 }
 

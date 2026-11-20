@@ -364,6 +364,100 @@ final class RemoteAdminService: AdminService {
         return try await api.send(request, as: AdminAppeal.self)
     }
 
+    func catalogList(
+        type: String,
+        parentID: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCatalogItem> {
+        var query = [
+            URLQueryItem(name: "page", value: String(max(1, page))),
+            URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+        ]
+        if let parentID, !parentID.isEmpty {
+            query.append(URLQueryItem(name: "parentId", value: parentID))
+        }
+        return try await api.send(
+            .get("admin/catalog/\(encoded(type))", query: query),
+            as: Page<AdminCatalogItem>.self
+        )
+    }
+
+    func catalogItem(type: String, id: String) async throws -> AdminCatalogItem {
+        try await api.send(
+            .get("admin/catalog/\(encoded(type))/\(encoded(id))"),
+            as: AdminCatalogItem.self
+        )
+    }
+
+    func createCatalogItem(
+        type: String,
+        edit: AdminCatalogEdit
+    ) async throws -> AdminCatalogItem {
+        let request = try APIRequest.json(
+            .post,
+            "admin/catalog/\(encoded(type))",
+            body: edit,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminCatalogItem.self)
+    }
+
+    func updateCatalogItem(
+        type: String,
+        id: String,
+        edit: AdminCatalogEdit
+    ) async throws -> AdminCatalogItem {
+        let request = try APIRequest.json(
+            .put,
+            "admin/catalog/\(encoded(type))/\(encoded(id))",
+            body: edit,
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminCatalogItem.self)
+    }
+
+    func deleteCatalogItem(type: String, id: String) async throws {
+        try await api.sendVoid(
+            .delete("admin/catalog/\(encoded(type))/\(encoded(id))")
+        )
+    }
+
+    func adminReviews(
+        query: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminReviewItem> {
+        var items = [
+            URLQueryItem(name: "page", value: String(max(1, page))),
+            URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+        ]
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
+            items.append(URLQueryItem(name: "q", value: trimmed))
+        }
+        return try await api.send(
+            .get("admin/reviews", query: items),
+            as: Page<AdminReviewItem>.self
+        )
+    }
+
+    func removeReview(id: String, reason: String) async throws {
+        struct Body: Encodable {
+            let reason: String
+        }
+        let request = try APIRequest.json(
+            .delete,
+            "admin/reviews/\(encoded(id))",
+            body: Body(reason: reason),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        try await api.sendVoid(request)
+    }
+
     private func encoded(_ value: String) -> String {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }

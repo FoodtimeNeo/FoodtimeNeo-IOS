@@ -81,4 +81,28 @@ protocol AdminService: AnyObject {
         internalNote: String?,
         expectedRevision: Int
     ) async throws -> AdminAppeal
+
+    func catalogList(
+        type: String,
+        parentID: String?,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCatalogItem>
+    func catalogItem(type: String, id: String) async throws -> AdminCatalogItem
+    func createCatalogItem(
+        type: String,
+        edit: AdminCatalogEdit
+    ) async throws -> AdminCatalogItem
+    func updateCatalogItem(
+        type: String,
+        id: String,
+        edit: AdminCatalogEdit
+    ) async throws -> AdminCatalogItem
+    func deleteCatalogItem(type: String, id: String) async throws
+    func adminReviews(
+        query: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminReviewItem>
+    func removeReview(id: String, reason: String) async throws
 }
