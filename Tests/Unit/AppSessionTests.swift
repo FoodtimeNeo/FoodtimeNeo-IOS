@@ -199,6 +199,7 @@ final class AppSessionTests: XCTestCase {
             feedback: FakeFeedbackService(),
             reviews: FakeReviewService(),
             venueReviews: FakeVenueReviewService(),
+            submissions: FakeSubmissionService(),
             api: api,
             cookieJar: jar,
             archive: MemoryCookieArchive(),

@@ -378,6 +378,30 @@ final class FakeReviewService: ReviewService {
     }
 }
 
+final class FakeSubmissionService: SubmissionService {
+    var uploadResult = Result<UploadedImage, Error>.success(TestFixtures.uploadedImage)
+    var submitResult = Result<ImageSubmission, Error>.success(TestFixtures.imageSubmission)
+    var myResult = Result<Page<ImageSubmission>, Error>.success(
+        Page(items: [], total: 0, page: 1, size: 20)
+    )
+    private(set) var uploadCalls = 0
+    private(set) var submitCalls = 0
+
+    func uploadImage(_ jpegData: Data) async throws -> UploadedImage {
+        uploadCalls += 1
+        return try uploadResult.get()
+    }
+
+    func submitDishImage(dishID: String, imageURL: String) async throws -> ImageSubmission {
+        submitCalls += 1
+        return try submitResult.get()
+    }
+
+    func myImageSubmissions(page: Int, size: Int) async throws -> Page<ImageSubmission> {
+        try myResult.get()
+    }
+}
+
 final class FakeVenueReviewService: VenueReviewService {
     var targetResult = VenueRatingTarget(
         type: "hall",
@@ -588,6 +612,28 @@ enum TestFixtures {
         content: "好吃",
         status: "pending",
         submittedAt: Date()
+    )
+
+    static let uploadedImage = UploadedImage(
+        id: "media-1",
+        imageUrl: "/api/v1/media/media-1",
+        width: 1600,
+        height: 1200
+    )
+
+    static let imageSubmission = ImageSubmission(
+        id: "is-1",
+        dishId: "d-1",
+        dishName: "鸡腿饭",
+        stallId: "s-1",
+        stallName: "三号档口",
+        diningHallId: "h-1",
+        diningHallName: "学苑食堂",
+        imageUrl: "/api/v1/media/media-1",
+        status: "pending",
+        reviewedAt: nil,
+        reviewReason: nil,
+        createdAt: Date()
     )
 
     static let venueReview = VenueReview(

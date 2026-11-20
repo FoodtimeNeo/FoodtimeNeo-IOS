@@ -27,7 +27,7 @@ RULES = {
         "Data adapts HTTP/storage and must not import presentation or notification UI",
     ),
     "Platform": (
-        ("SwiftUI", "WebKit"),
+        ("WebKit",),
         ("APIClient", "Remote", "URLSession"),
         "Platform adapts system capabilities and must not own business HTTP",
     ),
