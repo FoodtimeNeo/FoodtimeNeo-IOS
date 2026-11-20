@@ -699,6 +699,58 @@ final class RemoteAdminServiceTests: XCTestCase {
         XCTAssertEqual(importJSON["csv"] as? String, "反馈编号,反馈类型\r\n")
     }
 
+    func testCatalogImagesListAddAndRemove() async throws {
+        let transport = StubHTTPTransport()
+        transport.replies = [
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"items":[{"id":"image-1","imageUrl":"/api/v1/media/a.jpg"}],"total":1,"page":1,"size":12}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("""
+            {"headerName":"X-CSRF-TOKEN","token":"token-a1"}
+            """)),
+            .init(status: 201, body: TestFixtures.envelope("""
+            {"id":"image-2","imageUrl":"/api/v1/media/b.jpg"}
+            """)),
+            .init(status: 200, body: TestFixtures.envelope("null"))
+        ]
+        let service = RemoteAdminService(
+            api: TestFixtures.makeClient(transport: transport, jar: MemoryCookieJar())
+        )
+
+        let page = try await service.catalogImages(
+            type: "dishes",
+            id: "dish-1",
+            page: 1,
+            size: 12
+        )
+        let added = try await service.addCatalogImage(
+            type: "dishes",
+            id: "dish-1",
+            imageURL: "/api/v1/media/b.jpg"
+        )
+        try await service.removeCatalogImage(
+            type: "dishes",
+            id: "dish-1",
+            imageID: "image-1"
+        )
+
+        XCTAssertEqual(page.items.first?.id, "image-1")
+        XCTAssertEqual(added.id, "image-2")
+        XCTAssertEqual(
+            transport.requests[0].url?.path,
+            "/api/v1/admin/catalog/dishes/dish-1/images"
+        )
+        XCTAssertEqual(transport.requests[2].httpMethod, "POST")
+        let body = try XCTUnwrap(transport.requests[2].httpBody)
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+        XCTAssertEqual(json["imageUrl"] as? String, "/api/v1/media/b.jpg")
+        XCTAssertEqual(transport.requests[3].httpMethod, "DELETE")
+        XCTAssertEqual(
+            transport.requests[3].url?.path,
+            "/api/v1/admin/catalog/dishes/dish-1/images/image-1"
+        )
+    }
+
     func testUpdateUserSendsRoleAndStatus() async throws {
         let transport = StubHTTPTransport()
         transport.replies = [

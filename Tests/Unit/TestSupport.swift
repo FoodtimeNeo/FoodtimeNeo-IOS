@@ -563,6 +563,18 @@ final class FakeAdminService: AdminService {
         )
     )
     var deleteCatalogError: Error?
+    var catalogImagesResult = Result<Page<AdminCatalogImage>, Error>.success(
+        Page(
+            items: [AdminCatalogImage(id: "image-1", imageUrl: "/api/v1/media/a.jpg")],
+            total: 1,
+            page: 1,
+            size: 12
+        )
+    )
+    var addCatalogImageResult = Result<AdminCatalogImage, Error>.success(
+        AdminCatalogImage(id: "image-2", imageUrl: "/api/v1/media/b.jpg")
+    )
+    var removeCatalogImageError: Error?
     var adminReviewsResult = Result<Page<AdminReviewItem>, Error>.success(
         Page(items: [], total: 0, page: 1, size: 20)
     )
@@ -743,6 +755,8 @@ final class FakeAdminService: AdminService {
     private(set) var catalogUpdateCalls = 0
     private(set) var catalogDeleteCalls = 0
     private(set) var removeReviewCalls = 0
+    private(set) var addCatalogImageCalls = 0
+    private(set) var removeCatalogImageCalls = 0
     private(set) var decideCorrectionCalls = 0
     private(set) var saveNoticeCalls = 0
     private(set) var scheduleNoticeCalls = 0
@@ -951,6 +965,33 @@ final class FakeAdminService: AdminService {
     func removeReview(id: String, reason: String) async throws {
         removeReviewCalls += 1
         if let removeReviewError { throw removeReviewError }
+    }
+
+    func catalogImages(
+        type: String,
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCatalogImage> {
+        try catalogImagesResult.get()
+    }
+
+    func addCatalogImage(
+        type: String,
+        id: String,
+        imageURL: String
+    ) async throws -> AdminCatalogImage {
+        addCatalogImageCalls += 1
+        return try addCatalogImageResult.get()
+    }
+
+    func removeCatalogImage(
+        type: String,
+        id: String,
+        imageID: String
+    ) async throws {
+        removeCatalogImageCalls += 1
+        if let removeCatalogImageError { throw removeCatalogImageError }
     }
 
     func corrections(

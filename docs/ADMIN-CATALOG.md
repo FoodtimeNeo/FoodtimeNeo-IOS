@@ -21,7 +21,7 @@
 
 - 编辑所属不可改：表单在编辑态禁用父级选择，仍以服务端为准。
 - 价格 0 起、最多两位小数；名称 ≤120、简介 ≤500。
-- `/admin/catalog/**` 允许 admin/superadmin；目录图片管理（`/admin/catalog/images`）仅超管，未纳入本分支。
+- `/admin/catalog/**` 允许 admin/superadmin；目录图片管理见 `docs/ADMIN-CATALOG-IMAGES.md`，仅超管显示入口。
 - 删除 409 不自动改为停用，避免误操作；提示用户手动编辑状态。
 
 ## 验证边界

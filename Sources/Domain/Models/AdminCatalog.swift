@@ -49,6 +49,11 @@ struct AdminReviewItem: Codable, Identifiable, Equatable, Sendable {
     let userEmail: String?
 }
 
+struct AdminCatalogImage: Codable, Identifiable, Equatable, Sendable {
+    let id: String
+    let imageUrl: String
+}
+
 enum AdminCatalogKind: String, CaseIterable, Identifiable {
     case diningHalls = "dining-halls"
     case stalls = "stalls"

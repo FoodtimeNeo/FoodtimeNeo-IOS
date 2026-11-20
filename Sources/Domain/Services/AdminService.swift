@@ -106,6 +106,23 @@ protocol AdminService: AnyObject {
     ) async throws -> Page<AdminReviewItem>
     func removeReview(id: String, reason: String) async throws
 
+    func catalogImages(
+        type: String,
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCatalogImage>
+    func addCatalogImage(
+        type: String,
+        id: String,
+        imageURL: String
+    ) async throws -> AdminCatalogImage
+    func removeCatalogImage(
+        type: String,
+        id: String,
+        imageID: String
+    ) async throws
+
     func corrections(
         status: String?,
         targetType: String?,

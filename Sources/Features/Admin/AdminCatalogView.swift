@@ -19,9 +19,20 @@ struct AdminCatalogView: View {
     @State private var pendingDelete: AdminCatalogItem?
     @State private var showDeleteAlert = false
     private let service: AdminService
+    private let uploader: SubmissionService?
+    private let mediaBaseURL: URL?
+    private let canManageImages: Bool
 
-    init(service: AdminService) {
+    init(
+        service: AdminService,
+        uploader: SubmissionService? = nil,
+        mediaBaseURL: URL? = nil,
+        canManageImages: Bool = false
+    ) {
         self.service = service
+        self.uploader = uploader
+        self.mediaBaseURL = mediaBaseURL
+        self.canManageImages = canManageImages
         _model = StateObject(wrappedValue: AdminCatalogViewModel(service: service))
     }
 
@@ -164,6 +175,20 @@ struct AdminCatalogView: View {
                     }
                     .buttonStyle(LinkButtonStyle())
                     .disabled(model.deletingID == item.id)
+                    if canManageImages, let uploader, let mediaBaseURL {
+                        NavigationLink {
+                            AdminCatalogImagesView(
+                                service: service,
+                                uploader: uploader,
+                                kind: model.kind,
+                                item: item,
+                                mediaBaseURL: mediaBaseURL
+                            )
+                        } label: {
+                            Text("图片")
+                        }
+                        .buttonStyle(LinkButtonStyle())
+                    }
                     Button("删除") {
                         pendingDelete = item
                         showDeleteAlert = true

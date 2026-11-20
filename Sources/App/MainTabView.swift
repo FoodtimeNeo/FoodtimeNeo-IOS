@@ -19,7 +19,12 @@ struct MainTabView: View {
 
             if session.canUseAdminArea {
                 NavigationStack {
-                    AdminHomeView(service: session.admin)
+                    AdminHomeView(
+                        service: session.admin,
+                        submissions: session.submissions,
+                        mediaBaseURL: session.catalog.mediaBaseURL,
+                        canManageCatalogImages: user.isSuperadmin
+                    )
                 }
                 .tabItem { Label("管理", systemImage: "shield.lefthalf.filled") }
             }

@@ -444,6 +444,54 @@ final class RemoteAdminService: AdminService {
         )
     }
 
+    func catalogImages(
+        type: String,
+        id: String,
+        page: Int,
+        size: Int
+    ) async throws -> Page<AdminCatalogImage> {
+        try await api.send(
+            .get(
+                "admin/catalog/\(encoded(type))/\(encoded(id))/images",
+                query: [
+                    URLQueryItem(name: "page", value: String(max(1, page))),
+                    URLQueryItem(name: "size", value: String(min(100, max(1, size))))
+                ]
+            ),
+            as: Page<AdminCatalogImage>.self
+        )
+    }
+
+    func addCatalogImage(
+        type: String,
+        id: String,
+        imageURL: String
+    ) async throws -> AdminCatalogImage {
+        struct Body: Encodable {
+            let imageUrl: String
+        }
+        let request = try APIRequest.json(
+            .post,
+            "admin/catalog/\(encoded(type))/\(encoded(id))/images",
+            body: Body(imageUrl: imageURL),
+            requiresAuth: true,
+            requiresCSRF: true
+        )
+        return try await api.send(request, as: AdminCatalogImage.self)
+    }
+
+    func removeCatalogImage(
+        type: String,
+        id: String,
+        imageID: String
+    ) async throws {
+        try await api.sendVoid(
+            .delete(
+                "admin/catalog/\(encoded(type))/\(encoded(id))/images/\(encoded(imageID))"
+            )
+        )
+    }
+
     func removeReview(id: String, reason: String) async throws {
         struct Body: Encodable {
             let reason: String

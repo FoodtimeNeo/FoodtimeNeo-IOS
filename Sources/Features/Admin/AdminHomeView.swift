@@ -4,9 +4,20 @@ import SwiftUI
 struct AdminHomeView: View {
     @StateObject private var model: AdminHomeViewModel
     private let service: AdminService
+    private let submissions: SubmissionService?
+    private let mediaBaseURL: URL?
+    private let canManageCatalogImages: Bool
 
-    init(service: AdminService) {
+    init(
+        service: AdminService,
+        submissions: SubmissionService? = nil,
+        mediaBaseURL: URL? = nil,
+        canManageCatalogImages: Bool = false
+    ) {
         self.service = service
+        self.submissions = submissions
+        self.mediaBaseURL = mediaBaseURL
+        self.canManageCatalogImages = canManageCatalogImages
         _model = StateObject(wrappedValue: AdminHomeViewModel(service: service))
     }
 
@@ -103,7 +114,12 @@ struct AdminHomeView: View {
                     adminLinkRow("社区审核", detail: "食记/评论队列、详情与删除")
                 }
                 NavigationLink {
-                    AdminCatalogView(service: service)
+                    AdminCatalogView(
+                        service: service,
+                        uploader: submissions,
+                        mediaBaseURL: mediaBaseURL,
+                        canManageImages: canManageCatalogImages
+                    )
                 } label: {
                     adminLinkRow("目录管理", detail: "食堂/档口/菜品增删改与启停")
                 }
