@@ -2,9 +2,9 @@
 
 目标是完整复刻 Android 客户端的功能、业务规则和手账风格，并持续跟进 Android 后续更新。普通用户、访客、管理员和超级管理员的能力都属于范围，不能只实现首页或普通用户流程。
 
-## 当前状态（2026-11-20，`feature/ios-foundation`）
+## 当前状态（2026-11-21，W1–W6 已实现，W7 进行中）
 
-本分支建立**工程底座与首个只读纵切片**，不是全量对齐：
+W0 工程底座、W1–W5 用户侧、W6 管理端均已实现并按功能拆成 `feature/*` PR；W7 完成隐私清单、分享、无障碍第一批与媒体缓存清理。以下为已接入内容，**CI 只证明编译与单测，不证明真机业务验收**：
 
 - 已建立 XcodeGen 工程（`project.yml`）、SwiftUI 外壳、Tab/导航、手账色板与基础控件。
 - 已接入网络层：`/api/v1`、统一响应包络、错误映射、`X-Request-Id`、`X-Foodtime-Client: ios`、Cookie 会话、CSRF、204/205 空 body、超时与禁止重定向。
@@ -31,11 +31,13 @@
 - W4 社区发帖：多图选择/上传、标题/正文、每账号本机草稿、pending 审核；详见 [社区发帖](docs/COMMUNITY-COMPOSE.md)。
 - W4 收藏分组：菜品/帖子独立分组、全部/未分组筛选、增删改名、成员管理；详见 [收藏分组](docs/COLLECTIONS.md)。
 - W5 浏览历史：服务器两栏各 50 条、开关/epoch、删除/清空、详情成功记录；详见 [浏览历史](docs/HISTORY.md)。
-- W6 管理基础：数据看板、用户搜索与角色/状态调整；详见 [管理端基础](docs/ADMIN.md)。
-- 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。
-- **尚未实现**：审核/社区管理、举报申诉（用户侧并行会话在做，管理侧待接）、目录管理、公告、反馈 CSV、完整媒体/分享等。`docs/parity/coverage.json` 已标 57 项 in-progress、0 verified。
-- **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、动态字体与 iPad 验收。CI 通过只证明编译与单元测试，不证明业务完成。
-- Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。
+- W6 管理端：看板/用户、审核队列与日志、社区审核、举报/申诉、目录/点评/图片、纠错审核、公告、反馈与 CSV、登录弹窗设置；入口见 [管理端基础](docs/ADMIN.md)，细分文档 `docs/ADMIN-*.md`。
+- W7 隐私/分享：`PrivacyInfo.xcprivacy` 与发布说明见 [RELEASE](docs/RELEASE.md)；食记系统分享见 [COMMUNITY-SHARE](docs/COMMUNITY-SHARE.md)；动态字体/VoiceOver 第一批见 [ACCESSIBILITY](docs/ACCESSIBILITY.md)；缓存与身份清理见 [MEDIA-CACHE](docs/MEDIA-CACHE.md)。
+- 已接入 macOS CI：`xcodegen generate` → 层边界检查 → `xcodebuild build` → 单元测试。管理端 PR #31–#39 已在模拟器构建与单测通过；W7 PR #40–#46 后续确认。
+- `docs/parity/coverage.json` 已标 81 项 in-progress、21 项 not-started、0 verified。
+- **仍未完成**：VoiceOver/动态字体实机走查、iPad 导航（D18 待拍板）、价格历史图表无障碍、媒体 TTL 决策、APNs/后台投递、Release archive 与 TestFlight。
+- **未执行**：Apple Simulator 交互验收、真机、真实后端写入联调、相册/通知/后台任务、真实权限矩阵。CI 通过只证明编译与单元测试，不证明业务完成。
+- Bundle ID 暂用 `cn.edu.bjtu.foodtime`，开发团队、签名与分发方式仍待确认；最低系统已确认为 iOS 17。合并由用户在 W7 后统一处理。
 
 ## 接手入口
 
