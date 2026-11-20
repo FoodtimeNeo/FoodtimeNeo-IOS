@@ -46,7 +46,9 @@ private struct CookieRecord: Codable {
     let version: Int
 
     init?(_ cookie: HTTPCookie) {
-        guard let domain = cookie.domain, let path = cookie.path, !cookie.name.isEmpty else {
+        let domain = cookie.domain
+        let path = cookie.path
+        guard !domain.isEmpty, !path.isEmpty, !cookie.name.isEmpty else {
             return nil
         }
         self.name = cookie.name

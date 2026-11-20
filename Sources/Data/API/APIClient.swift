@@ -161,7 +161,11 @@ final class APIClient {
             throw AppError.invalidResponse(message: "服务未返回数据")
         }
 
-        let envelope = try decodeEnvelope(data: data, response: response, request: request)
+        let envelope: APIEnvelope<T> = try decodeEnvelope(
+            data: data,
+            response: response,
+            request: request
+        )
         guard (200..<300).contains(response.statusCode), envelope.code == "OK" else {
             throw mapError(
                 status: response.statusCode,
